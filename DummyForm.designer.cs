@@ -1,4 +1,4 @@
-﻿namespace BigPurse
+﻿namespace App
 {
   partial class DummyForm
   {

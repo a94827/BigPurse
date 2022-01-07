@@ -10,7 +10,7 @@ using FreeLibSet.IO;
 using FreeLibSet.Config;
 using FreeLibSet.DependedValues;
 
-namespace BigPurse
+namespace App
 {
   /// <summary>
   /// Диалог "Настройки"

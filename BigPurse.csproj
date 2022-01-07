@@ -7,7 +7,7 @@
     <ProjectGuid>{04DD3AF1-3523-44EA-8AD4-462E3210CC24}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BigPurse</RootNamespace>
+    <RootNamespace>App</RootNamespace>
     <AssemblyName>BigPurse</AssemblyName>
     <ApplicationIcon>Program.ico</ApplicationIcon>
   </PropertyGroup>
@@ -66,6 +66,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigSection.cs" />
+    <Compile Include="EditOperationProduct.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditOperationProduct.Designer.cs">
+      <DependentUpon>EditOperationProduct.cs</DependentUpon>
+    </Compile>
     <Compile Include="EditShop.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -116,6 +122,10 @@
     <Compile Include="ProgramDB.cs" />
     <Compile Include="ProgramDBUI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="EditOperationProduct.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>EditOperationProduct.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="EditShop.resx">
       <DependentUpon>EditShop.cs</DependentUpon>
       <SubType>Designer</SubType>

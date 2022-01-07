@@ -11,7 +11,7 @@ using FreeLibSet.DependedValues;
 using FreeLibSet.Data;
 using FreeLibSet.Data.Docs;
 
-namespace BigPurse
+namespace App
 {
   internal partial class EditProduct : Form
   {
@@ -30,13 +30,11 @@ namespace BigPurse
 
     DocumentEditor _Editor;
 
-    public static void InitDocEditForm(object Sender, InitDocEditFormEventArgs Args)
+    public static void InitDocEditForm(object sender, InitDocEditFormEventArgs args)
     {
-      EditProduct Form = new EditProduct();
-
-      Form._Editor = Args.Editor;
-
-      Form.AddPage1(Args);
+      EditProduct form = new EditProduct();
+      form._Editor = args.Editor;
+      form.AddPage1(args);
     }
 
     #endregion
@@ -44,25 +42,23 @@ namespace BigPurse
     #region Страница 1 (общие)
 
     private EFPTextBox efpName;
-
     private EFPDocComboBox efpParent;
 
     private void AddPage1(InitDocEditFormEventArgs args)
     {
-      DocEditPage Page = args.AddPage("Общие", MainPanel1);
-      Page.ImageKey = args.Editor.DocTypeUI.ImageKey;
+      DocEditPage page = args.AddPage("Общие", MainPanel1);
 
-      efpName = new EFPTextBox(Page.BaseProvider, edName);
+      efpName = new EFPTextBox(page.BaseProvider, edName);
       efpName.CanBeEmpty = false;
       args.AddText(efpName, "Name", false);
 
-      efpParent = new EFPDocComboBox(Page.BaseProvider, cbParent, args.Editor.DocTypeUI);
+      efpParent = new EFPDocComboBox(page.BaseProvider, cbParent, args.Editor.DocTypeUI);
       efpParent.CanBeEmpty = true;
       args.AddRef(efpParent, "ParentId", true);
 
       #region Комментарий
 
-      EFPTextBox efpComment = new EFPTextBox(Page.BaseProvider, edComment);
+      EFPTextBox efpComment = new EFPTextBox(page.BaseProvider, edComment);
       efpComment.CanBeEmpty = true;
       args.AddText(efpComment, "Comment", true);
 

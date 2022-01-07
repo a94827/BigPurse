@@ -6,7 +6,7 @@ using FreeLibSet.IO;
 using System.Windows.Forms;
 using System.Reflection;
 
-namespace BigPurse
+namespace App
 {
   /// <summary>
   /// Главное меню программы

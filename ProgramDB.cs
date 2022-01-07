@@ -9,7 +9,7 @@ using System.IO;
 using System.Data;
 using FreeLibSet.Core;
 
-namespace BigPurse
+namespace App
 {
   /// <summary>
   /// Подключение к базе данных
@@ -74,6 +74,7 @@ namespace BigPurse
       // DBxRealDocProviderGlobal.DefaultClearCacheBuffer = 30; // обновления могут переключаться не только по таймеру, но и при запуске процедур
       _DBConnectionHelper.Splash = Splash;
       _GlobalDocData = _DBConnectionHelper.CreateRealDocProviderGlobal();
+      InitDocTextValues.Init(_GlobalDocData.TextHandlers);
       _DBConnectionHelper.Splash = null; // он скоро исчезнет
       if (_DBConnectionHelper.Errors.Count > 0)
       {
@@ -309,6 +310,10 @@ namespace BigPurse
           totalCredit = DataTools.SumDecimal(table, "RecordSum") + inlineSum;
           //sName=DataTools.GetStringsFromColumn
           break;
+        case OperationType.Move:
+          totalDebt = inlineSum;
+          totalCredit = inlineSum;
+          break;
         case OperationType.Debt:
           totalDebt = inlineSum;
           break;
@@ -321,9 +326,11 @@ namespace BigPurse
       }
 
       if (String.IsNullOrEmpty(sName))
-        sName = ProgramConvert.ToString(opType);
+        sName = Tools.ToString(opType);
 
       args.Doc.Values["DisplayName"].SetString(sName);
+      args.Doc.Values["TotalDebt"].SetDecimal(totalDebt);
+      args.Doc.Values["TotalCredit"].SetDecimal(totalCredit);
     }
 
     #endregion

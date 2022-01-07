@@ -7,7 +7,7 @@ using FreeLibSet.IO;
 using FreeLibSet.Forms.Docs;
 using FreeLibSet.Core;
 
-namespace BigPurse
+namespace App
 {
   static class Program
   {

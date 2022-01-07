@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace BigPurse
+namespace App
 {
   #region Перечисление OperationType
 
@@ -44,7 +44,7 @@ namespace BigPurse
 
   #endregion
 
-  internal static class ProgramConvert
+  internal static class Tools
   {
     #region OperationType
 
@@ -65,5 +65,37 @@ namespace BigPurse
     }
 
     #endregion
+
+    /// <summary>
+    /// Формат для денежных сумм
+    /// </summary>
+    public const string MoneyFormat = "#,##0.00";
+
+    public static bool UseDebt(OperationType opType)
+    {
+      switch (opType)
+      {
+        case OperationType.Balance:
+        case OperationType.Income:
+        case OperationType.Move:
+        case OperationType.Debt:
+          return true;
+        default:
+          return false;
+      }
+    }
+
+    public static bool UseCredit(OperationType opType)
+    {
+      switch (opType)
+      {
+        case OperationType.Expense:
+        case OperationType.Move:
+        case OperationType.Credit:
+          return true;
+        default:
+          return false;
+      }
+    }
   }
 }

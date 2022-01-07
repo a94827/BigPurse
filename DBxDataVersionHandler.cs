@@ -8,7 +8,7 @@ using FreeLibSet.Core;
 
 // Для переноса в ExtDBDocs.dll
 
-namespace BigPurse
+namespace App
 {
   /// <summary>
   /// Обработка таблицы "DataVersion" в базе данных документов.

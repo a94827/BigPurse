@@ -10,8 +10,9 @@ using FreeLibSet.Forms.Docs;
 using FreeLibSet.DependedValues;
 using FreeLibSet.Data;
 using FreeLibSet.Data.Docs;
+using FreeLibSet.Core;
 
-namespace BigPurse
+namespace App
 {
   internal partial class EditOperation : Form
   {
@@ -48,6 +49,57 @@ namespace BigPurse
         return ImageKeys[(int)opType];
     }
 
+    public static void Total_ValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args)
+    {
+      for (int i = 0; i < 3; i++)
+      {
+        decimal s = args.GetDecimal(i);
+        if (s != 0m)
+        {
+          args.Value = s;
+          break;
+        }
+      }
+    }
+
+    public static void Wallet_Text_ValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args)
+    {
+      string s1 = ProgramDBUI.TheUI.DocTypes["Wallets"].GetTextValue(args.GetInt(0));
+      string s2 = ProgramDBUI.TheUI.DocTypes["Wallets"].GetTextValue(args.GetInt(1));
+
+      args.Value = DataTools.JoinNotEmptyStrings(" <- ", new string[] { s1, s2 });
+    }
+
+    /* ???
+    private class WalletGridFilter : RefDocGridFilter
+    {
+      #region Конструктор
+
+      public WalletGridFilter()
+        :base(ProgramDBUI.TheUI, "Wallets", 
+      { 
+      }
+
+      #endregion
+    }
+    */
+
+    public static void InitView(object sender, InitEFPDBxViewEventArgs args)
+    {
+      #region Фильтры
+
+      DateRangeGridFilter filtDate = new DateRangeGridFilter("Date");
+      filtDate.DisplayName = "Дата операции";
+      args.ControlProvider.Filters.Add(filtDate);
+
+      EnumGridFilter filtOpType = new EnumGridFilter("OpType", Tools.OperationTypeNames);
+      filtOpType.DisplayName = "Тип операции";
+      filtOpType.ImageKeys = ImageKeys;
+      args.ControlProvider.Filters.Add(filtOpType);
+
+      #endregion
+    }
+
     #endregion
 
     #region Редактор
@@ -61,7 +113,7 @@ namespace BigPurse
         ListSelectDialog dlg = new ListSelectDialog();
         dlg.Title = "Создание операции";
         dlg.ImageKey = "Insert";
-        dlg.Items = ProgramConvert.OperationTypeNames;
+        dlg.Items = Tools.OperationTypeNames;
         dlg.ImageKeys = ImageKeys;
         try { dlg.SelectedIndex = args.Editor.MainValues["OpType"].AsInteger; }
         catch { }
@@ -73,6 +125,11 @@ namespace BigPurse
         }
 
         args.Editor.MainValues["OpType"].SetInteger(dlg.SelectedIndex);
+        OperationType opType = (OperationType)(dlg.SelectedIndex);
+        if (!Tools.UseDebt(opType))
+          args.Editor.MainValues["WalletDebt"].SetNull();
+        if (!Tools.UseCredit(opType))
+          args.Editor.MainValues["WalletCredit"].SetNull();
       }
     }
 
@@ -83,33 +140,249 @@ namespace BigPurse
 
     DocumentEditor _Editor;
 
-    public static void InitDocEditForm(object Sender, InitDocEditFormEventArgs Args)
+    OperationType opType;
+
+    const OperationType MixedOpType = (OperationType)(-1);
+
+    public static void InitDocEditForm(object sender, InitDocEditFormEventArgs args)
     {
-      EditOperation Form = new EditOperation();
+      EditOperation form = new EditOperation();
+      form._Editor = args.Editor;
 
-      Form._Editor = Args.Editor;
+      if (args.Editor.MainValues["OpType"].Grayed)
+        form.opType = MixedOpType;
+      else
+        form.opType = (OperationType)(args.Editor.MainValues["OpType"].AsInteger);
 
-      Form.AddPage1(Args);
+      form.AddPage1(args);
+      if (form.opType == OperationType.Expense && (!args.Editor.MultiDocMode))
+        form.AddPage2(args);
     }
 
     #endregion
 
-    #region Страница 1 (общие)
+    #region Страница 1 (Общие)
 
-    private EFPTextBox efpName;
+    EFPDateTimeBox efpDate;
+    EFPIntEditBox efpOpOrder;
+    EFPDocComboBox efpWalletDebt, efpWalletCredit, efpContra;
+    EFPDecimalEditBox efpSumBefore, efpSumOp, efpSumAfter;
 
     private void AddPage1(InitDocEditFormEventArgs args)
     {
-      DocEditPage Page = args.AddPage("Общие", MainPanel1);
-      Page.ImageKey = args.Editor.DocTypeUI.ImageKey;
+      DocEditPage page = args.AddPage("Общие", MainPanel1);
+      if (opType == MixedOpType)
+      {
+        page.ImageKey = args.Editor.DocTypeUI.ImageKey;
+      }
+      else
+      {
+        page.ImageKey = GetImageKey(opType);
+        grpOp.Text += " (" + Tools.ToString(opType) + ")";
+      }
+
+      #region Дата и порядок операции
+
+      efpDate = new EFPDateTimeBox(page.BaseProvider, edDate);
+      efpDate.CanBeEmpty = false;
+      args.AddDate(efpDate, "Date", true);
+
+      efpOpOrder = new EFPIntEditBox(page.BaseProvider, edOpOrder);
+      efpOpOrder.CanBeEmpty = false;
+      efpOpOrder.Minimum = 0;
+      efpOpOrder.Maximum = Int16.MaxValue;
+      args.AddInt(efpOpOrder, "OpOrder", true);
+
+      #endregion
+
+      #region Кошельки
+
+      if (Tools.UseDebt(opType))
+      {
+        efpWalletDebt = new EFPDocComboBox(page.BaseProvider, cbWalletDebt, ProgramDBUI.TheUI.DocTypes["Wallets"]);
+        efpWalletDebt.Label = lblWalletDebt;
+        efpWalletDebt.CanBeEmpty = false;
+        args.AddRef(efpWalletDebt, "WalletDebt", true);
+      }
+      else
+      {
+        cbWalletDebt.Visible = false;
+        lblWalletDebt.Visible = false;
+        if (opType != MixedOpType && (!_Editor.IsReadOnly))
+          _Editor.MainValues["WalletDebt"].SetNull();
+      }
+
+      if (Tools.UseCredit(opType))
+      {
+        efpWalletCredit = new EFPDocComboBox(page.BaseProvider, cbWalletCredit, ProgramDBUI.TheUI.DocTypes["Wallets"]);
+        efpWalletCredit.Label = lblWalletCredit;
+        efpWalletCredit.CanBeEmpty = false;
+        args.AddRef(efpWalletCredit, "WalletCredit", true);
+      }
+      else
+      {
+        cbWalletCredit.Visible = false;
+        lblWalletCredit.Visible = false;
+        if (opType != MixedOpType && (!_Editor.IsReadOnly))
+          _Editor.MainValues["WalletCredit"].SetNull();
+      }
+
+      if (opType == OperationType.Move && (!args.Editor.IsReadOnly))
+      {
+        efpWalletDebt.Validating += new FreeLibSet.UICore.UIValidatingEventHandler(efpWallet_MoveValidating);
+        efpWalletCredit.Validating += new FreeLibSet.UICore.UIValidatingEventHandler(efpWallet_MoveValidating);
+        efpWalletDebt.DocIdEx.ValueChanged += efpWalletCredit.Validate;
+        efpWalletCredit.DocIdEx.ValueChanged += efpWalletDebt.Validate;
+      }
+
+      #endregion
+
+      #region Контрагент
+
+      // Поле "Контрагент" используется для разных целей
+      if (opType != MixedOpType)
+      {
+        if (opType == OperationType.Income)
+        {
+          lblContra.Text = "Источник";
+          efpContra = new EFPDocComboBox(page.BaseProvider, cbContra, ProgramDBUI.TheUI.DocTypes["IncomeSources"]);
+          efpContra.CanBeEmpty = false;
+          args.AddRef(efpContra, "IncomeSource", true);
+        }
+        else if (!_Editor.IsReadOnly)
+          _Editor.MainValues["IncomeSource"].SetNull();
+
+        if (opType == OperationType.Expense)
+        {
+          lblContra.Text = "Магазин";
+          efpContra = new EFPDocComboBox(page.BaseProvider, cbContra, ProgramDBUI.TheUI.DocTypes["Shops"]);
+          efpContra.CanBeEmpty = true;
+          args.AddRef(efpContra, "Shop", true);
+        }
+        else if (!_Editor.IsReadOnly)
+          _Editor.MainValues["Shop"].SetNull();
+
+        if (opType == OperationType.Debt || opType == OperationType.Credit)
+        {
+          lblContra.Text = opType == OperationType.Debt ? "Кредитор" : "Дебитор";
+          efpContra = new EFPDocComboBox(page.BaseProvider, cbContra, ProgramDBUI.TheUI.DocTypes["Debtors"]);
+          efpContra.CanBeEmpty = false;
+          args.AddRef(efpContra, "Debtor", true);
+        }
+        else if (!_Editor.IsReadOnly)
+          _Editor.MainValues["Debtor"].SetNull();
+      }
+
+      #endregion
+
+      #region Суммы
+
+      if (opType == MixedOpType || _Editor.MultiDocMode)
+        grpSum.Visible = false;
+      else
+      {
+        efpSumBefore = new EFPDecimalEditBox(page.BaseProvider, edSumBefore);
+        efpSumBefore.Control.Format = Tools.MoneyFormat;
+        efpSumBefore.CanBeEmpty = true;
+        efpSumBefore.ReadOnly = true;
+
+        efpSumOp = new EFPDecimalEditBox(page.BaseProvider, edSumOp);
+        efpSumOp.Control.Format = Tools.MoneyFormat;
+        efpSumOp.CanBeEmpty = false;
+
+        efpSumAfter = new EFPDecimalEditBox(page.BaseProvider, edSumAfter);
+        efpSumAfter.Control.Format = Tools.MoneyFormat;
+        efpSumAfter.CanBeEmpty = true;
+        efpSumAfter.ReadOnly = true;
+
+        if (opType == OperationType.Expense)
+        {
+          efpSumOp.ReadOnly = true;
+          page.PageShow += new DocEditPageEventHandler(Page1_PageShow_CalcExpenseSum);
+        }
+        else
+        {
+          efpSumOp.Validating += new FreeLibSet.UICore.UIValidatingEventHandler(efpSumOp_Validating);
+          args.AddDecimal(efpSumOp, "InlineSum", false);
+        }
+      }
+
+      #endregion
 
       #region Комментарий
 
-      EFPTextBox efpComment = new EFPTextBox(Page.BaseProvider, edComment);
+      EFPTextBox efpComment = new EFPTextBox(page.BaseProvider, edComment);
       efpComment.CanBeEmpty = true;
       args.AddText(efpComment, "Comment", true);
 
       #endregion
+    }
+
+    void Page1_PageShow_CalcExpenseSum(object sender, DocEditPageEventArgs args)
+    {
+      efpSumOp.Value = DataTools.SumDecimal(sdgProducts.SourceAsDataView, "RecordSum");
+    }
+
+    /// <summary>
+    /// Проверка, что кошельки не совпадают для операции перемещения
+    /// </summary>
+    void efpWallet_MoveValidating(object sender, FreeLibSet.UICore.UIValidatingEventArgs args)
+    {
+      if (args.ValidateState == FreeLibSet.UICore.UIValidateState.Error)
+        return;
+      if (efpWalletDebt.DocId == efpWalletCredit.DocId)
+        args.SetError("Для операции перемещения кошельки должны быть разными");
+    }
+
+    void efpSumOp_Validating(object sender, FreeLibSet.UICore.UIValidatingEventArgs args)
+    {
+      if (args.ValidateState != FreeLibSet.UICore.UIValidateState.Ok)
+        return;
+      if (efpSumOp.Value == 0m)
+        args.SetWarning("Сумма должна быть задана");
+    }
+
+    #endregion
+
+    #region Страница 2 (Товары)
+
+    EFPSubDocGridView sdgProducts;
+
+    /// <summary>
+    /// Панель статусной строки "Всего"
+    /// </summary>
+    EFPCommandItem ciSBProductSum;
+
+    private void AddPage2(InitDocEditFormEventArgs args)
+    {
+      bool oldCalcSums = EFPApp.ShowAutoCalcSums;
+      try
+      {
+        EFPApp.ShowAutoCalcSums = false; // временно отключаем панели статусной строки
+        DocEditPage page = args.AddSubDocsPage("OperationProducts", out sdgProducts);
+        page.Title = "Товары";
+        sdgProducts.ManualOrderColumn = "RecordOrder";
+
+        ciSBProductSum = new EFPCommandItem("View", "Total");
+        ciSBProductSum.Usage = EFPCommandItemUsage.StatusBar;
+        ciSBProductSum.ImageKey = "Sum";
+        ciSBProductSum.ToolTipText = "Общая сумма по чеку";
+        ciSBProductSum.StatusBarText = "?";
+        sdgProducts.CommandItems.Add(ciSBProductSum);
+
+        sdgProducts.UseIdle = true;
+        sdgProducts.Idle += new EventHandler(sdgProducts_Idle);
+      }
+      finally
+      {
+        EFPApp.ShowAutoCalcSums = oldCalcSums;
+      }
+    }
+
+    void sdgProducts_Idle(object sender, EventArgs args)
+    {
+      decimal s = DataTools.SumDecimal(sdgProducts.SourceAsDataView, "RecordSum");
+      ciSBProductSum.StatusBarText = s.ToString(Tools.MoneyFormat);
     }
 
     #endregion

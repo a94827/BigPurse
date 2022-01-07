@@ -5,7 +5,7 @@ using FreeLibSet.Data.Docs;
 using FreeLibSet.Data;
 using FreeLibSet.Calendar;
 
-namespace BigPurse
+namespace App
 {
   /// <summary>
   /// Инициализация текстового представления для документов

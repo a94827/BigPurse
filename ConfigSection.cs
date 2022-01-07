@@ -11,7 +11,7 @@ using FreeLibSet.Caching;
 using FreeLibSet.Forms;
 using FreeLibSet.Core;
 
-namespace BigPurse
+namespace App
 {
 
   /// <summary>

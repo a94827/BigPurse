@@ -9,7 +9,7 @@ using FreeLibSet.Forms;
 using System.ComponentModel;
 using FreeLibSet.Core;
 
-namespace BigPurse
+namespace App
 {
   internal class ProgramDBUI : DBUI
   {
@@ -30,6 +30,25 @@ namespace BigPurse
       dt.GridProducer.Columns.AddDate("Date");
 
       dt.GridProducer.Columns.AddText("DisplayName", "Содержание", 40, 30);
+
+      dt.GridProducer.Columns.AddUserMoney("Total", "TotalDebt,TotalCredit,InlineSum",
+        new EFPGridProducerValueNeededEventHandler(EditOperation.Total_ValueNeeded),
+        "Сумма");
+      dt.GridProducer.Columns.LastAdded.Format = Tools.MoneyFormat;
+      dt.GridProducer.Columns.AddMoney("TotalDebt", "Сумма дебет");
+      dt.GridProducer.Columns.LastAdded.Format = Tools.MoneyFormat;
+      dt.GridProducer.Columns.AddMoney("TotalCredit", "Сумма кредит");
+      dt.GridProducer.Columns.LastAdded.Format = Tools.MoneyFormat;
+
+      dt.GridProducer.Columns.AddUserText("Wallet_Text", "WalletDebt,WalletCredit",
+        new EFPGridProducerValueNeededEventHandler(EditOperation.Wallet_Text_ValueNeeded),
+        "Кошелек", 15, 10);
+      dt.GridProducer.Columns.LastAdded.SizeGroup = "WalletText";
+      dt.GridProducer.Columns.AddRefDocText("WalletDebt", this.DocTypes["Wallets"], "Кошелек дебет", 15, 10);
+      dt.GridProducer.Columns.LastAdded.SizeGroup = "WalletText";
+      dt.GridProducer.Columns.AddRefDocText("WalletCredit", this.DocTypes["Wallets"], "Кошелек кредит", 15, 10);
+      dt.GridProducer.Columns.LastAdded.SizeGroup = "WalletText";
+
       dt.GridProducer.Columns.AddText("Comment", "Комментарий", 30, 10);
 
       dt.GridProducer.ToolTips.AddText("DisplayName", "Содержание");
@@ -39,13 +58,24 @@ namespace BigPurse
       dt.GridProducer.NewDefaultConfig(false);
       dt.GridProducer.DefaultConfig.Columns.Add("Date");
       dt.GridProducer.DefaultConfig.Columns.AddFill("DisplayName", 100);
+      dt.GridProducer.DefaultConfig.Columns.Add("Total");
+      dt.GridProducer.DefaultConfig.Columns.Add("Wallet_Text");
       dt.GridProducer.DefaultConfig.ToolTips.Add("Comment");
 
       dt.AddImageHandler("Operation", new DBxColumns("OpType"), new DBxImageValueNeededEventHandler(EditOperation.ImageValueNeeded));
+      dt.InitView += new InitEFPDBxViewEventHandler(EditOperation.InitView);
+
       dt.BeforeEdit += new BeforeDocEditEventHandler(EditOperation.BeforeEditDoc);
       dt.InitEditForm += new InitDocEditFormEventHandler(EditOperation.InitDocEditForm);
       dt.CanInsertCopy = true;
       dt.CanMultiEdit = true;
+
+      dt.Columns["Date"].DefaultValue = DateTime.Today;
+      dt.Columns["Date"].NewMode = ColumnNewMode.SavedIfChangedElseDefault;
+      dt.Columns["OpOrder"].NewMode = ColumnNewMode.SavedIfChangedElseDefault;
+      dt.Columns["OpType"].NewMode = ColumnNewMode.Saved;
+      dt.Columns["WalletDebt"].NewMode = ColumnNewMode.Saved;
+      dt.Columns["WalletCredit"].NewMode = ColumnNewMode.Saved;
 
       #endregion
 
@@ -53,18 +83,21 @@ namespace BigPurse
 
       sdt = dt.SubDocTypes["OperationProducts"];
       sdt.GridProducer.Columns.AddText("Product.Name", "Товар, услуга", 20, 5);
+      sdt.GridProducer.Columns.AddText("Description", "Описание", 20, 5);
       sdt.GridProducer.Columns.AddMoney("RecordSum", "Сумма");
+      sdt.GridProducer.Columns.LastAdded.Format = Tools.MoneyFormat;
       sdt.GridProducer.Columns.AddText("Comment", "Комментарий", 30, 10);
 
       sdt.GridProducer.ToolTips.AddText("Comment", String.Empty).DisplayName = "Комментарий (если задан)";
 
       sdt.GridProducer.DefaultConfig = new EFPDataGridViewConfig();
-      sdt.GridProducer.DefaultConfig.Columns.AddFill("Product.Name", 100);
+      sdt.GridProducer.DefaultConfig.Columns.AddFill("Product.Name", 50);
+      sdt.GridProducer.DefaultConfig.Columns.AddFill("Description", 50);
       sdt.GridProducer.DefaultConfig.Columns.Add("RecordSum");
       sdt.GridProducer.DefaultConfig.ToolTips.Add("Comment");
 
       sdt.CanInsertCopy = true;
-      //sdt.InitEditForm += new InitSubDocEditFormEventHandler(EditOperationProduct.InitEditForm);
+      sdt.InitEditForm += new InitSubDocEditFormEventHandler(EditOperationProduct.InitSubDocEditForm);
       sdt.ImageKey = "Product";
 
       #endregion
@@ -90,7 +123,7 @@ namespace BigPurse
 
       dt.InitEditForm += new InitDocEditFormEventHandler(EditWallet.InitDocEditForm);
       dt.CanInsertCopy = true;
-      dt.CanMultiEdit = true; 
+      dt.CanMultiEdit = true;
       dt.DataBuffering = true;
       dt.Columns["Name"].NewMode = ColumnNewMode.AlwaysDefaultValue;
 
