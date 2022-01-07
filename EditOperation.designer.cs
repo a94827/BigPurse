@@ -28,17 +28,16 @@
     /// </summary>
     private void InitializeComponent()
     {
-      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditOperation));
       this.tabControl1 = new System.Windows.Forms.TabControl();
       this.tabPage1 = new System.Windows.Forms.TabPage();
       this.MainPanel1 = new System.Windows.Forms.Panel();
       this.groupBox5 = new System.Windows.Forms.GroupBox();
       this.edComment = new System.Windows.Forms.TextBox();
       this.grpOp = new System.Windows.Forms.GroupBox();
-      this.edDate = new System.Windows.Forms.Label();
-      this.dateTimeBox1 = new FreeLibSet.Controls.DateTimeBox();
-      this.label1 = new System.Windows.Forms.Label();
       this.edOpOrder = new FreeLibSet.Controls.IntEditBox();
+      this.label1 = new System.Windows.Forms.Label();
+      this.dateTimeBox1 = new FreeLibSet.Controls.DateTimeBox();
+      this.edDate = new System.Windows.Forms.Label();
       this.tabControl1.SuspendLayout();
       this.tabPage1.SuspendLayout();
       this.MainPanel1.SuspendLayout();
@@ -114,21 +113,13 @@
       this.grpOp.TabStop = false;
       this.grpOp.Text = "Операция";
       // 
-      // edDate
+      // edOpOrder
       // 
-      this.edDate.Location = new System.Drawing.Point(6, 22);
-      this.edDate.Name = "edDate";
-      this.edDate.Size = new System.Drawing.Size(96, 20);
-      this.edDate.TabIndex = 0;
-      this.edDate.Text = "Дата";
-      this.edDate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-      // 
-      // dateTimeBox1
-      // 
-      this.dateTimeBox1.Location = new System.Drawing.Point(119, 22);
-      this.dateTimeBox1.Name = "dateTimeBox1";
-      this.dateTimeBox1.Size = new System.Drawing.Size(120, 20);
-      this.dateTimeBox1.TabIndex = 1;
+      this.edOpOrder.Increment = 1;
+      this.edOpOrder.Location = new System.Drawing.Point(355, 24);
+      this.edOpOrder.Name = "edOpOrder";
+      this.edOpOrder.Size = new System.Drawing.Size(70, 20);
+      this.edOpOrder.TabIndex = 3;
       // 
       // label1
       // 
@@ -139,16 +130,21 @@
       this.label1.Text = "Порядок";
       this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
-      // OpOrder
+      // dateTimeBox1
       // 
-      this.edOpOrder.BackColor = System.Drawing.SystemColors.Window;
-      this.edOpOrder.ForeColor = System.Drawing.SystemColors.WindowText;
-      this.edOpOrder.FormatProvider = new System.Globalization.CultureInfo("ru-RU");
-      this.edOpOrder.Increment = 1;
-      this.edOpOrder.Location = new System.Drawing.Point(341, 23);
-      this.edOpOrder.Name = "OpOrder";
-      this.edOpOrder.Size = new System.Drawing.Size(56, 20);
-      this.edOpOrder.TabIndex = 3;
+      this.dateTimeBox1.Location = new System.Drawing.Point(119, 22);
+      this.dateTimeBox1.Name = "dateTimeBox1";
+      this.dateTimeBox1.Size = new System.Drawing.Size(120, 20);
+      this.dateTimeBox1.TabIndex = 1;
+      // 
+      // edDate
+      // 
+      this.edDate.Location = new System.Drawing.Point(6, 22);
+      this.edDate.Name = "edDate";
+      this.edDate.Size = new System.Drawing.Size(96, 20);
+      this.edDate.TabIndex = 0;
+      this.edDate.Text = "Дата";
+      this.edDate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // EditOperation
       // 
