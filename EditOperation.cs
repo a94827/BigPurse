@@ -305,6 +305,8 @@ namespace App
           efpSumOp.Validating += new FreeLibSet.UICore.UIValidatingEventHandler(efpSumOp_Validating);
           args.AddDecimal(efpSumOp, "InlineSum", false);
         }
+
+        efpSumOp.ValueEx.ValueChanged += new EventHandler(efpSumOp_ValueChanged);
       }
 
       #endregion
@@ -314,6 +316,22 @@ namespace App
       EFPTextBox efpComment = new EFPTextBox(page.BaseProvider, edComment);
       efpComment.CanBeEmpty = true;
       args.AddText(efpComment, "Comment", true);
+
+      #endregion
+
+      #region Расчет баланса
+
+      efpSumBefore.UseIdle = true;
+      efpSumBefore.Idle += new EventHandler(efpSumBefore_Idle);
+
+      if (efpWalletDebt != null)
+        efpWalletDebt.DocIdEx.ValueChanged += new EventHandler(StartCalcBalance);
+      if (efpWalletCredit != null)
+        efpWalletCredit.DocIdEx.ValueChanged += new EventHandler(StartCalcBalance);
+      efpDate.NValueEx.ValueChanged += new EventHandler(StartCalcBalance);
+      efpOpOrder.ValueEx.ValueChanged += new EventHandler(StartCalcBalance);
+      _Editor.AfterWrite += StartCalcBalance;
+      efpSumBefore.Attached += new EventHandler(StartCalcBalance);
 
       #endregion
     }
@@ -340,6 +358,61 @@ namespace App
         return;
       if (efpSumOp.Value == 0m)
         args.SetWarning("Сумма должна быть задана");
+    }
+
+    #endregion
+
+    #region Расчет баланса
+
+    /// <summary>
+    /// Текущий калькулятор баланса.
+    /// </summary>
+    BalanceCalc CurrCalc;
+
+    private void StartCalcBalance(object sender, EventArgs args)
+    {
+      if (efpSumBefore.ProviderState != EFPControlProviderState.Attached)
+        return;
+
+      efpSumBefore.NValue = null;
+
+      CurrCalc = new BalanceCalc();
+      if (Tools.UseCredit(opType))
+        CurrCalc.WalletId = efpWalletCredit.DocId;
+      else
+        CurrCalc.WalletId = efpWalletDebt.DocId;
+      CurrCalc.Date = efpDate.NValue;
+      CurrCalc.OpOrder = efpOpOrder.Value;
+      CurrCalc.OperationId = _Editor.Documents[0][0].DocId;
+      CurrCalc.Calculate();
+    }
+
+    void efpSumBefore_Idle(object sender, EventArgs args)
+    {
+      if (CurrCalc == null)
+        return;
+      if (CurrCalc.IsComplete)
+      {
+        efpSumBefore.NValue = CurrCalc.Balance;
+
+        CurrCalc = null;
+
+        efpSumOp_ValueChanged(null, null);
+      }
+    }
+
+
+    void efpSumOp_ValueChanged(object sender, EventArgs e)
+    {
+      if (efpSumBefore.NValue.HasValue && opType != OperationType.Balance)
+      {
+        if (Tools.UseCredit(opType))
+          efpSumAfter.NValue = efpSumBefore.NValue.Value - efpSumOp.Value;
+        else
+          efpSumAfter.NValue = efpSumBefore.NValue.Value + efpSumOp.Value;
+      }
+      else
+        efpSumOp.NValue = null;
     }
 
     #endregion

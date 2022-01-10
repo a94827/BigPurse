@@ -65,6 +65,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BalanceCalc.cs" />
     <Compile Include="ConfigSection.cs" />
     <Compile Include="EditOperationProduct.cs">
       <SubType>Form</SubType>
