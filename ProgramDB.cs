@@ -8,6 +8,7 @@ using FreeLibSet.Data;
 using System.IO;
 using System.Data;
 using FreeLibSet.Core;
+using FreeLibSet.Collections;
 
 namespace App
 {
@@ -196,7 +197,7 @@ namespace App
       sdt.Struct.Columns.AddInt16("RecordOrder");
       sdt.Struct.Columns.AddReference("Product", "Products", false);
       sdt.Struct.Columns.AddString("Description", 100, false);
-      sdt.Struct.Columns.AddInt("Quantity", true);
+      sdt.Struct.Columns.AddSingle("Quantity", true);
       sdt.Struct.Columns.AddString("Unit", 50, true);
       sdt.Struct.Columns.AddString("Formula", 100, true);
       sdt.Struct.Columns.AddMoney("RecordSum");
@@ -308,7 +309,22 @@ namespace App
         case OperationType.Expense:
           DataTable table = args.Doc.SubDocs["OperationProducts"].CreateSubDocsData();
           totalCredit = DataTools.SumDecimal(table, "RecordSum") + inlineSum;
-          //sName=DataTools.GetStringsFromColumn
+          if (table.Rows.Count > 0)
+          {
+            SingleScopeStringList lst = new SingleScopeStringList(false);
+            foreach (DataRow row in table.Rows)
+            {
+              string s1 = DataTools.GetString(row, "Description");
+              if (s1.Length > 0)
+                lst.Add(s1);
+              else
+              {
+                Int32 productId = DataTools.GetInt(row, "Product");
+                lst.Add(args.Doc.DocProvider.GetTextValue("Products", productId));
+              }
+            }
+            sName = String.Join(", ", lst.ToArray());
+          }
           break;
         case OperationType.Move:
           totalDebt = inlineSum;

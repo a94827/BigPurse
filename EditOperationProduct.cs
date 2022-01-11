@@ -39,7 +39,7 @@ namespace App
 
     EFPDocComboBox efpProduct;
     EFPTextComboBox efpDescription, efpUnit;
-    EFPIntEditBox efpQuantity;
+    EFPSingleEditBox efpQuantity;
     EFPTextBox efpFormula;
     EFPDecimalEditBox efpSum;
     DocValueDecimalEditBox dvSum;
@@ -62,9 +62,9 @@ namespace App
 
       #region Количество и единица измерения
 
-      efpQuantity = new EFPIntEditBox(page.BaseProvider, edQuantity);
+      efpQuantity = new EFPSingleEditBox(page.BaseProvider, edQuantity);
       efpQuantity.CanBeEmpty = true;
-      args.AddInt(efpQuantity, "Quantity", false);
+      args.AddSingle(efpQuantity, "Quantity", false);
 
       efpUnit = new EFPTextComboBox(page.BaseProvider, cbUnit);
       efpUnit.CanBeEmpty = true;

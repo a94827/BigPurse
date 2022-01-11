@@ -157,6 +157,9 @@ namespace App
       form.AddPage1(args);
       if (form.opType == OperationType.Expense && (!args.Editor.MultiDocMode))
         form.AddPage2(args);
+
+      //if (!form._Editor.IsReadOnly)
+      //  form._Editor.AfterWrite += new DocEditEventHandler(form.Editor_AfterWrite);
     }
 
     #endregion
@@ -269,8 +272,17 @@ namespace App
           efpContra.CanBeEmpty = false;
           args.AddRef(efpContra, "Debtor", true);
         }
-        else if (!_Editor.IsReadOnly)
-          _Editor.MainValues["Debtor"].SetNull();
+        else
+        {
+          if (!_Editor.IsReadOnly)
+            _Editor.MainValues["Debtor"].SetNull();
+        }
+      }
+
+      if (efpContra == null)
+      {
+        cbContra.Visible = false;
+        lblContra.Visible = false;
       }
 
       #endregion
@@ -304,6 +316,11 @@ namespace App
         {
           efpSumOp.Validating += new FreeLibSet.UICore.UIValidatingEventHandler(efpSumOp_Validating);
           args.AddDecimal(efpSumOp, "InlineSum", false);
+        }
+        if (opType == OperationType.Balance)
+        {
+          efpSumOp.Label.Text = "Реальный остаток";
+          efpSumAfter.Label.Text = "Расхождение";
         }
 
         efpSumOp.ValueEx.ValueChanged += new EventHandler(efpSumOp_ValueChanged);
@@ -404,15 +421,17 @@ namespace App
 
     void efpSumOp_ValueChanged(object sender, EventArgs e)
     {
-      if (efpSumBefore.NValue.HasValue && opType != OperationType.Balance)
+      if (efpSumBefore.NValue.HasValue)
       {
-        if (Tools.UseCredit(opType))
+        if (opType == OperationType.Balance)
+          efpSumAfter.NValue = efpSumBefore.NValue.Value - efpSumOp.Value;
+        else if (Tools.UseCredit(opType))
           efpSumAfter.NValue = efpSumBefore.NValue.Value - efpSumOp.Value;
         else
           efpSumAfter.NValue = efpSumBefore.NValue.Value + efpSumOp.Value;
       }
       else
-        efpSumOp.NValue = null;
+        efpSumAfter.NValue = null;
     }
 
     #endregion
@@ -460,6 +479,19 @@ namespace App
 
     #endregion
 
+    /*
+     * Так не работает
+     * 
+    void Editor_AfterWrite(object sender, DocEditEventArgs args)
+    {
+      // При поочередном создании разнотипных операций удобно, когда выбранный кошелек запоминается
+
+      if (efpWalletCredit != null)
+        args.Editor.DocTypeUI.Columns["WalletCredit"].Value = efpWalletDebt.DocId;
+      if (efpWalletDebt == null)
+        args.Editor.DocTypeUI.Columns["WalletDebt"].Value = efpWalletCredit.DocId;
+    }
+      */
     #endregion
   }
 }

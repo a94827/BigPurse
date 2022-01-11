@@ -96,9 +96,11 @@ namespace App
       sdt.GridProducer.DefaultConfig.Columns.Add("RecordSum");
       sdt.GridProducer.DefaultConfig.ToolTips.Add("Comment");
 
+      sdt.ImageKey = "Product";
       sdt.CanInsertCopy = true;
       sdt.InitEditForm += new InitSubDocEditFormEventHandler(EditOperationProduct.InitSubDocEditForm);
-      sdt.ImageKey = "Product";
+
+      sdt.Columns["Product"].NewMode = ColumnNewMode.Saved;
 
       #endregion
 

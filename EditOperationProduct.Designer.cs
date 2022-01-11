@@ -35,7 +35,7 @@ namespace App
       this.label2 = new System.Windows.Forms.Label();
       this.cbDescription = new System.Windows.Forms.ComboBox();
       this.label3 = new System.Windows.Forms.Label();
-      this.edQuantity = new FreeLibSet.Controls.IntEditBox();
+      this.edQuantity = new FreeLibSet.Controls.SingleEditBox();
       this.label4 = new System.Windows.Forms.Label();
       this.cbUnit = new System.Windows.Forms.ComboBox();
       this.label5 = new System.Windows.Forms.Label();
@@ -129,9 +129,7 @@ namespace App
       // 
       // edQuantity
       // 
-      this.edQuantity.Increment = 1;
       this.edQuantity.Location = new System.Drawing.Point(104, 77);
-      this.edQuantity.Minimum = 1;
       this.edQuantity.Name = "edQuantity";
       this.edQuantity.Size = new System.Drawing.Size(75, 20);
       this.edQuantity.TabIndex = 5;
@@ -243,7 +241,7 @@ namespace App
     private System.Windows.Forms.Label label5;
     private System.Windows.Forms.ComboBox cbUnit;
     private System.Windows.Forms.Label label4;
-    private FreeLibSet.Controls.IntEditBox edQuantity;
+    private FreeLibSet.Controls.SingleEditBox edQuantity;
     private System.Windows.Forms.Label label3;
     private FreeLibSet.Controls.DecimalEditBox edSum;
     private System.Windows.Forms.Label label6;
