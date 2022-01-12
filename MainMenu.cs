@@ -131,6 +131,15 @@ namespace App
       MenuReports.MenuText = "Отчеты";
       EFPApp.CommandItems.Add(MenuReports);
 
+      ci = new EFPCommandItem("Reports", "TurnoverStatement");
+      ci.Parent = MenuReports;
+      ci.MenuText = "Оборотная ведомость";
+      ci.ImageKey = "TurnoverStatement";
+      ci.Click += new EventHandler(ciTurnoverStatement_Click);
+      ci.GroupBegin = true;
+      EFPApp.CommandItems.Add(ci);
+      SpeedPanelStandard.Add(ci);
+
       #endregion
 
       #region Сервис
@@ -220,6 +229,11 @@ namespace App
     #endregion
 
     #region Меню "Отчеты"
+
+    private static void ciTurnoverStatement_Click(object sender, EventArgs args)
+    {
+      new TurnoverStatement().Run();
+    }
 
     #endregion
 

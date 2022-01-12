@@ -49,6 +49,7 @@
       this.MainImageList.Images.SetKeyName(9, "Shop");
       this.MainImageList.Images.SetKeyName(10, "Product");
       this.MainImageList.Images.SetKeyName(11, "Debtor");
+      this.MainImageList.Images.SetKeyName(12, "TurnoverStatement");
       // 
       // DummyForm
       // 
