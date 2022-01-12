@@ -51,6 +51,8 @@ namespace App
             ProgramDBUI.Settings = new UserSettings();
             ProgramDBUI.Settings.ReadConfig();
 
+            BalanceCalc.MainEntry = DB.MainEntry;
+
             spl.Complete();
 
             #region Главное окно

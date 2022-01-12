@@ -157,6 +157,9 @@ namespace App
       form.AddPage1(args);
       if (form.opType == OperationType.Expense && (!args.Editor.MultiDocMode))
         form.AddPage2(args);
+
+      //if (!form._Editor.IsReadOnly)
+      //  form._Editor.AfterWrite += new DocEditEventHandler(form.Editor_AfterWrite);
     }
 
     #endregion
@@ -269,8 +272,17 @@ namespace App
           efpContra.CanBeEmpty = false;
           args.AddRef(efpContra, "Debtor", true);
         }
-        else if (!_Editor.IsReadOnly)
-          _Editor.MainValues["Debtor"].SetNull();
+        else
+        {
+          if (!_Editor.IsReadOnly)
+            _Editor.MainValues["Debtor"].SetNull();
+        }
+      }
+
+      if (efpContra == null)
+      {
+        cbContra.Visible = false;
+        lblContra.Visible = false;
       }
 
       #endregion
@@ -305,6 +317,13 @@ namespace App
           efpSumOp.Validating += new FreeLibSet.UICore.UIValidatingEventHandler(efpSumOp_Validating);
           args.AddDecimal(efpSumOp, "InlineSum", false);
         }
+        if (opType == OperationType.Balance)
+        {
+          efpSumOp.Label.Text = "Реальный остаток";
+          efpSumAfter.Label.Text = "Расхождение";
+        }
+
+        efpSumOp.ValueEx.ValueChanged += new EventHandler(efpSumOp_ValueChanged);
       }
 
       #endregion
@@ -314,6 +333,22 @@ namespace App
       EFPTextBox efpComment = new EFPTextBox(page.BaseProvider, edComment);
       efpComment.CanBeEmpty = true;
       args.AddText(efpComment, "Comment", true);
+
+      #endregion
+
+      #region Расчет баланса
+
+      efpSumBefore.UseIdle = true;
+      efpSumBefore.Idle += new EventHandler(efpSumBefore_Idle);
+
+      if (efpWalletDebt != null)
+        efpWalletDebt.DocIdEx.ValueChanged += new EventHandler(StartCalcBalance);
+      if (efpWalletCredit != null)
+        efpWalletCredit.DocIdEx.ValueChanged += new EventHandler(StartCalcBalance);
+      efpDate.NValueEx.ValueChanged += new EventHandler(StartCalcBalance);
+      efpOpOrder.ValueEx.ValueChanged += new EventHandler(StartCalcBalance);
+      _Editor.AfterWrite += StartCalcBalance;
+      efpSumBefore.Attached += new EventHandler(StartCalcBalance);
 
       #endregion
     }
@@ -340,6 +375,63 @@ namespace App
         return;
       if (efpSumOp.Value == 0m)
         args.SetWarning("Сумма должна быть задана");
+    }
+
+    #endregion
+
+    #region Расчет баланса
+
+    /// <summary>
+    /// Текущий калькулятор баланса.
+    /// </summary>
+    BalanceCalc CurrCalc;
+
+    private void StartCalcBalance(object sender, EventArgs args)
+    {
+      if (efpSumBefore.ProviderState != EFPControlProviderState.Attached)
+        return;
+
+      efpSumBefore.NValue = null;
+
+      CurrCalc = new BalanceCalc();
+      if (Tools.UseCredit(opType))
+        CurrCalc.WalletId = efpWalletCredit.DocId;
+      else
+        CurrCalc.WalletId = efpWalletDebt.DocId;
+      CurrCalc.Date = efpDate.NValue;
+      CurrCalc.OpOrder = efpOpOrder.Value;
+      CurrCalc.OperationId = _Editor.Documents[0][0].DocId;
+      CurrCalc.Calculate();
+    }
+
+    void efpSumBefore_Idle(object sender, EventArgs args)
+    {
+      if (CurrCalc == null)
+        return;
+      if (CurrCalc.IsComplete)
+      {
+        efpSumBefore.NValue = CurrCalc.Balance;
+
+        CurrCalc = null;
+
+        efpSumOp_ValueChanged(null, null);
+      }
+    }
+
+
+    void efpSumOp_ValueChanged(object sender, EventArgs e)
+    {
+      if (efpSumBefore.NValue.HasValue)
+      {
+        if (opType == OperationType.Balance)
+          efpSumAfter.NValue = efpSumBefore.NValue.Value - efpSumOp.Value;
+        else if (Tools.UseCredit(opType))
+          efpSumAfter.NValue = efpSumBefore.NValue.Value - efpSumOp.Value;
+        else
+          efpSumAfter.NValue = efpSumBefore.NValue.Value + efpSumOp.Value;
+      }
+      else
+        efpSumAfter.NValue = null;
     }
 
     #endregion
@@ -387,6 +479,19 @@ namespace App
 
     #endregion
 
+    /*
+     * Так не работает
+     * 
+    void Editor_AfterWrite(object sender, DocEditEventArgs args)
+    {
+      // При поочередном создании разнотипных операций удобно, когда выбранный кошелек запоминается
+
+      if (efpWalletCredit != null)
+        args.Editor.DocTypeUI.Columns["WalletCredit"].Value = efpWalletDebt.DocId;
+      if (efpWalletDebt == null)
+        args.Editor.DocTypeUI.Columns["WalletDebt"].Value = efpWalletCredit.DocId;
+    }
+      */
     #endregion
   }
 }
