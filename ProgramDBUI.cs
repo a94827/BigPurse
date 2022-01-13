@@ -27,7 +27,10 @@ namespace App
 
       dt = base.DocTypes["Operations"];
 
-      dt.GridProducer.Columns.AddDate("Date");
+      dt.GridProducer.Columns.AddDate("Date", "Дата");
+      dt.GridProducer.Columns.AddInt("OpOrder", "П.", 3);
+      dt.GridProducer.Columns.LastAdded.DisplayName = "Порядок операции в пределах даты";
+      dt.GridProducer.Columns.AddInt("OpOrder2", "OpOrder2", 3); // !!!
 
       dt.GridProducer.Columns.AddText("DisplayName", "Содержание", 40, 30);
 
@@ -54,6 +57,11 @@ namespace App
       dt.GridProducer.ToolTips.AddText("DisplayName", "Содержание");
       dt.GridProducer.ToolTips.AddText("Comment", String.Empty).DisplayName = "Комментарий (если задан)";
 
+      dt.GridProducer.Orders.Add("Date,OpOrder,OpOrder2,Id", "Основной порядок");
+      dt.GridProducer.FixedColumns.Add("Date");
+      dt.GridProducer.FixedColumns.Add("OpOrder");
+      dt.GridProducer.FixedColumns.Add("OpOrder2");
+      dt.GridProducer.FixedColumns.Add("Id");
 
       dt.GridProducer.NewDefaultConfig(false);
       dt.GridProducer.DefaultConfig.Columns.Add("Date");

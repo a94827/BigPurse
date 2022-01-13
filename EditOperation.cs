@@ -345,17 +345,21 @@ namespace App
 
       #region Расчет баланса
 
-      efpSumBefore.UseIdle = true;
-      efpSumBefore.Idle += new EventHandler(efpSumBefore_Idle);
+      if (efpSumBefore != null)
+      {
+        if (efpWalletDebt != null)
+          efpWalletDebt.DocIdEx.ValueChanged += new EventHandler(StartCalcBalance);
+        if (efpWalletCredit != null)
+          efpWalletCredit.DocIdEx.ValueChanged += new EventHandler(StartCalcBalance);
+        efpDate.NValueEx.ValueChanged += new EventHandler(StartCalcBalance);
+        efpOpOrder.ValueEx.ValueChanged += new EventHandler(StartCalcBalance);
+        _Editor.AfterWrite += StartCalcBalance;
 
-      if (efpWalletDebt != null)
-        efpWalletDebt.DocIdEx.ValueChanged += new EventHandler(StartCalcBalance);
-      if (efpWalletCredit != null)
-        efpWalletCredit.DocIdEx.ValueChanged += new EventHandler(StartCalcBalance);
-      efpDate.NValueEx.ValueChanged += new EventHandler(StartCalcBalance);
-      efpOpOrder.ValueEx.ValueChanged += new EventHandler(StartCalcBalance);
-      _Editor.AfterWrite += StartCalcBalance;
-      efpSumBefore.Attached += new EventHandler(StartCalcBalance);
+        efpSumBefore.UseIdle = true;
+        efpSumBefore.Idle += new EventHandler(efpSumBefore_Idle);
+        efpSumBefore.Attached += new EventHandler(StartCalcBalance);
+      }
+
 
       #endregion
     }
@@ -407,6 +411,7 @@ namespace App
         CurrCalc.WalletId = efpWalletDebt.DocId;
       CurrCalc.Date = efpDate.NValue;
       CurrCalc.OpOrder = efpOpOrder.Value;
+      CurrCalc.OpType = opType;
       CurrCalc.OperationId = _Editor.Documents[0][0].DocId;
       CurrCalc.Calculate();
     }

@@ -44,6 +44,11 @@ namespace App
     /// </summary>
     public int OpOrder;
 
+    /// <summary>
+    /// Тип операции также влияет на сортировку
+    /// </summary>
+    public OperationType OpType;
+
     #endregion
 
     #region Результаты расчета
@@ -129,7 +134,7 @@ namespace App
         filters.Add(new ValueFilter("OpOrder", OpOrder, CompareKind.LessOrEqualThan));
         filters.Add(DBSDocType.DeletedFalseFilter);
         si3.Where = AndFilter.FromList(filters);
-        si3.OrderBy = DBxOrder.FromDataViewSort("OpOrder,Id");
+        si3.OrderBy = DBxOrder.FromDataViewSort("OpOrder,OpOrder2,Id");
         DataTable tbl3 = con.FillSelect(si3);
         foreach (DataRow row in tbl3.Rows)
         {

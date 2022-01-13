@@ -97,5 +97,13 @@ namespace App
           return false;
       }
     }
+
+    public static int GetOpOrder2(OperationType opType)
+    {
+      if (opType == OperationType.Balance)
+        return 2;
+      else
+        return 1;
+    }
   }
 }

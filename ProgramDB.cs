@@ -162,7 +162,7 @@ namespace App
       dt.PluralTitle = "Операции";
       dt.SingularTitle = "Операция";
       dt.Struct.Columns.AddDate("Date", false);
-      dt.Struct.Columns.AddInt16("OpOrder");
+      dt.Struct.Columns.AddInt16("OpOrder", false);
       dt.Struct.Columns.AddInt("OpType", DataTools.GetEnumRange(typeof(OperationType))).Nullable = false;
       dt.Struct.Columns.AddReference("WalletDebt", "Wallets", true);
       dt.Struct.Columns.AddReference("WalletCredit", "Wallets", true);
@@ -176,14 +176,15 @@ namespace App
 
       #region Вычисляемые поля
 
-      dt.Struct.Columns.AddString("DisplayName", 100, true);
+      dt.Struct.Columns.AddString("DisplayName", 100, false);
       dt.CalculatedColumns.Add("DisplayName");
+      dt.Struct.Columns.AddInt("OpOrder2", 1, 2, false);
 
       #endregion
 
       dt.BeforeWrite += new ServerDocTypeBeforeWriteEventHandler(Operation_BeforeWrite);
-      dt.DefaultOrder = DBxOrder.FromDataViewSort("Date,OpOrder,Id");
-      dt.Struct.Indexes.Add("Date,OpOrder,Id");
+      dt.DefaultOrder = DBxOrder.FromDataViewSort("Date,OpOrder,OpOrder2,Id");
+      dt.Struct.Indexes.Add("Date,OpOrder,OpOrder2,Id");
       _DocTypes.Add(dt);
 
       #endregion
@@ -293,6 +294,9 @@ namespace App
     void Operation_BeforeWrite(object sender, ServerDocTypeBeforeWriteEventArgs args)
     {
       OperationType opType = (OperationType)(args.Doc.Values["OpType"].AsInteger);
+
+      args.Doc.Values["OpOrder2"].SetInteger(Tools.GetOpOrder2(opType));
+
       string sName = String.Empty;
       decimal totalDebt = 0m;
       decimal totalCredit = 0m;

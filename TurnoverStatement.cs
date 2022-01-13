@@ -182,7 +182,7 @@ namespace App
       DataTable srcTable = ProgramDBUI.TheUI.DocProvider.FillSelect("Operations",
         new DBxColumns("Id,Date,DisplayName,OpType,TotalDebt,TotalCredit,InlineSum,WalletDebt,WalletCredit"),
         new AndFilter(new DateRangeFilter("Date", Params.FirstDate, Params.LastDate), DBSDocType.DeletedFalseFilter),
-        DBxOrder.FromDataViewSort("Date,OpOrder,Id"));
+        DBxOrder.FromDataViewSort("Date,OpOrder,OpOrder2,Id"));
 
       foreach (DataRow srcRow in srcTable.Rows)
       {
