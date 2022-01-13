@@ -126,9 +126,19 @@ namespace App
 
         args.Editor.MainValues["OpType"].SetInteger(dlg.SelectedIndex);
         OperationType opType = (OperationType)(dlg.SelectedIndex);
-        if (!Tools.UseDebt(opType))
+        if (Tools.UseDebt(opType))
+        {
+          if (args.Editor.MainValues["WalletDebt"].IsNull)
+            args.Editor.MainValues["WalletDebt"].SetValue(args.Editor.DocTypeUI.Columns["WalletCredit"].Value);
+        }
+        else
           args.Editor.MainValues["WalletDebt"].SetNull();
-        if (!Tools.UseCredit(opType))
+        if (Tools.UseCredit(opType))
+        {
+          if (args.Editor.MainValues["WalletCredit"].IsNull)
+            args.Editor.MainValues["WalletCredit"].SetValue(args.Editor.DocTypeUI.Columns["WalletDebt"].Value);
+        }
+        else
           args.Editor.MainValues["WalletCredit"].SetNull();
       }
     }
@@ -157,9 +167,6 @@ namespace App
       form.AddPage1(args);
       if (form.opType == OperationType.Expense && (!args.Editor.MultiDocMode))
         form.AddPage2(args);
-
-      //if (!form._Editor.IsReadOnly)
-      //  form._Editor.AfterWrite += new DocEditEventHandler(form.Editor_AfterWrite);
     }
 
     #endregion
@@ -479,19 +486,6 @@ namespace App
 
     #endregion
 
-    /*
-     * Так не работает
-     * 
-    void Editor_AfterWrite(object sender, DocEditEventArgs args)
-    {
-      // При поочередном создании разнотипных операций удобно, когда выбранный кошелек запоминается
-
-      if (efpWalletCredit != null)
-        args.Editor.DocTypeUI.Columns["WalletCredit"].Value = efpWalletDebt.DocId;
-      if (efpWalletDebt == null)
-        args.Editor.DocTypeUI.Columns["WalletDebt"].Value = efpWalletCredit.DocId;
-    }
-      */
     #endregion
   }
 }
