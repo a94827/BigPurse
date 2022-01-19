@@ -116,12 +116,13 @@
     <Compile Include="EditIncomeSource.designer.cs">
       <DependentUpon>EditIncomeSource.cs</DependentUpon>
     </Compile>
-    <Compile Include="Enums.cs" />
+    <Compile Include="Tools.cs" />
     <Compile Include="InitDocTextValues.cs" />
     <Compile Include="MainMenu.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProgramDB.cs" />
     <Compile Include="ProgramDBUI.cs" />
+    <Compile Include="ProgramValueBuffer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="EditOperationProduct.resx">
       <SubType>Designer</SubType>
@@ -160,6 +161,10 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="PurchaseReport.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>PurchaseReport.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="TurnoverStatement.resx">
       <SubType>Designer</SubType>
       <DependentUpon>TurnoverStatement.cs</DependentUpon>
@@ -181,6 +186,12 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="PurchaseReport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PurchaseReport.Designer.cs">
+      <DependentUpon>PurchaseReport.cs</DependentUpon>
     </Compile>
     <Compile Include="TurnoverStatement.cs">
       <SubType>Form</SubType>

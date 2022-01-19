@@ -50,13 +50,13 @@
       this.MainImageList.Images.SetKeyName(10, "Product");
       this.MainImageList.Images.SetKeyName(11, "Debtor");
       this.MainImageList.Images.SetKeyName(12, "TurnoverStatement");
+      this.MainImageList.Images.SetKeyName(13, "PurchaseReport");
       // 
       // DummyForm
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(379, 322);
-      this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.ClientSize = new System.Drawing.Size(284, 262);
       this.Name = "DummyForm";
       this.Text = "DummyForm";
       this.ResumeLayout(false);

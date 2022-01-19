@@ -92,6 +92,17 @@ namespace App
       sdt = dt.SubDocTypes["OperationProducts"];
       sdt.GridProducer.Columns.AddText("Product.Name", "Товар, услуга", 20, 5);
       sdt.GridProducer.Columns.AddText("Description", "Описание", 20, 5);
+      sdt.GridProducer.Columns.AddText("Quantity1", "Кол-во 1", 5, 2);
+      sdt.GridProducer.Columns.LastAdded.Format = "0.###";
+      sdt.GridProducer.Columns.LastAdded.SizeGroup = "Quantity";
+      sdt.GridProducer.Columns.AddText("Unit1", "Ед. изм. 1", 5, 2);
+      sdt.GridProducer.Columns.LastAdded.SizeGroup = "Unit";
+      sdt.GridProducer.Columns.AddText("Quantity2", "Кол-во 2", 5, 2);
+      sdt.GridProducer.Columns.LastAdded.Format = "0.###";
+      sdt.GridProducer.Columns.LastAdded.SizeGroup = "Quantity";
+      sdt.GridProducer.Columns.AddText("Unit2", "Ед. изм. 2", 5, 2);
+      sdt.GridProducer.Columns.LastAdded.SizeGroup = "Unit";
+      sdt.GridProducer.Columns.AddText("Formula", "Формула", 15, 5);
       sdt.GridProducer.Columns.AddMoney("RecordSum", "Сумма");
       sdt.GridProducer.Columns.LastAdded.Format = Tools.MoneyFormat;
       sdt.GridProducer.Columns.AddText("Comment", "Комментарий", 30, 10);

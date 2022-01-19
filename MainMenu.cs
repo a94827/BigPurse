@@ -140,6 +140,15 @@ namespace App
       EFPApp.CommandItems.Add(ci);
       SpeedPanelStandard.Add(ci);
 
+      ci = new EFPCommandItem("Reports", "PurchaseReport");
+      ci.Parent = MenuReports;
+      ci.MenuText = "Покупки";
+      ci.ImageKey = "PurchaseReport";
+      ci.Click += new EventHandler(ciPurchaseReport_Click);
+      ci.GroupEnd = true;
+      EFPApp.CommandItems.Add(ci);
+      SpeedPanelStandard.Add(ci);
+
       #endregion
 
       #region Сервис
@@ -233,6 +242,11 @@ namespace App
     private static void ciTurnoverStatement_Click(object sender, EventArgs args)
     {
       new TurnoverStatement().Run();
+    }
+
+    private static void ciPurchaseReport_Click(object sender, EventArgs args)
+    {
+      new PurchaseReport().Run();
     }
 
     #endregion

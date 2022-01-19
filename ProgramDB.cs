@@ -198,8 +198,10 @@ namespace App
       sdt.Struct.Columns.AddInt16("RecordOrder");
       sdt.Struct.Columns.AddReference("Product", "Products", false);
       sdt.Struct.Columns.AddString("Description", 100, false);
-      sdt.Struct.Columns.AddSingle("Quantity", true);
-      sdt.Struct.Columns.AddString("Unit", 50, true);
+      sdt.Struct.Columns.AddSingle("Quantity1", true);
+      sdt.Struct.Columns.AddString("Unit1", 50, true);
+      sdt.Struct.Columns.AddSingle("Quantity2", true);
+      sdt.Struct.Columns.AddString("Unit2", 50, true);
       sdt.Struct.Columns.AddString("Formula", 100, true);
       sdt.Struct.Columns.AddMoney("RecordSum");
       sdt.Struct.Columns.AddMemo("Comment");

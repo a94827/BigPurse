@@ -26,6 +26,7 @@ namespace App
 
       efpWallets = new EFPMultiDocComboBox(FormProvider, cbWallets, ProgramDBUI.TheUI.DocTypes["Wallets"]);
       efpWallets.SelectionMode = DocSelectionMode.MultiCheckBoxes;
+      efpWallets.MaxTextItemCount = 3;
     }
 
     #endregion
@@ -56,10 +57,7 @@ namespace App
     protected override void OnInitTitle()
     {
       base.Title = "Оборотная ведомость за " + DateRangeFormatter.Default.ToString(FirstDate, LastDate, true);
-      string[] walletNames = new string[WalletIds.Length];
-      for (int i = 0; i < WalletIds.Length; i++)
-        walletNames[i] = ProgramDBUI.TheUI.DocProvider.GetTextValue("Wallets", WalletIds[i]);
-      base.FilterInfo.Add("Кошельки", String.Join(", ", walletNames));
+      base.FilterInfo.Add("Кошельки", String.Join(", ", ProgramDBUI.TheUI.DocProvider.GetTextValues("Wallets", WalletIds)));
     }
 
     public override EFPReportExtParamsForm CreateForm()
@@ -328,7 +326,7 @@ namespace App
 
     void MainPage_GetDocSel(object Sender, EFPDBxGridViewDocSelEventArgs Args)
     {
-      Args.AddFromColumn("Operations", "DocId");
+      Args.AddFromColumn("Operations", "Id");
     }
 
     #endregion
