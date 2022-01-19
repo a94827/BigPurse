@@ -42,7 +42,9 @@ namespace App
 
     EFPDocComboBox efpProduct;
     EFPTextComboBox efpDescription, efpUnit1, efpUnit2;
+    DocValueTextBox dvDescription, dvUnit1, dvUnit2;
     EFPSingleEditBox efpQuantity1, efpQuantity2;
+    DocValueSingleEditBox dvQuantity1, dvQuantity2;
     EFPTextBox efpFormula;
     EFPDecimalEditBox efpSum;
     DocValueDecimalEditBox dvSum;
@@ -63,7 +65,7 @@ namespace App
       cbDescription.AutoCompleteSource = AutoCompleteSource.CustomSource;
       efpDescription = new EFPTextComboBox(page.BaseProvider, cbDescription);
       efpDescription.CanBeEmpty = true;
-      args.AddText(efpDescription, "Description", false);
+      dvDescription = args.AddText(efpDescription, "Description", false);
 
       #endregion
 
@@ -71,27 +73,29 @@ namespace App
 
       efpQuantity1 = new EFPSingleEditBox(page.BaseProvider, edQuantity1);
       efpQuantity1.CanBeEmpty = true;
-      args.AddSingle(efpQuantity1, "Quantity1", false);
+      dvQuantity1 = args.AddSingle(efpQuantity1, "Quantity1", false);
 
       cbUnit1.Enter += new EventHandler(cbUnit1_Enter);
       cbUnit1.AutoCompleteMode = AutoCompleteMode.Suggest;
       cbUnit1.AutoCompleteSource = AutoCompleteSource.CustomSource;
       efpUnit1 = new EFPTextComboBox(page.BaseProvider, cbUnit1);
       efpUnit1.CanBeEmpty = true;
-      args.AddText(efpUnit1, "Unit1", false);
+      efpUnit1.DisplayName = "Ед. изм. 1";
+      dvUnit1 = args.AddText(efpUnit1, "Unit1", false);
       SetQuantityAndUnitValidation(efpQuantity1, efpUnit1);
 
+
+      efpQuantity2 = new EFPSingleEditBox(page.BaseProvider, edQuantity2);
+      efpQuantity2.CanBeEmpty = true;
+      dvQuantity2 = args.AddSingle(efpQuantity2, "Quantity2", false);
 
       cbUnit2.Enter += new EventHandler(cbUnit2_Enter);
       cbUnit2.AutoCompleteMode = AutoCompleteMode.Suggest;
       cbUnit2.AutoCompleteSource = AutoCompleteSource.CustomSource;
-      efpQuantity2 = new EFPSingleEditBox(page.BaseProvider, edQuantity2);
-      efpQuantity2.CanBeEmpty = true;
-      args.AddSingle(efpQuantity2, "Quantity2", false);
-
       efpUnit2 = new EFPTextComboBox(page.BaseProvider, cbUnit2);
       efpUnit2.CanBeEmpty = true;
-      args.AddText(efpUnit2, "Unit2", false);
+      efpUnit2.DisplayName = "Ед. изм. 2";
+      dvUnit2 = args.AddText(efpUnit2, "Unit2", false);
       SetQuantityAndUnitValidation(efpQuantity2, efpUnit2);
 
       efpQuantity2.Validators.AddError(new DepEqual<float>(efpQuantity2.ValueEx, 0f),
@@ -151,9 +155,7 @@ namespace App
 
       EFPTextComboBox efpUnit = (EFPTextComboBox)sender;
 
-      string errorText;
-      if (!Tools.IsValidUnit(efpUnit.Text, out errorText))
-        args.SetError(errorText);
+      ProductBuffer.ValidateProductValue(efpProduct.DocId, Object.ReferenceEquals(efpUnit, efpUnit1) ? "Unit1" : "Unit2", efpUnit.Text, args);
     }
 
     #region Списки для выбора значений текстовых полей
@@ -168,6 +170,16 @@ namespace App
       lvDescription = false;
       lvUnit1 = false;
       lvUnit2 = false;
+
+      dvDescription.UserEnabled = ProductBuffer.GetColumnEnabled(efpProduct.DocId, "Description");
+      dvQuantity1.UserEnabled = ProductBuffer.GetColumnEnabled(efpProduct.DocId, "Quantity1");
+      dvUnit1.UserEnabled = ProductBuffer.GetColumnEnabled(efpProduct.DocId, "Unit1");
+      dvQuantity2.UserEnabled = ProductBuffer.GetColumnEnabled(efpProduct.DocId, "Quantity2");
+      dvUnit2.UserEnabled = ProductBuffer.GetColumnEnabled(efpProduct.DocId, "Unit2");
+
+      efpDescription.Validate();
+      efpUnit1.Validate();
+      efpUnit2.Validate();
     }
 
     void cbDescription_Enter(object sender, EventArgs args)
@@ -196,7 +208,7 @@ namespace App
           return; // Уже загружено
 
         productId = efpProduct.DocId;
-        string[] a = ProgramValueBuffer.GetOpProductValues(productId, columnName);
+        string[] a = ProductBuffer.GetOpProductValues(productId, columnName);
         control.Items.Clear();
         control.Items.AddRange(a);
         control.AutoCompleteCustomSource.AddRange(a);
@@ -215,9 +227,9 @@ namespace App
 
     void Editor_AfterWrite(object sender, SubDocEditEventArgs args)
     {
-      ProgramValueBuffer.AddOpProductValues(efpProduct.DocId, "Description", efpDescription.Text);
-      ProgramValueBuffer.AddOpProductValues(efpProduct.DocId, "Unit1", efpUnit1.Text);
-      ProgramValueBuffer.AddOpProductValues(efpProduct.DocId, "Unit2", efpUnit2.Text);
+      ProductBuffer.AddOpProductValues(efpProduct.DocId, "Description", efpDescription.Text);
+      ProductBuffer.AddOpProductValues(efpProduct.DocId, "Unit1", efpUnit1.Text);
+      ProductBuffer.AddOpProductValues(efpProduct.DocId, "Unit2", efpUnit2.Text);
     }
 
     #endregion

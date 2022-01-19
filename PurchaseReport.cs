@@ -11,6 +11,7 @@ using FreeLibSet.Calendar;
 using FreeLibSet.Data;
 using FreeLibSet.Data.Docs;
 using FreeLibSet.Core;
+using FreeLibSet.UICore;
 
 namespace App
 {
@@ -280,6 +281,8 @@ namespace App
     void MainPage_InitGrid(object Sender, EventArgs Args)
     {
       MainPage.ControlProvider.GetRowAttributes += new EFPDataGridViewRowAttributesEventHandler(MainPage_GetRowAttributes);
+      MainPage.ControlProvider.UseRowImages = true;
+      MainPage.ControlProvider.ShowRowCountInTopLeftCellToolTipText = true;
 
       MainPage.ControlProvider.ReadOnly = false;
       MainPage.ControlProvider.Control.ReadOnly = true;
@@ -292,10 +295,18 @@ namespace App
 
     void MainPage_GetRowAttributes(object sender, EFPDataGridViewRowAttributesEventArgs args)
     {
+      if (args.DataRow == null)
+        return;
+
       if (DataTools.GetBool(args.DataRow, "TotalRow"))
         args.ColorType = EFPDataGridViewColorType.TotalRow;
       else
       {
+        DoGetRowAttributes(args, "Description");
+        DoGetRowAttributes(args, "Unit1");
+        DoGetRowAttributes(args, "Unit2");
+
+        /*
         string errorText;
         string sUnit1 = DataTools.GetString(args.DataRow, "Unit1");
         if (!Tools.IsValidUnit(sUnit1, out errorText))
@@ -303,6 +314,23 @@ namespace App
         string sUnit2 = DataTools.GetString(args.DataRow, "Unit2");
         if (!Tools.IsValidUnit(sUnit2, out errorText))
           args.AddRowError("Неправильная единица измерения 2: \"" + sUnit2 + "\". " + errorText, "Unit2");
+         * */
+      }
+    }
+
+    private void DoGetRowAttributes(EFPDataGridViewRowAttributesEventArgs args, string columnName)
+    {
+      UISimpleValidableObject obj = new UISimpleValidableObject();
+      Int32 productId = DataTools.GetInt(args.DataRow, "Product");
+      ProductBuffer.ValidateProductValue(productId, columnName, DataTools.GetString(args.DataRow, columnName), obj);
+      switch (obj.ValidateState)
+      {
+        case UIValidateState.Error:
+          args.AddRowError(obj.Message, columnName);
+          break;
+        case UIValidateState.Warning:
+          args.AddRowWarning(obj.Message, columnName);
+          break;
       }
     }
 

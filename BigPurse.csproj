@@ -122,7 +122,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="ProgramDB.cs" />
     <Compile Include="ProgramDBUI.cs" />
-    <Compile Include="ProgramValueBuffer.cs" />
+    <Compile Include="ProductBuffer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="EditOperationProduct.resx">
       <SubType>Designer</SubType>

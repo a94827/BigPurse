@@ -17,7 +17,7 @@ namespace App
   /// </summary>
   internal class ProgramDB : DisposableObject
   {
-    #region Конструктор и Dispose
+    #region Конструктор и Dispose()
 
     /// <summary>
     /// Конструктор ничего не делает.
@@ -268,7 +268,18 @@ namespace App
       dt.Struct.Columns.AddString("Name", 200, false);
       dt.Struct.Columns.AddReference("ParentId", "Products", true);
       dt.TreeParentColumnName = "ParentId";
+
+      dt.Struct.Columns.AddInt("DescriptionPresence", DataTools.GetEnumRange(typeof(PresenceType)));
+      dt.Struct.Columns.LastAdded.Nullable = true;
+      dt.Struct.Columns.AddInt("Unit1Presence", DataTools.GetEnumRange(typeof(PresenceType)));
+      dt.Struct.Columns.LastAdded.Nullable = true;
+      dt.Struct.Columns.AddMemo("Unit1List");
+      dt.Struct.Columns.AddInt("Unit2Presence", DataTools.GetEnumRange(typeof(PresenceType)));
+      dt.Struct.Columns.LastAdded.Nullable = true;
+      dt.Struct.Columns.AddMemo("Unit2List");
+
       dt.Struct.Columns.AddMemo("Comment");
+      dt.BeforeWrite += new ServerDocTypeBeforeWriteEventHandler(Product_BeforeWrite);
       dt.DefaultOrder = new DBxOrder("Name");
       _DocTypes.Add(dt);
 
@@ -353,6 +364,15 @@ namespace App
       args.Doc.Values["DisplayName"].SetString(sName);
       args.Doc.Values["TotalDebt"].SetDecimal(totalDebt);
       args.Doc.Values["TotalCredit"].SetDecimal(totalCredit);
+    }
+
+    #endregion
+
+    #region Operations
+
+    void Product_BeforeWrite(object sender, ServerDocTypeBeforeWriteEventArgs args)
+    {
+      ProductBuffer.ResetProductData();
     }
 
     #endregion

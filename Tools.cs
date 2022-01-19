@@ -45,6 +45,41 @@ namespace App
 
   #endregion
 
+  #region PresenceType
+
+  /// <summary>
+  /// Необходимость использования единицы измерения, описания в записях
+  /// </summary>
+  public enum PresenceType
+  {
+    /// <summary>
+    /// Необходимость определяется родительским элементом
+    /// </summary>
+    Inherited = 0,
+
+    /// <summary>
+    /// Значение не должно задаваться
+    /// </summary>
+    Disabled = 1,
+
+    /// <summary>
+    /// Значение может быть задано, а может отсутствовать
+    /// </summary>
+    Optional = 2,
+
+    /// <summary>
+    /// Значение может отсутствовать, но выдается предупреждение
+    /// </summary>
+    WarningIfNone = 3,
+
+    /// <summary>
+    /// Значение является обязательным
+    /// </summary>
+    Required = 4,
+  }
+
+  #endregion
+
   internal static class Tools
   {
     #region OperationType
@@ -64,6 +99,27 @@ namespace App
       else
         return OperationTypeNames[(int)value];
     }
+
+    #endregion
+
+    #region PresenceType
+
+    public static readonly string[] PresenceTypeNames = new string[] { 
+      "Унаследовано",
+      "Не задается",
+      "Может задаваться или нет",
+      "Предупреждение, если не задано",
+      "Должно быть задано"
+    };
+
+    public static string ToString(PresenceType value)
+    {
+      if ((int)value < 0 || (int)value >= PresenceTypeNames.Length)
+        return "?? " + value.ToString();
+      else
+        return PresenceTypeNames[(int)value];
+    }
+
 
     #endregion
 
@@ -139,6 +195,9 @@ namespace App
       _BadUnitPairs.Add("дм.", "дм");
       _BadUnitPairs.Add("м.", "м");
       _BadUnitPairs.Add("км.", "км");
+
+      _BadUnitPairs.Add("л.", "л");
+      _BadUnitPairs.Add("мл.", "мл");
 
       // Должна быть точка
       _BadUnitPairs.Add("шт", "шт.");
