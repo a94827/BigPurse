@@ -24,7 +24,7 @@ namespace App
 
     #endregion
 
-    #region Редактор
+    #region Редактор основного документа
 
     #region InitDocEditForm
 
@@ -128,6 +128,14 @@ namespace App
 
 
     #endregion
+
+    #endregion
+
+    #region Редактор поддокумента "Единица измерения в списке"
+
+    private static void BeforeEditMU(object sender, BeforeSubDocEditEventArgs args)
+    { 
+    }
 
     #endregion
   }

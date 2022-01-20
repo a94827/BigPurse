@@ -199,9 +199,11 @@ namespace App
       sdt.Struct.Columns.AddReference("Product", "Products", false);
       sdt.Struct.Columns.AddString("Description", 100, false);
       sdt.Struct.Columns.AddSingle("Quantity1", true);
-      sdt.Struct.Columns.AddString("Unit1", 50, true);
+      sdt.Struct.Columns.AddReference("MU1", "MUs", true);
+      sdt.Struct.Columns.AddString("Unit1", 50, true); // TODO: Убрать
       sdt.Struct.Columns.AddSingle("Quantity2", true);
-      sdt.Struct.Columns.AddString("Unit2", 50, true);
+      sdt.Struct.Columns.AddReference("MU2", "MUs", true);
+      sdt.Struct.Columns.AddString("Unit2", 50, true); // TODO: Убрать
       sdt.Struct.Columns.AddString("Formula", 100, true);
       sdt.Struct.Columns.AddMoney("RecordSum");
       sdt.Struct.Columns.AddMemo("Comment");
@@ -260,7 +262,21 @@ namespace App
 
       #endregion
 
+      #region Единицы измерения
+
+      dt = new DBxDocType("MUs");
+      dt.SingularTitle = "Единица измерения";
+      dt.PluralTitle = "Единицы измерения";
+      dt.Struct.Columns.AddString("Name", 20, false);
+      dt.Struct.Columns.AddMemo("Comment");
+      dt.DefaultOrder = new DBxOrder("Name");
+      _DocTypes.Add(dt);
+
+      #endregion
+
       #region Товары
+
+      #region Основной документ
 
       dt = new DBxDocType("Products");
       dt.SingularTitle = "Товар";
@@ -273,15 +289,40 @@ namespace App
       dt.Struct.Columns.LastAdded.Nullable = true;
       dt.Struct.Columns.AddInt("Unit1Presence", DataTools.GetEnumRange(typeof(PresenceType)));
       dt.Struct.Columns.LastAdded.Nullable = true;
-      dt.Struct.Columns.AddMemo("Unit1List");
+      dt.Struct.Columns.AddBoolean("HasMU1List");
+      dt.CalculatedColumns.Add("HasMU1List");
+      dt.Struct.Columns.AddMemo("Unit1List"); // TODO: Убрать
       dt.Struct.Columns.AddInt("Unit2Presence", DataTools.GetEnumRange(typeof(PresenceType)));
       dt.Struct.Columns.LastAdded.Nullable = true;
-      dt.Struct.Columns.AddMemo("Unit2List");
+      dt.Struct.Columns.AddBoolean("HasMU2List");
+      dt.CalculatedColumns.Add("HasMU2List");
+      dt.Struct.Columns.AddMemo("Unit2List"); // TODO: Убрать
 
       dt.Struct.Columns.AddMemo("Comment");
       dt.BeforeWrite += new ServerDocTypeBeforeWriteEventHandler(Product_BeforeWrite);
       dt.DefaultOrder = new DBxOrder("Name");
       _DocTypes.Add(dt);
+
+      #endregion
+
+      #region Списки единиц измерения
+
+      sdt = new DBxSubDocType("ProductMUs1");
+      sdt.SingularTitle = "Допустимая единица измерения №1 для товара";
+      sdt.PluralTitle = "Допустимые единицы измерения №1 для товаров";
+
+      sdt.Struct.Columns.AddReference("MU", "MUs", false);
+      dt.SubDocs.Add(sdt);
+
+
+      sdt = new DBxSubDocType("ProductMUs2");
+      sdt.SingularTitle = "Допустимая единица измерения №2 для товара";
+      sdt.PluralTitle = "Допустимые единицы измерения №2 для товаров";
+
+      sdt.Struct.Columns.AddReference("MU", "MUs", false);
+      dt.SubDocs.Add(sdt);
+
+      #endregion
 
       #endregion
 
@@ -372,6 +413,9 @@ namespace App
 
     void Product_BeforeWrite(object sender, ServerDocTypeBeforeWriteEventArgs args)
     {
+      args.Doc.Values["HasMU1List"].SetBoolean(args.Doc.SubDocs["ProductMUs1"].NonDeletedSubDocCount > 0);
+      args.Doc.Values["HasMU2List"].SetBoolean(args.Doc.SubDocs["ProductMUs2"].NonDeletedSubDocCount > 0);
+
       ProductBuffer.ResetProductData();
     }
 

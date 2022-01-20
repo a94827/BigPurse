@@ -95,13 +95,13 @@ namespace App
       sdt.GridProducer.Columns.AddText("Quantity1", "Кол-во 1", 5, 2);
       sdt.GridProducer.Columns.LastAdded.Format = "0.###";
       sdt.GridProducer.Columns.LastAdded.SizeGroup = "Quantity";
-      sdt.GridProducer.Columns.AddText("Unit1", "Ед. изм. 1", 5, 2);
-      sdt.GridProducer.Columns.LastAdded.SizeGroup = "Unit";
+      sdt.GridProducer.Columns.AddText("MU1.Name", "Ед. изм. 1", 5, 2);
+      sdt.GridProducer.Columns.LastAdded.SizeGroup = "MUName";
       sdt.GridProducer.Columns.AddText("Quantity2", "Кол-во 2", 5, 2);
       sdt.GridProducer.Columns.LastAdded.Format = "0.###";
       sdt.GridProducer.Columns.LastAdded.SizeGroup = "Quantity";
-      sdt.GridProducer.Columns.AddText("Unit2", "Ед. изм. 2", 5, 2);
-      sdt.GridProducer.Columns.LastAdded.SizeGroup = "Unit";
+      sdt.GridProducer.Columns.AddText("MU2.Name", "Ед. изм. 2", 5, 2);
+      sdt.GridProducer.Columns.LastAdded.SizeGroup = "MUName";
       sdt.GridProducer.Columns.AddText("Formula", "Формула", 15, 5);
       sdt.GridProducer.Columns.AddMoney("RecordSum", "Сумма");
       sdt.GridProducer.Columns.LastAdded.Format = Tools.MoneyFormat;
@@ -202,6 +202,8 @@ namespace App
 
       #region Товары и услуги
 
+      #region Основной документ
+
       dt = base.DocTypes["Products"];
 
       dt.GridProducer.Columns.AddText("Name", "Название", 40, 15);
@@ -225,6 +227,21 @@ namespace App
 
       #endregion
 
+      #region Списки единиц измерения
+
+      sdt = dt.SubDocTypes["ProductMUs1"];
+      sdt.GridProducer.Columns.AddText("Name", "Название", 20, 5);
+      sdt.GridProducer.NewDefaultConfig(false);
+      sdt.GridProducer.DefaultConfig.Columns.AddFill("Name");
+      sdt.ImageKey = "MU";
+      sdt.CanMultiEdit = false;
+      sdt.CanInsertCopy = false;
+      sdt.BeforeEdit+=new BeforeSubDocEditEventHandler(EditProduct.BeforeEditMU);
+
+      #endregion
+
+      #endregion
+
       #region Должники
 
       dt = base.DocTypes["Debtors"];
@@ -243,6 +260,31 @@ namespace App
       dt.ImageKey = "Debtor";
 
       dt.InitEditForm += new InitDocEditFormEventHandler(EditDebtor.InitDocEditForm);
+      dt.CanInsertCopy = true;
+      dt.CanMultiEdit = true;
+      dt.DataBuffering = true;
+      dt.Columns["Name"].NewMode = ColumnNewMode.AlwaysDefaultValue;
+
+      #endregion
+
+      #region Единицы измерения
+
+      dt = base.DocTypes["MUs"];
+
+      dt.GridProducer.Columns.AddText("Name", "Название", 40, 15);
+      dt.GridProducer.Columns.LastAdded.CanIncSearch = true;
+
+      dt.GridProducer.Columns.AddText("Comment", "Комментарий", 30, 10);
+
+      dt.GridProducer.ToolTips.AddText("Comment", String.Empty).DisplayName = "Комментарий (если задан)";
+
+      dt.GridProducer.NewDefaultConfig(false);
+      dt.GridProducer.DefaultConfig.Columns.AddFill("Name", 100);
+      dt.GridProducer.DefaultConfig.ToolTips.Add("Comment");
+
+      dt.ImageKey = "MU";
+
+      dt.InitEditForm += new InitDocEditFormEventHandler(EditMU.InitDocEditForm);
       dt.CanInsertCopy = true;
       dt.CanMultiEdit = true;
       dt.DataBuffering = true;
