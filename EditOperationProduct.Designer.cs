@@ -32,7 +32,7 @@ namespace App
       this.groupBox5 = new System.Windows.Forms.GroupBox();
       this.edComment = new System.Windows.Forms.TextBox();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
-      this.cbUnit2 = new System.Windows.Forms.ComboBox();
+      this.cbMU2 = new FreeLibSet.Controls.UserSelComboBox();
       this.label7 = new System.Windows.Forms.Label();
       this.edQuantity2 = new FreeLibSet.Controls.SingleEditBox();
       this.label8 = new System.Windows.Forms.Label();
@@ -40,7 +40,7 @@ namespace App
       this.label6 = new System.Windows.Forms.Label();
       this.edFormula = new System.Windows.Forms.TextBox();
       this.label5 = new System.Windows.Forms.Label();
-      this.cbUnit1 = new System.Windows.Forms.ComboBox();
+      this.cbMU1 = new FreeLibSet.Controls.UserSelComboBox();
       this.label4 = new System.Windows.Forms.Label();
       this.edQuantity1 = new FreeLibSet.Controls.SingleEditBox();
       this.label3 = new System.Windows.Forms.Label();
@@ -88,7 +88,7 @@ namespace App
       // 
       // groupBox1
       // 
-      this.groupBox1.Controls.Add(this.cbUnit2);
+      this.groupBox1.Controls.Add(this.cbMU2);
       this.groupBox1.Controls.Add(this.label7);
       this.groupBox1.Controls.Add(this.edQuantity2);
       this.groupBox1.Controls.Add(this.label8);
@@ -96,7 +96,7 @@ namespace App
       this.groupBox1.Controls.Add(this.label6);
       this.groupBox1.Controls.Add(this.edFormula);
       this.groupBox1.Controls.Add(this.label5);
-      this.groupBox1.Controls.Add(this.cbUnit1);
+      this.groupBox1.Controls.Add(this.cbMU1);
       this.groupBox1.Controls.Add(this.label4);
       this.groupBox1.Controls.Add(this.edQuantity1);
       this.groupBox1.Controls.Add(this.label3);
@@ -112,15 +112,14 @@ namespace App
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "Запись";
       // 
-      // cbUnit2
+      // cbMU2
       // 
-      this.cbUnit2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+      this.cbMU2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                   | System.Windows.Forms.AnchorStyles.Right)));
-      this.cbUnit2.FormattingEnabled = true;
-      this.cbUnit2.Location = new System.Drawing.Point(283, 103);
-      this.cbUnit2.Name = "cbUnit2";
-      this.cbUnit2.Size = new System.Drawing.Size(199, 21);
-      this.cbUnit2.TabIndex = 11;
+      this.cbMU2.Location = new System.Drawing.Point(283, 103);
+      this.cbMU2.Name = "cbMU2";
+      this.cbMU2.Size = new System.Drawing.Size(199, 20);
+      this.cbMU2.TabIndex = 11;
       // 
       // label7
       // 
@@ -185,15 +184,14 @@ namespace App
       this.label5.Text = "&Формула";
       this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
-      // cbUnit1
+      // cbMU1
       // 
-      this.cbUnit1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+      this.cbMU1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                   | System.Windows.Forms.AnchorStyles.Right)));
-      this.cbUnit1.FormattingEnabled = true;
-      this.cbUnit1.Location = new System.Drawing.Point(283, 77);
-      this.cbUnit1.Name = "cbUnit1";
-      this.cbUnit1.Size = new System.Drawing.Size(199, 21);
-      this.cbUnit1.TabIndex = 7;
+      this.cbMU1.Location = new System.Drawing.Point(283, 77);
+      this.cbMU1.Name = "cbMU1";
+      this.cbMU1.Size = new System.Drawing.Size(199, 20);
+      this.cbMU1.TabIndex = 7;
       // 
       // label4
       // 
@@ -284,7 +282,7 @@ namespace App
     private System.Windows.Forms.ComboBox cbDescription;
     private System.Windows.Forms.TextBox edFormula;
     private System.Windows.Forms.Label label5;
-    private System.Windows.Forms.ComboBox cbUnit1;
+    private FreeLibSet.Controls.UserSelComboBox cbMU1;
     private System.Windows.Forms.Label label4;
     private FreeLibSet.Controls.SingleEditBox edQuantity1;
     private System.Windows.Forms.Label label3;
@@ -292,7 +290,7 @@ namespace App
     private System.Windows.Forms.Label label6;
     private System.Windows.Forms.GroupBox groupBox5;
     private System.Windows.Forms.TextBox edComment;
-    private System.Windows.Forms.ComboBox cbUnit2;
+    private FreeLibSet.Controls.UserSelComboBox cbMU2;
     private System.Windows.Forms.Label label7;
     private FreeLibSet.Controls.SingleEditBox edQuantity2;
     private System.Windows.Forms.Label label8;

@@ -24,7 +24,7 @@ namespace App
 
     #endregion
 
-    #region Редактор основного документа
+    #region Редактор
 
     #region InitDocEditForm
 
@@ -71,7 +71,7 @@ namespace App
     #region Страница 2 (В операции)
 
     EFPListComboBox efpDescriptionPresence, efpUnit1Presence, efpUnit2Presence;
-    EFPCsvCodesTextBox efpUnit1List, efpUnit2List;
+    EFPAllSubDocComboBox efpMU1, efpMU2;
 
     private void AddPage2(InitDocEditFormEventArgs args)
     {
@@ -88,22 +88,13 @@ namespace App
       efpUnit1Presence = new EFPListComboBox(page.BaseProvider, cbUnit1Presence);
       args.AddInt(efpUnit1Presence, "Unit1Presence", true);
 
-      efpUnit1List = new EFPCsvCodesTextBox(page.BaseProvider, edUnit1List);
-      efpUnit1List.CanBeEmpty = true;
-      efpUnit1List.UseSpace = false;
-      efpUnit1List.CodeValidating += new EFPCodeValidatingEventHandler(efpUnitList_CodeValidating);
-      args.AddText(efpUnit1List, "Unit1List", true);
-
+      efpMU1 = new EFPAllSubDocComboBox(page.BaseProvider, cbMU1, _Editor, args.MultiDocs[0].SubDocs["ProductMUs1"]);
 
       cbUnit2Presence.Items.AddRange(Tools.PresenceTypeNames);
       efpUnit2Presence = new EFPListComboBox(page.BaseProvider, cbUnit2Presence);
       args.AddInt(efpUnit2Presence, "Unit2Presence", true);
 
-      efpUnit2List = new EFPCsvCodesTextBox(page.BaseProvider, edUnit2List);
-      efpUnit2List.CanBeEmpty = true;
-      efpUnit2List.UseSpace = false;
-      efpUnit2List.CodeValidating += new EFPCodeValidatingEventHandler(efpUnitList_CodeValidating);
-      args.AddText(efpUnit2List, "Unit2List", true);
+      efpMU2 = new EFPAllSubDocComboBox(page.BaseProvider, cbMU1, _Editor, args.MultiDocs[0].SubDocs["ProductMUs2"]);
 
       efpParent.DocIdEx.ValueChanged += new EventHandler(efpParent_ValueChanged);
       efpParent_ValueChanged(null, null);
@@ -119,23 +110,8 @@ namespace App
       cbUnit2Presence.Items[0] = "Унаследовано - " + Tools.ToString(pd.Unit2Presence);
     }
 
-    void efpUnitList_CodeValidating(object sender, EFPCodeValidatingEventArgs args)
-    {
-      string errorText;
-      if (!Tools.IsValidUnit(args.Code, out errorText))
-        args.SetError(errorText);
-    }
-
 
     #endregion
-
-    #endregion
-
-    #region Редактор поддокумента "Единица измерения в списке"
-
-    private static void BeforeEditMU(object sender, BeforeSubDocEditEventArgs args)
-    { 
-    }
 
     #endregion
   }
