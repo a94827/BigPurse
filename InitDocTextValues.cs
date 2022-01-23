@@ -22,8 +22,7 @@ namespace App
       TextHandlers.Add("IncomeSources", "Name");
       TextHandlers.Add("Shops", "Name");
       TextHandlers.Add("Products", "Name");
-      TextHandlers.Add("ProductMUs1", "MU.Name");
-      TextHandlers.Add("ProductMUs2", "MU.Name");
+      TextHandlers.Add("ProductMUSets", "MU1.Name,MU2.Name,MU3.Name");
       TextHandlers.Add("Debtors", "Name");
       TextHandlers.Add("MUs", "Name");
     }

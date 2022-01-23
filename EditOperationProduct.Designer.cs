@@ -32,6 +32,10 @@ namespace App
       this.groupBox5 = new System.Windows.Forms.GroupBox();
       this.edComment = new System.Windows.Forms.TextBox();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
+      this.cbMU3 = new FreeLibSet.Controls.UserSelComboBox();
+      this.label9 = new System.Windows.Forms.Label();
+      this.edQuantity3 = new FreeLibSet.Controls.SingleEditBox();
+      this.label10 = new System.Windows.Forms.Label();
       this.cbMU2 = new FreeLibSet.Controls.UserSelComboBox();
       this.label7 = new System.Windows.Forms.Label();
       this.edQuantity2 = new FreeLibSet.Controls.SingleEditBox();
@@ -60,16 +64,16 @@ namespace App
       this.MainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
       this.MainPanel.Location = new System.Drawing.Point(0, 0);
       this.MainPanel.Name = "MainPanel";
-      this.MainPanel.Size = new System.Drawing.Size(494, 282);
+      this.MainPanel.Size = new System.Drawing.Size(494, 313);
       this.MainPanel.TabIndex = 0;
       // 
       // groupBox5
       // 
       this.groupBox5.Controls.Add(this.edComment);
       this.groupBox5.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.groupBox5.Location = new System.Drawing.Point(0, 188);
+      this.groupBox5.Location = new System.Drawing.Point(0, 210);
       this.groupBox5.Name = "groupBox5";
-      this.groupBox5.Size = new System.Drawing.Size(494, 94);
+      this.groupBox5.Size = new System.Drawing.Size(494, 103);
       this.groupBox5.TabIndex = 3;
       this.groupBox5.TabStop = false;
       this.groupBox5.Text = "Комментари&й";
@@ -83,11 +87,15 @@ namespace App
       this.edComment.Multiline = true;
       this.edComment.Name = "edComment";
       this.edComment.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-      this.edComment.Size = new System.Drawing.Size(482, 69);
+      this.edComment.Size = new System.Drawing.Size(482, 78);
       this.edComment.TabIndex = 0;
       // 
       // groupBox1
       // 
+      this.groupBox1.Controls.Add(this.cbMU3);
+      this.groupBox1.Controls.Add(this.label9);
+      this.groupBox1.Controls.Add(this.edQuantity3);
+      this.groupBox1.Controls.Add(this.label10);
       this.groupBox1.Controls.Add(this.cbMU2);
       this.groupBox1.Controls.Add(this.label7);
       this.groupBox1.Controls.Add(this.edQuantity2);
@@ -107,10 +115,45 @@ namespace App
       this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
       this.groupBox1.Location = new System.Drawing.Point(0, 0);
       this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(494, 188);
+      this.groupBox1.Size = new System.Drawing.Size(494, 210);
       this.groupBox1.TabIndex = 0;
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "Запись";
+      // 
+      // cbMU3
+      // 
+      this.cbMU3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                  | System.Windows.Forms.AnchorStyles.Right)));
+      this.cbMU3.Location = new System.Drawing.Point(283, 129);
+      this.cbMU3.Name = "cbMU3";
+      this.cbMU3.Size = new System.Drawing.Size(199, 20);
+      this.cbMU3.TabIndex = 15;
+      // 
+      // label9
+      // 
+      this.label9.Location = new System.Drawing.Point(185, 129);
+      this.label9.Name = "label9";
+      this.label9.Size = new System.Drawing.Size(92, 20);
+      this.label9.TabIndex = 14;
+      this.label9.Text = "Ед. измерения";
+      this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+      // 
+      // edQuantity3
+      // 
+      this.edQuantity3.Increment = 0F;
+      this.edQuantity3.Location = new System.Drawing.Point(104, 129);
+      this.edQuantity3.Name = "edQuantity3";
+      this.edQuantity3.Size = new System.Drawing.Size(75, 20);
+      this.edQuantity3.TabIndex = 13;
+      // 
+      // label10
+      // 
+      this.label10.Location = new System.Drawing.Point(6, 129);
+      this.label10.Name = "label10";
+      this.label10.Size = new System.Drawing.Size(92, 20);
+      this.label10.TabIndex = 12;
+      this.label10.Text = "Количество &3";
+      this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // cbMU2
       // 
@@ -154,33 +197,33 @@ namespace App
             0,
             0,
             0});
-      this.edSum.Location = new System.Drawing.Point(104, 156);
+      this.edSum.Location = new System.Drawing.Point(104, 181);
       this.edSum.Name = "edSum";
       this.edSum.Size = new System.Drawing.Size(150, 20);
-      this.edSum.TabIndex = 15;
+      this.edSum.TabIndex = 19;
       // 
       // label6
       // 
-      this.label6.Location = new System.Drawing.Point(6, 156);
+      this.label6.Location = new System.Drawing.Point(6, 181);
       this.label6.Name = "label6";
       this.label6.Size = new System.Drawing.Size(92, 20);
-      this.label6.TabIndex = 14;
+      this.label6.TabIndex = 18;
       this.label6.Text = "&Сумма";
       this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // edFormula
       // 
-      this.edFormula.Location = new System.Drawing.Point(104, 130);
+      this.edFormula.Location = new System.Drawing.Point(104, 155);
       this.edFormula.Name = "edFormula";
       this.edFormula.Size = new System.Drawing.Size(378, 20);
-      this.edFormula.TabIndex = 13;
+      this.edFormula.TabIndex = 17;
       // 
       // label5
       // 
-      this.label5.Location = new System.Drawing.Point(6, 130);
+      this.label5.Location = new System.Drawing.Point(6, 155);
       this.label5.Name = "label5";
       this.label5.Size = new System.Drawing.Size(92, 20);
-      this.label5.TabIndex = 12;
+      this.label5.TabIndex = 16;
       this.label5.Text = "&Формула";
       this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
@@ -260,7 +303,7 @@ namespace App
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(494, 282);
+      this.ClientSize = new System.Drawing.Size(494, 313);
       this.Controls.Add(this.MainPanel);
       this.Name = "EditOperationProduct";
       this.MainPanel.ResumeLayout(false);
@@ -294,5 +337,9 @@ namespace App
     private System.Windows.Forms.Label label7;
     private FreeLibSet.Controls.SingleEditBox edQuantity2;
     private System.Windows.Forms.Label label8;
+    private FreeLibSet.Controls.UserSelComboBox cbMU3;
+    private System.Windows.Forms.Label label9;
+    private FreeLibSet.Controls.SingleEditBox edQuantity3;
+    private System.Windows.Forms.Label label10;
   }
 }

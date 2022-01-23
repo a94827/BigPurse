@@ -92,16 +92,25 @@ namespace App
       sdt = dt.SubDocTypes["OperationProducts"];
       sdt.GridProducer.Columns.AddText("Product.Name", "Товар, услуга", 20, 5);
       sdt.GridProducer.Columns.AddText("Description", "Описание", 20, 5);
+
       sdt.GridProducer.Columns.AddText("Quantity1", "Кол-во 1", 5, 2);
       sdt.GridProducer.Columns.LastAdded.Format = "0.###";
       sdt.GridProducer.Columns.LastAdded.SizeGroup = "Quantity";
       sdt.GridProducer.Columns.AddText("MU1.Name", "Ед. изм. 1", 5, 2);
       sdt.GridProducer.Columns.LastAdded.SizeGroup = "MUName";
+
       sdt.GridProducer.Columns.AddText("Quantity2", "Кол-во 2", 5, 2);
       sdt.GridProducer.Columns.LastAdded.Format = "0.###";
       sdt.GridProducer.Columns.LastAdded.SizeGroup = "Quantity";
       sdt.GridProducer.Columns.AddText("MU2.Name", "Ед. изм. 2", 5, 2);
       sdt.GridProducer.Columns.LastAdded.SizeGroup = "MUName";
+
+      sdt.GridProducer.Columns.AddText("Quantity3", "Кол-во 3", 5, 2);
+      sdt.GridProducer.Columns.LastAdded.Format = "0.###";
+      sdt.GridProducer.Columns.LastAdded.SizeGroup = "Quantity";
+      sdt.GridProducer.Columns.AddText("MU3.Name", "Ед. изм. 3", 5, 2);
+      sdt.GridProducer.Columns.LastAdded.SizeGroup = "MUName";
+
       sdt.GridProducer.Columns.AddText("Formula", "Формула", 15, 5);
       sdt.GridProducer.Columns.AddMoney("RecordSum", "Сумма");
       sdt.GridProducer.Columns.LastAdded.Format = Tools.MoneyFormat;
@@ -229,23 +238,22 @@ namespace App
 
       #region Списки единиц измерения
 
-      sdt = dt.SubDocTypes["ProductMUs1"];
-      sdt.GridProducer.Columns.AddText("MU.Name", "Название", 20, 5);
+      sdt = dt.SubDocTypes["ProductMUSets"];
+      sdt.GridProducer.Columns.AddText("MU1.Name", "Ед.изм 1", 10, 5);
+      sdt.GridProducer.Columns.LastAdded.SizeGroup = "MUName";
+      sdt.GridProducer.Columns.AddText("MU2.Name", "Ед.изм 2", 10, 5);
+      sdt.GridProducer.Columns.LastAdded.SizeGroup = "MUName";
+      sdt.GridProducer.Columns.AddText("MU3.Name", "Ед.изм 3", 10, 5);
+      sdt.GridProducer.Columns.LastAdded.SizeGroup = "MUName";
+      
       sdt.GridProducer.NewDefaultConfig(false);
-      sdt.GridProducer.DefaultConfig.Columns.AddFill("MU.Name");
+      sdt.GridProducer.DefaultConfig.Columns.AddFill("MU1.Name");
+      sdt.GridProducer.DefaultConfig.Columns.AddFill("MU2.Name");
+      sdt.GridProducer.DefaultConfig.Columns.AddFill("MU3.Name");
       sdt.ImageKey = "MU";
       sdt.CanMultiEdit = false;
-      sdt.CanInsertCopy = false;
-      sdt.BeforeEdit += new BeforeSubDocEditEventHandler(EditProduct.BeforeEditMU);
-
-      sdt = dt.SubDocTypes["ProductMUs2"];
-      sdt.GridProducer.Columns.AddText("MU.Name", "Название", 20, 5);
-      sdt.GridProducer.NewDefaultConfig(false);
-      sdt.GridProducer.DefaultConfig.Columns.AddFill("MU.Name");
-      sdt.ImageKey = "MU";
-      sdt.CanMultiEdit = false;
-      sdt.CanInsertCopy = false;
-      sdt.BeforeEdit += new BeforeSubDocEditEventHandler(EditProduct.BeforeEditMU);
+      sdt.CanInsertCopy = true;
+      sdt.InitEditForm+=new InitSubDocEditFormEventHandler(EditProductMUSet.InitSubDocEditForm);
 
       #endregion
 

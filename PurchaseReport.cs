@@ -163,7 +163,7 @@ namespace App
       DBxSelectInfo si = new DBxSelectInfo();
       si.TableName = "OperationProducts";
       si.Expressions.Add("Id"); // нужно только для EFPDBxGridView
-      si.Expressions.Add("DocId,RecordOrder,Product,Product.Name,Description,Quantity1,MU1,MU1.Name,Quantity2,MU2,MU2.Name,Formula,RecordSum,Comment");
+      si.Expressions.Add("DocId,RecordOrder,Product,Product.Name,Description,Quantity1,MU1,MU1.Name,Quantity2,MU2,MU2.Name,Quantity3,MU3,MU3.Name,Formula,RecordSum,Comment");
       si.Expressions.Add("DocId.Date,DocId.OpOrder,DocId.WalletCredit,DocId.WalletCredit.Name,DocId.Shop,DocId.Shop.Name,DocId.Comment");
 
       List<DBxFilter> filters = new List<DBxFilter>();
@@ -248,16 +248,25 @@ namespace App
 
       gridProducer.Columns.AddText("Product.Name", "Товар, услуга", 20, 5);
       gridProducer.Columns.AddText("Description", "Описание", 20, 5);
+
       gridProducer.Columns.AddText("Quantity1", "Кол-во 1", 5, 2);
       gridProducer.Columns.LastAdded.Format = "0.###";
       gridProducer.Columns.LastAdded.SizeGroup = "Quantity";
       gridProducer.Columns.AddText("MU1.Name", "Ед. изм. 1", 5, 2);
-      gridProducer.Columns.LastAdded.SizeGroup = "Unit";
+      gridProducer.Columns.LastAdded.SizeGroup = "MUName";
+
       gridProducer.Columns.AddText("Quantity2", "Кол-во 2", 5, 2);
       gridProducer.Columns.LastAdded.Format = "0.###";
       gridProducer.Columns.LastAdded.SizeGroup = "Quantity";
       gridProducer.Columns.AddText("MU2.Name", "Ед. изм. 2", 5, 2);
-      gridProducer.Columns.LastAdded.SizeGroup = "Unit";
+      gridProducer.Columns.LastAdded.SizeGroup = "MUName";
+
+      gridProducer.Columns.AddText("Quantity3", "Кол-во 3", 5, 2);
+      gridProducer.Columns.LastAdded.Format = "0.###";
+      gridProducer.Columns.LastAdded.SizeGroup = "Quantity";
+      gridProducer.Columns.AddText("MU3.Name", "Ед. изм. 3", 5, 2);
+      gridProducer.Columns.LastAdded.SizeGroup = "MUName";
+
       gridProducer.Columns.AddText("Formula", "Формула", 15, 5);
       gridProducer.Columns.AddMoney("RecordSum", "Сумма");
       gridProducer.Columns.LastAdded.Format = Tools.MoneyFormat;
@@ -273,6 +282,8 @@ namespace App
       gridProducer.DefaultConfig.Columns.Add("MU1.Name");
       gridProducer.DefaultConfig.Columns.Add("Quantity2");
       gridProducer.DefaultConfig.Columns.Add("MU2.Name");
+      gridProducer.DefaultConfig.Columns.Add("Quantity3");
+      gridProducer.DefaultConfig.Columns.Add("MU3.Name");
       gridProducer.DefaultConfig.Columns.Add("RecordSum");
 
       return gridProducer;

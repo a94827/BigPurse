@@ -13,31 +13,48 @@ namespace App
   /// <summary>
   /// Буферизация текстовых значений полей для выбора из списков
   /// </summary>
-  public static class ProductBuffer
+  internal static class ProductBuffer
   {
     #region Информация из дерева товаров
+
+    /// <summary>
+    /// Одна комбинация единиц измерения
+    /// </summary>
+    public struct MUSet
+    {
+      #region Поля
+
+      public Int32 MUId1;
+      public Int32 MUId2;
+      public Int32 MUId3;
+
+      #endregion
+    }
 
     public class ProductData : ICloneable
     {
       #region Поля
 
+      /// <summary>
+      /// Наличие поля "Описание"
+      /// </summary>
       public PresenceType DescriptionPresence;
 
-      public PresenceType Unit1Presence;
+      /// <summary>
+      /// Наличие количества и единиц измерения
+      /// </summary>
+      public PresenceType QuantityPresence;
 
       /// <summary>
-      /// Фиксированный список единиц измерения.
+      /// Список комбинаций единиц измерения
       /// Если длина списка равна 0, то можно использовать любые единицы из справочника
       /// </summary>
-      public Int32[] MU1List;
-
-      public PresenceType Unit2Presence;
+      public MUSet[] MUSets;
 
       /// <summary>
-      /// Фиксированный список единиц измерения.
-      /// Если длина списка равна 0, то можно использовать любые единицы из справочника
+      /// Максимальное количество единиц измерения, которые можно использовать (0,1,2 или 3)
       /// </summary>
-      public Int32[] MU2List;
+      public int MaxQuantityLevel;
 
       #endregion
 
@@ -47,10 +64,9 @@ namespace App
       {
         ProductData res = new ProductData();
         res.DescriptionPresence = this.DescriptionPresence;
-        res.Unit1Presence = this.Unit1Presence;
-        res.MU1List = this.MU1List;
-        res.Unit2Presence = this.Unit2Presence;
-        res.MU2List = this.MU2List;
+        res.QuantityPresence = this.QuantityPresence;
+        res.MUSets = this.MUSets;
+        res.MaxQuantityLevel = this.MaxQuantityLevel;
         return res;
       }
 
@@ -68,10 +84,9 @@ namespace App
     {
       ProductData obj = new ProductData();
       obj.DescriptionPresence = PresenceType.Optional;
-      obj.Unit1Presence = PresenceType.Optional;
-      obj.MU1List = DataTools.EmptyIds;
-      obj.Unit2Presence = PresenceType.Optional;
-      obj.MU2List = DataTools.EmptyIds;
+      obj.QuantityPresence = PresenceType.Optional;
+      obj.MUSets = new MUSet[0];
+      obj.MaxQuantityLevel = 3;
       return obj;
     }
 
@@ -118,8 +133,8 @@ namespace App
       }
 
       object[] vals = ProgramDBUI.TheUI.DocProvider.GetValues("Products", productId,
-        //                 0              1                2           3 
-        new DBxColumns("ParentId,DescriptionPresence,Unit1Presence,Unit2Presence"));
+        //                 0              1                2          
+        new DBxColumns("ParentId,DescriptionPresence,QuantityPresence"));
 
       ProductData parentData;
       Int32 parentId = DataTools.GetInt(vals[0]);
@@ -133,33 +148,48 @@ namespace App
       if (descripionPresence != PresenceType.Inherited)
         pd.DescriptionPresence = descripionPresence;
 
-      PresenceType unit1Presence = DataTools.GetEnum<PresenceType>(vals[2]);
-      if (unit1Presence != PresenceType.Inherited)
-        pd.Unit1Presence = unit1Presence;
-
-      PresenceType unit2Presence = DataTools.GetEnum<PresenceType>(vals[3]);
-      if (unit2Presence != PresenceType.Inherited)
-        pd.Unit2Presence = unit2Presence;
+      PresenceType quantityPresence = DataTools.GetEnum<PresenceType>(vals[2]);
+      if (quantityPresence != PresenceType.Inherited)
+        pd.QuantityPresence = quantityPresence;
 
       DataTable tbl;
-      tbl = ProgramDBUI.TheUI.DocProvider.FillSelect("ProductMUs1", new DBxColumns("MU"),
+      tbl = ProgramDBUI.TheUI.DocProvider.FillSelect("ProductMUSets", new DBxColumns("MU1,MU2,MU3"),
         new AndFilter(new ValueFilter("DocId", productId), DBSSubDocType.DeletedFalseFilter));
       if (tbl.Rows.Count > 0)
-        pd.MU1List = DataTools.GetIdsFromColumn(tbl, "MU");
-
-      tbl = ProgramDBUI.TheUI.DocProvider.FillSelect("ProductMUs2", new DBxColumns("MU"),
-        new AndFilter(new ValueFilter("DocId", productId), DBSSubDocType.DeletedFalseFilter));
-      if (tbl.Rows.Count > 0)
-        pd.MU2List = DataTools.GetIdsFromColumn(tbl, "MU");
+      {
+        pd.MUSets = new MUSet[tbl.Rows.Count];
+        for (int i = 0; i < tbl.Rows.Count; i++)
+        {
+          pd.MUSets[i].MUId1 = DataTools.GetInt(tbl.Rows[i], "MU1");
+          pd.MUSets[i].MUId2 = DataTools.GetInt(tbl.Rows[i], "MU2");
+          pd.MUSets[i].MUId3 = DataTools.GetInt(tbl.Rows[i], "MU3");
+        }
+      }
 
 #if DEBUG
       if (pd.DescriptionPresence == PresenceType.Inherited)
         throw new BugException("DescriptionPresence");
-      if (pd.Unit1Presence == PresenceType.Inherited)
-        throw new BugException("Unit1Presence");
-      if (pd.Unit2Presence == PresenceType.Inherited)
-        throw new BugException("Unit2Presence");
+      if (pd.QuantityPresence == PresenceType.Inherited)
+        throw new BugException("QuantutyPresence");
 #endif
+
+      if (pd.MUSets.Length == 0)
+        pd.MaxQuantityLevel = 3;
+      else if (pd.QuantityPresence == PresenceType.Disabled)
+        pd.MaxQuantityLevel = 0;
+      else
+      {
+        pd.MaxQuantityLevel = 1;
+        for (int i = 0; i < pd.MUSets.Length; i++)
+        { 
+          int lvl=1;
+          if (pd.MUSets[i].MUId3 != 0)
+            lvl = 3;
+          else if (pd.MUSets[i].MUId2 != 0)
+            lvl = 2;
+          pd.MaxQuantityLevel = Math.Max(pd.MaxQuantityLevel, lvl);
+        }
+      }
 
       _ProductDict[productId] = pd;
       return pd;
@@ -179,46 +209,43 @@ namespace App
     public static bool GetColumnEnabled(Int32 productId, string columnName)
     {
       ProductData pd = GetProductData(productId);
-      PresenceType prs;
       switch (columnName)
       {
         case "Description":
-          prs = pd.DescriptionPresence;
-          break;
+          return pd.DescriptionPresence!=PresenceType.Disabled;
         case "Quantity1":
         case "MU1":
-          prs = pd.Unit1Presence;
-          break;
+          return pd.MaxQuantityLevel >= 1;
         case "Quantity2":
         case "MU2":
-          prs = pd.Unit2Presence;
-          break;
+          return pd.MaxQuantityLevel >= 2;
+        case "Quantity3":
+        case "MU3":
+          return pd.MaxQuantityLevel >= 3;
         default:
           throw new ArgumentOutOfRangeException("columnName", columnName, "Неправильное имя поля");
       }
-
-      return prs != PresenceType.Disabled;
     }
 
     public static string[] GetOpProductValues(Int32 productId, string columnName)
     {
       ProductData pd = GetProductData(productId);
       PresenceType prs;
-      Int32[] fixedList;
+      //Int32[] fixedList;
       switch (columnName)
       {
         case "Description":
           prs = pd.DescriptionPresence;
-          fixedList = null;
+          //fixedList = null;
           break;
-        case "MU1":
-          prs = pd.Unit1Presence;
-          fixedList = pd.MU1List;
-          break;
-        case "MU2":
-          prs = pd.Unit2Presence;
-          fixedList = pd.MU2List;
-          break;
+        //case "MU1":
+        //  prs = pd.Unit1Presence;
+        //  fixedList = pd.MU1List;
+        //  break;
+        //case "MU2":
+        //  prs = pd.Unit2Presence;
+        //  fixedList = pd.MU2List;
+        //  break;
         default:
           throw new ArgumentOutOfRangeException("columnName", columnName, "Неправильное имя поля");
       }
@@ -239,21 +266,21 @@ namespace App
 
       ProductData pd = GetProductData(productId);
       PresenceType prs;
-      Int32[] fixedList;
+      //Int32[] fixedList;
       switch (columnName)
       {
         case "Description":
           prs = pd.DescriptionPresence;
-          fixedList = null;
+          //fixedList = null;
           break;
-        case "MU1":
-          prs = pd.Unit1Presence;
-          fixedList = pd.MU1List;
-          break;
-        case "MU2":
-          prs = pd.Unit2Presence;
-          fixedList = pd.MU2List;
-          break;
+        //case "MU1":
+        //  prs = pd.Unit1Presence;
+        //  fixedList = pd.MU1List;
+        //  break;
+        //case "MU2":
+        //  prs = pd.Unit2Presence;
+        //  fixedList = pd.MU2List;
+        //  break;
         default:
           throw new ArgumentOutOfRangeException("columnName", columnName, "Неправильное имя поля");
       }

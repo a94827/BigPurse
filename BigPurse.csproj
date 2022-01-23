@@ -79,6 +79,12 @@
     <Compile Include="EditOperationProduct.Designer.cs">
       <DependentUpon>EditOperationProduct.cs</DependentUpon>
     </Compile>
+    <Compile Include="EditProductMUSet.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditProductMUSet.Designer.cs">
+      <DependentUpon>EditProductMUSet.cs</DependentUpon>
+    </Compile>
     <Compile Include="EditShop.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -137,6 +143,10 @@
     <EmbeddedResource Include="EditOperationProduct.resx">
       <SubType>Designer</SubType>
       <DependentUpon>EditOperationProduct.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditProductMUSet.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>EditProductMUSet.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="EditShop.resx">
       <DependentUpon>EditShop.cs</DependentUpon>

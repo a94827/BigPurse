@@ -14,6 +14,7 @@ using System.Globalization;
 using FreeLibSet.Data.Docs;
 using FreeLibSet.Logging;
 using FreeLibSet.UICore;
+using FreeLibSet.Data;
 
 namespace App
 {
@@ -42,11 +43,11 @@ namespace App
 
     EFPDocComboBox efpProduct;
     EFPTextComboBox efpDescription;
-    EFPDocComboBox efpMU1, efpMU2;
+    EFPDocComboBox efpMU1, efpMU2, efpMU3;
     DocValueTextBox dvDescription;
-    DocValueDocComboBox dvMU1, dvMU2;
-    EFPSingleEditBox efpQuantity1, efpQuantity2;
-    DocValueSingleEditBox dvQuantity1, dvQuantity2;
+    DocValueDocComboBox dvMU1, dvMU2, dvMU3;
+    EFPSingleEditBox efpQuantity1, efpQuantity2, efpQuantity3;
+    DocValueSingleEditBox dvQuantity1, dvQuantity2, dvQuantity3;
     EFPTextBox efpFormula;
     EFPDecimalEditBox efpSum;
     DocValueDecimalEditBox dvSum;
@@ -96,9 +97,21 @@ namespace App
       dvMU2 = args.AddRef(efpMU2, "MU2", false);
       SetQuantityAndUnitValidation(efpQuantity2, efpMU2);
 
-      efpQuantity2.Validators.AddError(new DepEqual<float>(efpQuantity2.ValueEx, 0f),
-        "Нельзя задавать второе количество без первого",
-        new DepEqual<float>(efpQuantity1.ValueEx, 0f));
+
+      efpQuantity3 = new EFPSingleEditBox(page.BaseProvider, edQuantity3);
+      efpQuantity3.CanBeEmpty = true;
+      dvQuantity3 = args.AddSingle(efpQuantity3, "Quantity3", false);
+
+      cbMU3.Enter += new EventHandler(cbMU3_Enter);
+      efpMU3 = new EFPDocComboBox(page.BaseProvider, cbMU3, ProgramDBUI.TheUI.DocTypes["MUs"]);
+      efpMU3.CanBeEmpty = true;
+      efpMU3.DisplayName = "Ед. изм. 3";
+      dvMU3 = args.AddRef(efpMU3, "MU3", false);
+      SetQuantityAndUnitValidation(efpQuantity3, efpMU3);
+
+      efpQuantity3.Validators.AddError(new DepEqual<float>(efpQuantity3.ValueEx, 0f),
+        "Нельзя задавать третье количество без второго",
+        new DepEqual<float>(efpQuantity2.ValueEx, 0f));
 
       #endregion
 
@@ -151,23 +164,24 @@ namespace App
     /// <summary>
     /// Флажки наличия загуженнных списков выбора строк в текстовые поля
     /// </summary>
-    private bool lvDescription, lvMU1, lvMU2;
+    private bool lvDescription;
 
     void efpProduct_ValueChanged(object sender, EventArgs args)
     {
       lvDescription = false;
-      lvMU1 = false;
-      lvMU2 = false;
 
       dvDescription.UserEnabled = ProductBuffer.GetColumnEnabled(efpProduct.DocId, "Description");
       dvQuantity1.UserEnabled = ProductBuffer.GetColumnEnabled(efpProduct.DocId, "Quantity1");
       dvMU1.UserEnabled = ProductBuffer.GetColumnEnabled(efpProduct.DocId, "MU1");
       dvQuantity2.UserEnabled = ProductBuffer.GetColumnEnabled(efpProduct.DocId, "Quantity2");
       dvMU2.UserEnabled = ProductBuffer.GetColumnEnabled(efpProduct.DocId, "MU2");
+      dvQuantity3.UserEnabled = ProductBuffer.GetColumnEnabled(efpProduct.DocId, "Quantity3");
+      dvMU3.UserEnabled = ProductBuffer.GetColumnEnabled(efpProduct.DocId, "MU3");
 
       efpDescription.Validate();
       efpMU1.Validate();
       efpMU2.Validate();
+      efpMU3.Validate();
     }
 
     void cbDescription_Enter(object sender, EventArgs args)
@@ -198,38 +212,55 @@ namespace App
 
     void cbMU1_Enter(object sender, EventArgs args)
     {
-      Do_CB_Enter(efpMU1, "MU1", ref lvMU1);
+      Do_CB_Enter(efpMU1, 1);
     }
 
     void cbMU2_Enter(object sender, EventArgs args)
     {
-      Do_CB_Enter(efpMU2, "MU2", ref lvMU2);
+      Do_CB_Enter(efpMU2, 2);
+    }
+
+    void cbMU3_Enter(object sender, EventArgs args)
+    {
+      Do_CB_Enter(efpMU3, 3);
     }
 
     private static bool CB_Enter_ErrorLogged = false;
 
-    private void Do_CB_Enter(EFPDocComboBox efpMU, string columnName, ref bool lvFlag)
+    private void Do_CB_Enter(EFPDocComboBox efpMU, int nMU)
     {
       Int32 productId = 0;
       try
       {
-        if (lvFlag)
-          return; // Уже загружено
-
         productId = efpProduct.DocId;
         ProductBuffer.ProductData pd = ProductBuffer.GetProductData(productId);
-        Int32[] muList = columnName == "MU1" ? pd.MU1List : pd.MU2List;
-        if (muList.Length == 0)
+        if (pd.MUSets.Length == 0)
           efpMU.FixedDocIds = null;
         else
-          efpMU.FixedDocIds = new FreeLibSet.Data.IdList(muList);
-        lvFlag = true;
+        {
+          // TODO: Надо для единиц 2 и 3 учитывать выбранные значения в верхних полях
+          IdList lst = new IdList();
+          for (int i = 0; i < pd.MUSets.Length; i++)
+          {
+            Int32 id;
+            switch (nMU)
+            {
+              case 1: id = pd.MUSets[i].MUId1; break;
+              case 2: id = pd.MUSets[i].MUId2; break;
+              case 3: id = pd.MUSets[i].MUId3; break;
+              default: throw new ArgumentException();
+            }
+            if (id != 0)
+              lst.Add(id);
+          }
+          efpMU.FixedDocIds = lst;
+        }
       }
       catch (Exception e)
       {
         if (!CB_Enter_ErrorLogged)
         {
-          LogoutTools.LogoutException(e, "Ошибка загрузки списка значений для поля \"" + columnName + "\", ProductId= " + productId.ToString() + ". Повторные ошибки не регистрируются");
+          LogoutTools.LogoutException(e, "Ошибка загрузки списка значений для единицы измерения "+nMU.ToString()+", ProductId= " + productId.ToString() + ". Повторные ошибки не регистрируются");
           CB_Enter_ErrorLogged = true;
         }
         EFPApp.ShowTempMessage("Не удалось получить список значений");

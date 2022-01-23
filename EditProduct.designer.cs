@@ -40,19 +40,14 @@
       this.label1 = new System.Windows.Forms.Label();
       this.tabPage2 = new System.Windows.Forms.TabPage();
       this.MainPanel2 = new System.Windows.Forms.Panel();
-      this.groupBox4 = new System.Windows.Forms.GroupBox();
-      this.cbMU2 = new FreeLibSet.Controls.UserSelComboBox();
-      this.label6 = new System.Windows.Forms.Label();
-      this.cbUnit2Presence = new System.Windows.Forms.ComboBox();
-      this.label7 = new System.Windows.Forms.Label();
       this.groupBox3 = new System.Windows.Forms.GroupBox();
-      this.cbMU1 = new FreeLibSet.Controls.UserSelComboBox();
-      this.label5 = new System.Windows.Forms.Label();
-      this.cbUnit1Presence = new System.Windows.Forms.ComboBox();
-      this.label4 = new System.Windows.Forms.Label();
+      this.grMUSets = new System.Windows.Forms.DataGridView();
+      this.panSpbMUSets = new System.Windows.Forms.Panel();
       this.groupBox2 = new System.Windows.Forms.GroupBox();
       this.cbDescriptionPresence = new System.Windows.Forms.ComboBox();
       this.label3 = new System.Windows.Forms.Label();
+      this.label4 = new System.Windows.Forms.Label();
+      this.cbQuantityPresence = new System.Windows.Forms.ComboBox();
       this.tabControl1.SuspendLayout();
       this.tabPage1.SuspendLayout();
       this.MainPanel1.SuspendLayout();
@@ -60,8 +55,8 @@
       this.groupBox1.SuspendLayout();
       this.tabPage2.SuspendLayout();
       this.MainPanel2.SuspendLayout();
-      this.groupBox4.SuspendLayout();
       this.groupBox3.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.grMUSets)).BeginInit();
       this.groupBox2.SuspendLayout();
       this.SuspendLayout();
       // 
@@ -183,7 +178,6 @@
       // 
       // MainPanel2
       // 
-      this.MainPanel2.Controls.Add(this.groupBox4);
       this.MainPanel2.Controls.Add(this.groupBox3);
       this.MainPanel2.Controls.Add(this.groupBox2);
       this.MainPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -192,123 +186,48 @@
       this.MainPanel2.Size = new System.Drawing.Size(568, 284);
       this.MainPanel2.TabIndex = 0;
       // 
-      // groupBox4
-      // 
-      this.groupBox4.Controls.Add(this.cbMU2);
-      this.groupBox4.Controls.Add(this.label6);
-      this.groupBox4.Controls.Add(this.cbUnit2Presence);
-      this.groupBox4.Controls.Add(this.label7);
-      this.groupBox4.Dock = System.Windows.Forms.DockStyle.Top;
-      this.groupBox4.Location = new System.Drawing.Point(0, 169);
-      this.groupBox4.Name = "groupBox4";
-      this.groupBox4.Size = new System.Drawing.Size(568, 109);
-      this.groupBox4.TabIndex = 3;
-      this.groupBox4.TabStop = false;
-      this.groupBox4.Text = "Поле \"Количество 2\"";
-      // 
-      // cbMU2
-      // 
-      this.cbMU2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                  | System.Windows.Forms.AnchorStyles.Right)));
-      this.cbMU2.Location = new System.Drawing.Point(23, 79);
-      this.cbMU2.Name = "cbMU2";
-      this.cbMU2.Size = new System.Drawing.Size(528, 20);
-      this.cbMU2.TabIndex = 3;
-      // 
-      // label6
-      // 
-      this.label6.AutoSize = true;
-      this.label6.Location = new System.Drawing.Point(15, 58);
-      this.label6.Name = "label6";
-      this.label6.Size = new System.Drawing.Size(229, 13);
-      this.label6.TabIndex = 2;
-      this.label6.Text = "Фиксированный список единиц измерения";
-      this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-      // 
-      // cbUnit2Presence
-      // 
-      this.cbUnit2Presence.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                  | System.Windows.Forms.AnchorStyles.Right)));
-      this.cbUnit2Presence.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.cbUnit2Presence.FormattingEnabled = true;
-      this.cbUnit2Presence.Location = new System.Drawing.Point(151, 27);
-      this.cbUnit2Presence.Name = "cbUnit2Presence";
-      this.cbUnit2Presence.Size = new System.Drawing.Size(400, 21);
-      this.cbUnit2Presence.TabIndex = 1;
-      // 
-      // label7
-      // 
-      this.label7.Location = new System.Drawing.Point(15, 27);
-      this.label7.Name = "label7";
-      this.label7.Size = new System.Drawing.Size(130, 21);
-      this.label7.TabIndex = 0;
-      this.label7.Text = "Наличие";
-      this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-      // 
       // groupBox3
       // 
-      this.groupBox3.Controls.Add(this.cbMU1);
-      this.groupBox3.Controls.Add(this.label5);
-      this.groupBox3.Controls.Add(this.cbUnit1Presence);
-      this.groupBox3.Controls.Add(this.label4);
-      this.groupBox3.Dock = System.Windows.Forms.DockStyle.Top;
-      this.groupBox3.Location = new System.Drawing.Point(0, 60);
+      this.groupBox3.Controls.Add(this.grMUSets);
+      this.groupBox3.Controls.Add(this.panSpbMUSets);
+      this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.groupBox3.Location = new System.Drawing.Point(0, 89);
       this.groupBox3.Name = "groupBox3";
-      this.groupBox3.Size = new System.Drawing.Size(568, 109);
-      this.groupBox3.TabIndex = 2;
+      this.groupBox3.Size = new System.Drawing.Size(568, 195);
+      this.groupBox3.TabIndex = 1;
       this.groupBox3.TabStop = false;
-      this.groupBox3.Text = "Поле \"Количество 1\"";
+      this.groupBox3.Text = "Сочетания единиц измерения";
       // 
-      // cbMU1
+      // grMUSets
       // 
-      this.cbMU1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                  | System.Windows.Forms.AnchorStyles.Right)));
-      this.cbMU1.Location = new System.Drawing.Point(23, 79);
-      this.cbMU1.Name = "cbMU1";
-      this.cbMU1.Size = new System.Drawing.Size(528, 20);
-      this.cbMU1.TabIndex = 3;
+      this.grMUSets.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+      this.grMUSets.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.grMUSets.Location = new System.Drawing.Point(3, 53);
+      this.grMUSets.Name = "grMUSets";
+      this.grMUSets.Size = new System.Drawing.Size(562, 139);
+      this.grMUSets.TabIndex = 1;
       // 
-      // label5
+      // panSpbMUSets
       // 
-      this.label5.AutoSize = true;
-      this.label5.Location = new System.Drawing.Point(15, 58);
-      this.label5.Name = "label5";
-      this.label5.Size = new System.Drawing.Size(229, 13);
-      this.label5.TabIndex = 2;
-      this.label5.Text = "Фиксированный список единиц измерения";
-      this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-      // 
-      // cbUnit1Presence
-      // 
-      this.cbUnit1Presence.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                  | System.Windows.Forms.AnchorStyles.Right)));
-      this.cbUnit1Presence.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.cbUnit1Presence.FormattingEnabled = true;
-      this.cbUnit1Presence.Location = new System.Drawing.Point(151, 27);
-      this.cbUnit1Presence.Name = "cbUnit1Presence";
-      this.cbUnit1Presence.Size = new System.Drawing.Size(400, 21);
-      this.cbUnit1Presence.TabIndex = 1;
-      // 
-      // label4
-      // 
-      this.label4.Location = new System.Drawing.Point(15, 27);
-      this.label4.Name = "label4";
-      this.label4.Size = new System.Drawing.Size(130, 21);
-      this.label4.TabIndex = 0;
-      this.label4.Text = "Наличие";
-      this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+      this.panSpbMUSets.Dock = System.Windows.Forms.DockStyle.Top;
+      this.panSpbMUSets.Location = new System.Drawing.Point(3, 16);
+      this.panSpbMUSets.Name = "panSpbMUSets";
+      this.panSpbMUSets.Size = new System.Drawing.Size(562, 37);
+      this.panSpbMUSets.TabIndex = 0;
       // 
       // groupBox2
       // 
       this.groupBox2.Controls.Add(this.cbDescriptionPresence);
       this.groupBox2.Controls.Add(this.label3);
+      this.groupBox2.Controls.Add(this.label4);
+      this.groupBox2.Controls.Add(this.cbQuantityPresence);
       this.groupBox2.Dock = System.Windows.Forms.DockStyle.Top;
       this.groupBox2.Location = new System.Drawing.Point(0, 0);
       this.groupBox2.Name = "groupBox2";
-      this.groupBox2.Size = new System.Drawing.Size(568, 60);
+      this.groupBox2.Size = new System.Drawing.Size(568, 89);
       this.groupBox2.TabIndex = 1;
       this.groupBox2.TabStop = false;
-      this.groupBox2.Text = "Поле \"Описание\"";
+      this.groupBox2.Text = "Наличие данные";
       // 
       // cbDescriptionPresence
       // 
@@ -327,8 +246,28 @@
       this.label3.Name = "label3";
       this.label3.Size = new System.Drawing.Size(130, 21);
       this.label3.TabIndex = 0;
-      this.label3.Text = "Наличие";
+      this.label3.Text = "Описание";
       this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+      // 
+      // label4
+      // 
+      this.label4.Location = new System.Drawing.Point(15, 54);
+      this.label4.Name = "label4";
+      this.label4.Size = new System.Drawing.Size(130, 21);
+      this.label4.TabIndex = 2;
+      this.label4.Text = "Количество";
+      this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+      // 
+      // cbQuantityPresence
+      // 
+      this.cbQuantityPresence.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                  | System.Windows.Forms.AnchorStyles.Right)));
+      this.cbQuantityPresence.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.cbQuantityPresence.FormattingEnabled = true;
+      this.cbQuantityPresence.Location = new System.Drawing.Point(151, 54);
+      this.cbQuantityPresence.Name = "cbQuantityPresence";
+      this.cbQuantityPresence.Size = new System.Drawing.Size(400, 21);
+      this.cbQuantityPresence.TabIndex = 3;
       // 
       // EditProduct
       // 
@@ -346,10 +285,8 @@
       this.groupBox1.PerformLayout();
       this.tabPage2.ResumeLayout(false);
       this.MainPanel2.ResumeLayout(false);
-      this.groupBox4.ResumeLayout(false);
-      this.groupBox4.PerformLayout();
       this.groupBox3.ResumeLayout(false);
-      this.groupBox3.PerformLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.grMUSets)).EndInit();
       this.groupBox2.ResumeLayout(false);
       this.ResumeLayout(false);
 
@@ -371,16 +308,11 @@
     private System.Windows.Forms.Panel MainPanel2;
     private System.Windows.Forms.GroupBox groupBox2;
     private System.Windows.Forms.Label label3;
-    private System.Windows.Forms.GroupBox groupBox4;
-    private FreeLibSet.Controls.UserSelComboBox cbMU2;
-    private System.Windows.Forms.Label label6;
-    private System.Windows.Forms.ComboBox cbUnit2Presence;
-    private System.Windows.Forms.Label label7;
     private System.Windows.Forms.GroupBox groupBox3;
-    private FreeLibSet.Controls.UserSelComboBox cbMU1;
-    private System.Windows.Forms.Label label5;
-    private System.Windows.Forms.ComboBox cbUnit1Presence;
+    private System.Windows.Forms.ComboBox cbQuantityPresence;
     private System.Windows.Forms.Label label4;
     private System.Windows.Forms.ComboBox cbDescriptionPresence;
+    private System.Windows.Forms.DataGridView grMUSets;
+    private System.Windows.Forms.Panel panSpbMUSets;
   }
 }
