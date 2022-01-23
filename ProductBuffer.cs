@@ -259,35 +259,16 @@ namespace App
     }
 
 
-    public static void ValidateProductValue(int productId, string columnName, string value, IUIValidableObject args)
+    public static void ValidateProductDescription(Int32 productId, string value, IUIValidableObject args)
     {
       if (args.ValidateState == UIValidateState.Error)
         return;
 
       ProductData pd = GetProductData(productId);
-      PresenceType prs;
-      //Int32[] fixedList;
-      switch (columnName)
-      {
-        case "Description":
-          prs = pd.DescriptionPresence;
-          //fixedList = null;
-          break;
-        //case "MU1":
-        //  prs = pd.Unit1Presence;
-        //  fixedList = pd.MU1List;
-        //  break;
-        //case "MU2":
-        //  prs = pd.Unit2Presence;
-        //  fixedList = pd.MU2List;
-        //  break;
-        default:
-          throw new ArgumentOutOfRangeException("columnName", columnName, "Неправильное имя поля");
-      }
 
       if (String.IsNullOrEmpty(value))
       {
-        switch (prs)
+        switch (pd.DescriptionPresence)
         { 
           case PresenceType.Required:
             args.SetError("Поле должно быть заполнено");
@@ -299,33 +280,11 @@ namespace App
         return;
       }
 
-      if (prs == PresenceType.Disabled)
+      if (pd.DescriptionPresence == PresenceType.Disabled)
       {
         args.SetError("Поле не должно заполняться");
         return;
       }
-
-      /*
-      if (fixedList != null)
-      {
-        int p = Array.IndexOf<string>(fixedList, value);
-        if (p < 0)
-        {
-          args.SetError("Значение должно быть выбрано из списка. Ввод других значений не разрешен");
-          return;
-        }
-      } */
-
-      /*
-      switch (columnName)
-      {
-        case "Unit1":
-        case "Unit2":
-          string errorText;
-          if (!Tools.IsValidUnit(value, out errorText))
-            args.SetError(errorText);
-          break;
-      } */
     }
 
     #endregion

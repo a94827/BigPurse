@@ -313,36 +313,118 @@ namespace App
         args.ColorType = EFPDataGridViewColorType.TotalRow;
       else
       {
-        DoGetRowAttributes(args, "Description");
-        //DoGetRowAttributes(args, "Unit1");
-        //DoGetRowAttributes(args, "Unit2");
+        Int32 productId = DataTools.GetInt(args.DataRow, "Product");
+        ProductBuffer.ProductData pd = ProductBuffer.GetProductData(productId);
 
-        /*
-        string errorText;
-        string sUnit1 = DataTools.GetString(args.DataRow, "Unit1");
-        if (!Tools.IsValidUnit(sUnit1, out errorText))
-          args.AddRowError("Неправильная единица измерения 1: \"" + sUnit1 + "\". " + errorText, "Unit1");
-        string sUnit2 = DataTools.GetString(args.DataRow, "Unit2");
-        if (!Tools.IsValidUnit(sUnit2, out errorText))
-          args.AddRowError("Неправильная единица измерения 2: \"" + sUnit2 + "\". " + errorText, "Unit2");
-         * */
+        #region Описание
+
+        string description = DataTools.GetString(args.DataRow, "Description");
+
+        if (String.IsNullOrEmpty(description))
+        {
+          switch (pd.DescriptionPresence)
+          {
+            case PresenceType.Required:
+              args.AddRowError("Описание должно быть заполнено", "Description");
+              break;
+            case PresenceType.WarningIfNone:
+              args.AddRowInformation("Описание обычно должно быть заполнено", "Description");
+              break;
+          }
+        }
+        else if (pd.DescriptionPresence == PresenceType.Disabled)
+        {
+          args.AddRowError("Описание не должно заполняться");
+        }
+
+        #endregion
+
+        #region Количество и единица измерения
+
+        float Q1 = DataTools.GetSingle(args.DataRow, "Quantity1");
+        float Q2 = DataTools.GetSingle(args.DataRow, "Quantity2");
+        float Q3 = DataTools.GetSingle(args.DataRow, "Quantity3");
+        Int32 muId1 = DataTools.GetInt(args.DataRow, "MU1");
+        Int32 muId2 = DataTools.GetInt(args.DataRow, "MU2");
+        Int32 muId3 = DataTools.GetInt(args.DataRow, "MU3");
+
+        if (Q1 == 0f && Q2 != 0f)
+          args.AddRowError("Заполнена вторая единица измерения без первой", "Quantity2");
+        if (Q2 == 0f && Q3 != 0f)
+          args.AddRowError("Заполнена третья единица измерения без второй", "Quantity3");
+        CheckQuantityAndMUPair(args, Q1, muId1, "1");
+        CheckQuantityAndMUPair(args, Q2, muId2, "2");
+        CheckQuantityAndMUPair(args, Q3, muId3, "3");
+        CheckMUPair(args, muId1, muId2, "1", "2");
+        CheckMUPair(args, muId2, muId3, "2", "3");
+        CheckMUPair(args, muId1, muId3, "1", "3");
+
+        bool hasQ = (Q1 != 0f) || (Q2 != 0f) || (Q3 != 0f);
+        if (hasQ)
+        {
+          if (pd.QuantityPresence == PresenceType.Disabled)
+            args.AddRowError("Количество не должно заполняться", "Quantity1,MU1.Name");
+          else if (pd.MUSets.Length > 0)
+          {
+            // Проверяем попадание единиц измерения
+            bool found = false;
+            for (int i = 0; i < pd.MUSets.Length; i++)
+            {
+              if (pd.MUSets[i].MUId1 == muId1 && pd.MUSets[i].MUId2 == muId2 && pd.MUSets[i].MUId3 == muId3)
+              {
+                found = true;
+                break;
+              }
+            }
+
+            string sColNames = "MU1.Name";
+            if (muId2 != 0)
+              sColNames += ",MU2.Name";
+            if (muId3 != 0)
+              sColNames += ",MU3.Name";
+
+            if (!found)
+              args.AddRowWarning("Неизвестная комбинация единиц измерения", sColNames);
+          }
+        }
+        else
+        {
+          switch (pd.QuantityPresence)
+          {
+            case PresenceType.Required:
+              args.AddRowError("Количество должно быть заполнено", "Quantity1,MU1.Name");
+              break;
+            case PresenceType.WarningIfNone:
+              args.AddRowInformation("Количество обычно должно быть заполнено", "Quantity1,MU1.Name");
+              break;
+          }
+        }
+
+        #endregion
       }
     }
 
-    private void DoGetRowAttributes(EFPDataGridViewRowAttributesEventArgs args, string columnName)
+    private static void CheckQuantityAndMUPair(EFPDataGridViewRowAttributesEventArgs args, float Q, int muId, string suffix)
     {
-      UISimpleValidableObject obj = new UISimpleValidableObject();
-      Int32 productId = DataTools.GetInt(args.DataRow, "Product");
-      ProductBuffer.ValidateProductValue(productId, columnName, DataTools.GetString(args.DataRow, columnName), obj);
-      switch (obj.ValidateState)
+      if ((Q == 0f) != (muId == 0))
       {
-        case UIValidateState.Error:
-          args.AddRowError(obj.Message, columnName);
-          break;
-        case UIValidateState.Warning:
-          args.AddRowWarning(obj.Message, columnName);
-          break;
+        string msg;
+        if (muId == 0)
+          msg = "Задано количество без единицы измерения";
+        else
+          msg = "Задана единица измерения без количества";
+        args.AddRowError("Количество №" + suffix + ". " + msg, "Quantity" + suffix + ",MU" + suffix + ".Name");
       }
+    }
+
+    private static void CheckMUPair(EFPDataGridViewRowAttributesEventArgs args, Int32 muId1, Int32 muId2, string suffix1, string suffix2)
+    {
+      if (muId1 == 0 || muId2 == 0)
+        return;
+      if (muId1 != muId2)
+        return;
+      string sColNames = "MU" + suffix1 + ".Name,MU" + suffix2 + ".Name";
+      args.AddRowError("Две одинаковые единицы измерения №" + suffix1 + " и №" + suffix2, sColNames);
     }
 
     void MainPage_EditData(object Sender, EventArgs Args)

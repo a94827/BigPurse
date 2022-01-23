@@ -109,6 +109,9 @@ namespace App
       dvMU3 = args.AddRef(efpMU3, "MU3", false);
       SetQuantityAndUnitValidation(efpQuantity3, efpMU3);
 
+      efpQuantity2.Validators.AddError(new DepEqual<float>(efpQuantity2.ValueEx, 0f),
+        "Ќельз€ задавать второе количество без первого",
+        new DepEqual<float>(efpQuantity1.ValueEx, 0f));
       efpQuantity3.Validators.AddError(new DepEqual<float>(efpQuantity3.ValueEx, 0f),
         "Ќельз€ задавать третье количество без второго",
         new DepEqual<float>(efpQuantity2.ValueEx, 0f));
