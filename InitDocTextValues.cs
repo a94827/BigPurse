@@ -22,9 +22,10 @@ namespace App
       TextHandlers.Add("IncomeSources", "Name");
       TextHandlers.Add("Shops", "Name");
       TextHandlers.Add("Products", "Name");
-      TextHandlers.Add("ProductMUs1", "Name");
-      TextHandlers.Add("ProductMUs2", "Name");
+      TextHandlers.Add("ProductMUs1", "MU.Name");
+      TextHandlers.Add("ProductMUs2", "MU.Name");
       TextHandlers.Add("Debtors", "Name");
+      TextHandlers.Add("MUs", "Name");
     }
 
     #endregion

@@ -230,13 +230,22 @@ namespace App
       #region Списки единиц измерения
 
       sdt = dt.SubDocTypes["ProductMUs1"];
-      sdt.GridProducer.Columns.AddText("Name", "Название", 20, 5);
+      sdt.GridProducer.Columns.AddText("MU.Name", "Название", 20, 5);
       sdt.GridProducer.NewDefaultConfig(false);
-      sdt.GridProducer.DefaultConfig.Columns.AddFill("Name");
+      sdt.GridProducer.DefaultConfig.Columns.AddFill("MU.Name");
       sdt.ImageKey = "MU";
       sdt.CanMultiEdit = false;
       sdt.CanInsertCopy = false;
-      sdt.BeforeEdit+=new BeforeSubDocEditEventHandler(EditProduct.BeforeEditMU);
+      sdt.BeforeEdit += new BeforeSubDocEditEventHandler(EditProduct.BeforeEditMU);
+
+      sdt = dt.SubDocTypes["ProductMUs2"];
+      sdt.GridProducer.Columns.AddText("MU.Name", "Название", 20, 5);
+      sdt.GridProducer.NewDefaultConfig(false);
+      sdt.GridProducer.DefaultConfig.Columns.AddFill("MU.Name");
+      sdt.ImageKey = "MU";
+      sdt.CanMultiEdit = false;
+      sdt.CanInsertCopy = false;
+      sdt.BeforeEdit += new BeforeSubDocEditEventHandler(EditProduct.BeforeEditMU);
 
       #endregion
 

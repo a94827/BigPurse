@@ -24,7 +24,7 @@ namespace App
 
     #endregion
 
-    #region Редактор
+    #region Редактор документа
 
     #region InitDocEditForm
 
@@ -88,13 +88,17 @@ namespace App
       efpUnit1Presence = new EFPListComboBox(page.BaseProvider, cbUnit1Presence);
       args.AddInt(efpUnit1Presence, "Unit1Presence", true);
 
-      efpMU1 = new EFPAllSubDocComboBox(page.BaseProvider, cbMU1, _Editor, args.MultiDocs[0].SubDocs["ProductMUs1"]);
+      efpMU1 = new EFPAllSubDocComboBox(page.BaseProvider, cbMU1, _Editor, _Editor.Documents[0].SubDocs["ProductMUs1"]);
+      efpMU1.EmptyText = "[ Наследуется ]";
+      efpMU1.MaxTextItemCount = 10;
 
       cbUnit2Presence.Items.AddRange(Tools.PresenceTypeNames);
       efpUnit2Presence = new EFPListComboBox(page.BaseProvider, cbUnit2Presence);
       args.AddInt(efpUnit2Presence, "Unit2Presence", true);
 
-      efpMU2 = new EFPAllSubDocComboBox(page.BaseProvider, cbMU1, _Editor, args.MultiDocs[0].SubDocs["ProductMUs2"]);
+      efpMU2 = new EFPAllSubDocComboBox(page.BaseProvider, cbMU2, _Editor, _Editor.Documents[0].SubDocs["ProductMUs2"]);
+      efpMU2.EmptyText = "[ Наследуется ]";
+      efpMU2.MaxTextItemCount = 10;
 
       efpParent.DocIdEx.ValueChanged += new EventHandler(efpParent_ValueChanged);
       efpParent_ValueChanged(null, null);
@@ -112,6 +116,45 @@ namespace App
 
 
     #endregion
+
+    #endregion
+
+    #region Редактор единицы измерения
+
+    public static void BeforeEditMU(object sender, BeforeSubDocEditEventArgs args)
+    {
+      args.ShowEditor = false;
+
+      DocSelectDialog dlg;
+      switch (args.Editor.State)
+      { 
+        case EFPDataGridViewState.Insert:
+          dlg=new DocSelectDialog(ProgramDBUI.TheUI.DocTypes["MUs"]);
+          dlg.Title="Добавление единицы измерения";
+          if (dlg.ShowDialog() == DialogResult.OK)
+            args.Editor.SubDocs.Values["MU"].SetInteger(dlg.DocId);
+          else
+            args.Cancel = true;
+          break;
+
+        case EFPDataGridViewState.Edit:
+          dlg = new DocSelectDialog(ProgramDBUI.TheUI.DocTypes["MUs"]);
+          dlg.Title = "Замена единицы измерения";
+          dlg.DocId = args.Editor.SubDocs.Values["MU"].AsInteger;
+          if (dlg.ShowDialog() == DialogResult.OK)
+            args.Editor.SubDocs.Values["MU"].SetInteger(dlg.DocId);
+          else
+            args.Cancel = true;
+          break;
+
+        case EFPDataGridViewState.View:
+          ProgramDBUI.TheUI.DocTypes["MUs"].PerformEditing(args.Editor.SubDocs.Values["MU"].AsInteger, true);
+          break;
+
+        case EFPDataGridViewState.Delete:
+          break;
+      }
+    }
 
     #endregion
   }

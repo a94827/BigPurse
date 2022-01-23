@@ -120,6 +120,9 @@ namespace App
       ci = ProgramDBUI.TheUI.DocTypes["Products"].CreateMainMenuItem(MenuRB);
       SpeedPanelStandard.Add(ci);
 
+      ci = ProgramDBUI.TheUI.DocTypes["MUs"].CreateMainMenuItem(MenuRB);
+      SpeedPanelStandard.Add(ci);
+
       ci = ProgramDBUI.TheUI.DocTypes["Debtors"].CreateMainMenuItem(MenuRB);
       SpeedPanelStandard.Add(ci);
 

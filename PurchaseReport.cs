@@ -163,7 +163,7 @@ namespace App
       DBxSelectInfo si = new DBxSelectInfo();
       si.TableName = "OperationProducts";
       si.Expressions.Add("Id"); // нужно только для EFPDBxGridView
-      si.Expressions.Add("DocId,RecordOrder,Product,Product.Name,Description,Quantity1,Unit1,Quantity2,Unit2,Formula,RecordSum,Comment");
+      si.Expressions.Add("DocId,RecordOrder,Product,Product.Name,Description,Quantity1,MU1,MU1.Name,Quantity2,MU2,MU2.Name,Formula,RecordSum,Comment");
       si.Expressions.Add("DocId.Date,DocId.OpOrder,DocId.WalletCredit,DocId.WalletCredit.Name,DocId.Shop,DocId.Shop.Name,DocId.Comment");
 
       List<DBxFilter> filters = new List<DBxFilter>();
@@ -251,12 +251,12 @@ namespace App
       gridProducer.Columns.AddText("Quantity1", "Кол-во 1", 5, 2);
       gridProducer.Columns.LastAdded.Format = "0.###";
       gridProducer.Columns.LastAdded.SizeGroup = "Quantity";
-      gridProducer.Columns.AddText("Unit1", "Ед. изм. 1", 5, 2);
+      gridProducer.Columns.AddText("MU1.Name", "Ед. изм. 1", 5, 2);
       gridProducer.Columns.LastAdded.SizeGroup = "Unit";
       gridProducer.Columns.AddText("Quantity2", "Кол-во 2", 5, 2);
       gridProducer.Columns.LastAdded.Format = "0.###";
       gridProducer.Columns.LastAdded.SizeGroup = "Quantity";
-      gridProducer.Columns.AddText("Unit2", "Ед. изм. 2", 5, 2);
+      gridProducer.Columns.AddText("MU2.Name", "Ед. изм. 2", 5, 2);
       gridProducer.Columns.LastAdded.SizeGroup = "Unit";
       gridProducer.Columns.AddText("Formula", "Формула", 15, 5);
       gridProducer.Columns.AddMoney("RecordSum", "Сумма");
@@ -270,9 +270,9 @@ namespace App
       gridProducer.DefaultConfig.Columns.AddFill("Product.Name", 50);
       gridProducer.DefaultConfig.Columns.AddFill("Description", 50);
       gridProducer.DefaultConfig.Columns.Add("Quantity1");
-      gridProducer.DefaultConfig.Columns.Add("Unit1");
+      gridProducer.DefaultConfig.Columns.Add("MU1.Name");
       gridProducer.DefaultConfig.Columns.Add("Quantity2");
-      gridProducer.DefaultConfig.Columns.Add("Unit2");
+      gridProducer.DefaultConfig.Columns.Add("MU2.Name");
       gridProducer.DefaultConfig.Columns.Add("RecordSum");
 
       return gridProducer;
@@ -303,8 +303,8 @@ namespace App
       else
       {
         DoGetRowAttributes(args, "Description");
-        DoGetRowAttributes(args, "Unit1");
-        DoGetRowAttributes(args, "Unit2");
+        //DoGetRowAttributes(args, "Unit1");
+        //DoGetRowAttributes(args, "Unit2");
 
         /*
         string errorText;

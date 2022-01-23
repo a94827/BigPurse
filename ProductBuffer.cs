@@ -6,6 +6,7 @@ using FreeLibSet.Forms;
 using FreeLibSet.Data;
 using FreeLibSet.Data.Docs;
 using FreeLibSet.UICore;
+using System.Data;
 
 namespace App
 {
@@ -24,11 +25,19 @@ namespace App
 
       public PresenceType Unit1Presence;
 
-      public string[] Unit1List;
+      /// <summary>
+      /// ‘иксированный список единиц измерени€.
+      /// ≈сли длина списка равна 0, то можно использовать любые единицы из справочника
+      /// </summary>
+      public Int32[] MU1List;
 
       public PresenceType Unit2Presence;
 
-      public string[] Unit2List;
+      /// <summary>
+      /// ‘иксированный список единиц измерени€.
+      /// ≈сли длина списка равна 0, то можно использовать любые единицы из справочника
+      /// </summary>
+      public Int32[] MU2List;
 
       #endregion
 
@@ -39,9 +48,9 @@ namespace App
         ProductData res = new ProductData();
         res.DescriptionPresence = this.DescriptionPresence;
         res.Unit1Presence = this.Unit1Presence;
-        res.Unit1List = this.Unit1List;
+        res.MU1List = this.MU1List;
         res.Unit2Presence = this.Unit2Presence;
-        res.Unit2List = this.Unit2List;
+        res.MU2List = this.MU2List;
         return res;
       }
 
@@ -60,9 +69,9 @@ namespace App
       ProductData obj = new ProductData();
       obj.DescriptionPresence = PresenceType.Optional;
       obj.Unit1Presence = PresenceType.Optional;
-      obj.Unit1List = null;
+      obj.MU1List = DataTools.EmptyIds;
       obj.Unit2Presence = PresenceType.Optional;
-      obj.Unit2List = null;
+      obj.MU2List = DataTools.EmptyIds;
       return obj;
     }
 
@@ -109,8 +118,8 @@ namespace App
       }
 
       object[] vals = ProgramDBUI.TheUI.DocProvider.GetValues("Products", productId,
-        //                 0              1                2           3           4           5
-        new DBxColumns("ParentId,DescriptionPresence,Unit1Presence,Unit1List,Unit2Presence,Unit2List"));
+        //                 0              1                2           3 
+        new DBxColumns("ParentId,DescriptionPresence,Unit1Presence,Unit2Presence"));
 
       ProductData parentData;
       Int32 parentId = DataTools.GetInt(vals[0]);
@@ -128,17 +137,20 @@ namespace App
       if (unit1Presence != PresenceType.Inherited)
         pd.Unit1Presence = unit1Presence;
 
-      string sUnit1List = DataTools.GetString(vals[3]);
-      if (sUnit1List.Length > 0)
-        pd.Unit1List = sUnit1List.Split(',');
-
-      PresenceType unit2Presence = DataTools.GetEnum<PresenceType>(vals[4]);
+      PresenceType unit2Presence = DataTools.GetEnum<PresenceType>(vals[3]);
       if (unit2Presence != PresenceType.Inherited)
         pd.Unit2Presence = unit2Presence;
 
-      string sUnit2List = DataTools.GetString(vals[5]);
-      if (sUnit2List.Length > 0)
-        pd.Unit2List = sUnit2List.Split(',');
+      DataTable tbl;
+      tbl = ProgramDBUI.TheUI.DocProvider.FillSelect("ProductMUs1", new DBxColumns("MU"),
+        new AndFilter(new ValueFilter("DocId", productId), DBSSubDocType.DeletedFalseFilter));
+      if (tbl.Rows.Count > 0)
+        pd.MU1List = DataTools.GetIdsFromColumn(tbl, "MU");
+
+      tbl = ProgramDBUI.TheUI.DocProvider.FillSelect("ProductMUs2", new DBxColumns("MU"),
+        new AndFilter(new ValueFilter("DocId", productId), DBSSubDocType.DeletedFalseFilter));
+      if (tbl.Rows.Count > 0)
+        pd.MU2List = DataTools.GetIdsFromColumn(tbl, "MU");
 
 #if DEBUG
       if (pd.DescriptionPresence == PresenceType.Inherited)
@@ -174,11 +186,11 @@ namespace App
           prs = pd.DescriptionPresence;
           break;
         case "Quantity1":
-        case "Unit1":
+        case "MU1":
           prs = pd.Unit1Presence;
           break;
         case "Quantity2":
-        case "Unit2":
+        case "MU2":
           prs = pd.Unit2Presence;
           break;
         default:
@@ -192,20 +204,20 @@ namespace App
     {
       ProductData pd = GetProductData(productId);
       PresenceType prs;
-      string[] fixedList;
+      Int32[] fixedList;
       switch (columnName)
       {
         case "Description":
           prs = pd.DescriptionPresence;
           fixedList = null;
           break;
-        case "Unit1":
+        case "MU1":
           prs = pd.Unit1Presence;
-          fixedList = pd.Unit1List;
+          fixedList = pd.MU1List;
           break;
-        case "Unit2":
+        case "MU2":
           prs = pd.Unit2Presence;
-          fixedList = pd.Unit2List;
+          fixedList = pd.MU2List;
           break;
         default:
           throw new ArgumentOutOfRangeException("columnName", columnName, "Ќеправильное им€ пол€");
@@ -213,10 +225,10 @@ namespace App
 
       if (prs == PresenceType.Disabled)
         return DataTools.EmptyStrings;
-      if (fixedList == null)
+      //if (fixedList == null)
         return DoGetOpProductValues(productId, columnName); // истори€
-      else
-        return fixedList;
+      //else
+      //  return fixedList;
     }
 
 
@@ -227,20 +239,20 @@ namespace App
 
       ProductData pd = GetProductData(productId);
       PresenceType prs;
-      string[] fixedList;
+      Int32[] fixedList;
       switch (columnName)
       {
         case "Description":
           prs = pd.DescriptionPresence;
           fixedList = null;
           break;
-        case "Unit1":
+        case "MU1":
           prs = pd.Unit1Presence;
-          fixedList = pd.Unit1List;
+          fixedList = pd.MU1List;
           break;
-        case "Unit2":
+        case "MU2":
           prs = pd.Unit2Presence;
-          fixedList = pd.Unit2List;
+          fixedList = pd.MU2List;
           break;
         default:
           throw new ArgumentOutOfRangeException("columnName", columnName, "Ќеправильное им€ пол€");
@@ -266,6 +278,7 @@ namespace App
         return;
       }
 
+      /*
       if (fixedList != null)
       {
         int p = Array.IndexOf<string>(fixedList, value);
@@ -274,8 +287,9 @@ namespace App
           args.SetError("«начение должно быть выбрано из списка. ¬вод других значений не разрешен");
           return;
         }
-      }
+      } */
 
+      /*
       switch (columnName)
       {
         case "Unit1":
@@ -284,7 +298,7 @@ namespace App
           if (!Tools.IsValidUnit(value, out errorText))
             args.SetError(errorText);
           break;
-      }
+      } */
     }
 
     #endregion
@@ -329,6 +343,7 @@ namespace App
 
           #region ќставл€ем только правильные единицы
 
+          /*
           List<string> lst = null;
           for (int i = 0; i < a.Length; i++)
           {
@@ -350,7 +365,7 @@ namespace App
 
           if (lst != null)
             a = lst.ToArray();
-
+          */
           #endregion
         }
         finally

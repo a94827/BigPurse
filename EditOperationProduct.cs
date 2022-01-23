@@ -41,8 +41,10 @@ namespace App
     private SubDocumentEditor _Editor;
 
     EFPDocComboBox efpProduct;
-    EFPTextComboBox efpDescription, efpMU1, efpUnit2;
-    DocValueTextBox dvDescription, dvUnit1, dvUnit2;
+    EFPTextComboBox efpDescription;
+    EFPDocComboBox efpMU1, efpMU2;
+    DocValueTextBox dvDescription;
+    DocValueDocComboBox dvMU1, dvMU2;
     EFPSingleEditBox efpQuantity1, efpQuantity2;
     DocValueSingleEditBox dvQuantity1, dvQuantity2;
     EFPTextBox efpFormula;
@@ -75,13 +77,11 @@ namespace App
       efpQuantity1.CanBeEmpty = true;
       dvQuantity1 = args.AddSingle(efpQuantity1, "Quantity1", false);
 
-      cbMU1.Enter += new EventHandler(cbUnit1_Enter);
-      cbMU1.AutoCompleteMode = AutoCompleteMode.Suggest;
-      cbMU1.AutoCompleteSource = AutoCompleteSource.CustomSource;
-      efpMU1 = new EFPTextComboBox(page.BaseProvider, cbMU1);
+      cbMU1.Enter += new EventHandler(cbMU1_Enter);
+      efpMU1 = new EFPDocComboBox(page.BaseProvider, cbMU1, ProgramDBUI.TheUI.DocTypes["MUs"]);
       efpMU1.CanBeEmpty = true;
       efpMU1.DisplayName = "Ед. изм. 1";
-      dvUnit1 = args.AddText(efpMU1, "Unit1", false);
+      dvMU1 = args.AddRef(efpMU1, "MU1", false);
       SetQuantityAndUnitValidation(efpQuantity1, efpMU1);
 
 
@@ -89,14 +89,12 @@ namespace App
       efpQuantity2.CanBeEmpty = true;
       dvQuantity2 = args.AddSingle(efpQuantity2, "Quantity2", false);
 
-      cbMU2.Enter += new EventHandler(cbUnit2_Enter);
-      cbMU2.AutoCompleteMode = AutoCompleteMode.Suggest;
-      cbMU2.AutoCompleteSource = AutoCompleteSource.CustomSource;
-      efpUnit2 = new EFPTextComboBox(page.BaseProvider, cbMU2);
-      efpUnit2.CanBeEmpty = true;
-      efpUnit2.DisplayName = "Ед. изм. 2";
-      dvUnit2 = args.AddText(efpUnit2, "Unit2", false);
-      SetQuantityAndUnitValidation(efpQuantity2, efpUnit2);
+      cbMU2.Enter += new EventHandler(cbMU2_Enter);
+      efpMU2 = new EFPDocComboBox(page.BaseProvider, cbMU2, ProgramDBUI.TheUI.DocTypes["MUs"]);
+      efpMU2.CanBeEmpty = true;
+      efpMU2.DisplayName = "Ед. изм. 2";
+      dvMU2 = args.AddRef(efpMU2, "MU2", false);
+      SetQuantityAndUnitValidation(efpQuantity2, efpMU2);
 
       efpQuantity2.Validators.AddError(new DepEqual<float>(efpQuantity2.ValueEx, 0f),
         "Нельзя задавать второе количество без первого",
@@ -137,25 +135,15 @@ namespace App
       #endregion
     }
 
-    private void SetQuantityAndUnitValidation(EFPSingleEditBox efpQuantity, EFPTextComboBox efpUnit)
+    private void SetQuantityAndUnitValidation(EFPSingleEditBox efpQuantity, EFPDocComboBox efpMU)
     {
-      efpUnit.Validating += new FreeLibSet.UICore.UIValidatingEventHandler(efpUnit_Validating); // в первую очередь
+      //efpMU.Validating += new FreeLibSet.UICore.UIValidatingEventHandler(efpUnit_Validating); // в первую очередь
 
       DepValue<bool> isNZ = new DepNot(new DepEqual<float>(efpQuantity.ValueEx, 0f));
       efpQuantity.Validators.AddError(isNZ,
         "Количество должно быть задано, если задана единица измерения",
-        efpUnit.IsNotEmptyEx);
-      efpUnit.Validators.AddError(efpUnit.IsNotEmptyEx, "Должна быть задана единица измерения", isNZ);
-    }
-
-    void efpUnit_Validating(object sender, UIValidatingEventArgs args)
-    {
-      if (args.ValidateState == UIValidateState.Error)
-        return;
-
-      EFPTextComboBox efpUnit = (EFPTextComboBox)sender;
-
-      ProductBuffer.ValidateProductValue(efpProduct.DocId, Object.ReferenceEquals(efpUnit, efpMU1) ? "Unit1" : "Unit2", efpUnit.Text, args);
+        efpMU.IsNotEmptyEx);
+      efpMU.Validators.AddError(efpMU.IsNotEmptyEx, "Должна быть задана единица измерения", isNZ);
     }
 
     #region Списки для выбора значений текстовых полей
@@ -163,38 +151,59 @@ namespace App
     /// <summary>
     /// Флажки наличия загуженнных списков выбора строк в текстовые поля
     /// </summary>
-    private bool lvDescription, lvUnit1, lvUnit2;
+    private bool lvDescription, lvMU1, lvMU2;
 
     void efpProduct_ValueChanged(object sender, EventArgs args)
     {
       lvDescription = false;
-      lvUnit1 = false;
-      lvUnit2 = false;
+      lvMU1 = false;
+      lvMU2 = false;
 
       dvDescription.UserEnabled = ProductBuffer.GetColumnEnabled(efpProduct.DocId, "Description");
       dvQuantity1.UserEnabled = ProductBuffer.GetColumnEnabled(efpProduct.DocId, "Quantity1");
-      dvUnit1.UserEnabled = ProductBuffer.GetColumnEnabled(efpProduct.DocId, "Unit1");
+      dvMU1.UserEnabled = ProductBuffer.GetColumnEnabled(efpProduct.DocId, "MU1");
       dvQuantity2.UserEnabled = ProductBuffer.GetColumnEnabled(efpProduct.DocId, "Quantity2");
-      dvUnit2.UserEnabled = ProductBuffer.GetColumnEnabled(efpProduct.DocId, "Unit2");
+      dvMU2.UserEnabled = ProductBuffer.GetColumnEnabled(efpProduct.DocId, "MU2");
 
       efpDescription.Validate();
       efpMU1.Validate();
-      efpUnit2.Validate();
+      efpMU2.Validate();
     }
 
     void cbDescription_Enter(object sender, EventArgs args)
     {
-      Do_CB_Enter(cbDescription, "Description", ref lvDescription);
+      Int32 productId = 0;
+      try
+      {
+        if (lvDescription)
+          return; // Уже загружено
+
+        productId = efpProduct.DocId;
+        string[] a = ProductBuffer.GetOpProductValues(productId, "Description");
+        efpDescription.Control.Items.Clear();
+        efpDescription.Control.Items.AddRange(a);
+        efpDescription.Control.AutoCompleteCustomSource.AddRange(a);
+        lvDescription = true;
+      }
+      catch (Exception e)
+      {
+        if (!CB_Enter_ErrorLogged)
+        {
+          LogoutTools.LogoutException(e, "Ошибка загрузки списка значений для поля \"Description\", ProductId= " + productId.ToString() + ". Повторные ошибки не регистрируются");
+          CB_Enter_ErrorLogged = true;
+        }
+        EFPApp.ShowTempMessage("Не удалось получить список значений");
+      }
     }
 
-    void cbUnit1_Enter(object sender, EventArgs args)
+    void cbMU1_Enter(object sender, EventArgs args)
     {
-      Do_CB_Enter(efpMU1, "Unit1", ref lvUnit1);
+      Do_CB_Enter(efpMU1, "MU1", ref lvMU1);
     }
 
-    void cbUnit2_Enter(object sender, EventArgs args)
+    void cbMU2_Enter(object sender, EventArgs args)
     {
-      Do_CB_Enter(efpMU2, "Unit2", ref lvUnit2);
+      Do_CB_Enter(efpMU2, "MU2", ref lvMU2);
     }
 
     private static bool CB_Enter_ErrorLogged = false;
@@ -208,10 +217,12 @@ namespace App
           return; // Уже загружено
 
         productId = efpProduct.DocId;
-        string[] a = ProductBuffer.GetOpProductValues(productId, columnName);
-        efpMU.Items.Clear();
-        efpMU.Items.AddRange(a);
-        efpMU.AutoCompleteCustomSource.AddRange(a);
+        ProductBuffer.ProductData pd = ProductBuffer.GetProductData(productId);
+        Int32[] muList = columnName == "MU1" ? pd.MU1List : pd.MU2List;
+        if (muList.Length == 0)
+          efpMU.FixedDocIds = null;
+        else
+          efpMU.FixedDocIds = new FreeLibSet.Data.IdList(muList);
         lvFlag = true;
       }
       catch (Exception e)
@@ -228,8 +239,8 @@ namespace App
     void Editor_AfterWrite(object sender, SubDocEditEventArgs args)
     {
       ProductBuffer.AddOpProductValues(efpProduct.DocId, "Description", efpDescription.Text);
-      ProductBuffer.AddOpProductValues(efpProduct.DocId, "Unit1", efpMU1.Text);
-      ProductBuffer.AddOpProductValues(efpProduct.DocId, "Unit2", efpUnit2.Text);
+      //ProductBuffer.AddOpProductValues(efpProduct.DocId, "Unit1", efpMU1.Text);
+      //ProductBuffer.AddOpProductValues(efpProduct.DocId, "Unit2", efpMU2.Text);
     }
 
     #endregion
