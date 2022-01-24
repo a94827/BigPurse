@@ -93,6 +93,10 @@ namespace App
       sdt.GridProducer.Columns.AddText("Product.Name", "Товар, услуга", 20, 5);
       sdt.GridProducer.Columns.AddText("Description", "Описание", 20, 5);
 
+      sdt.GridProducer.Columns.AddUserText("QuantityText", "Quantity1,MU1.Name,Quantity2,MU2.Name,Quantity3,MU3.Name",
+        new EFPGridProducerValueNeededEventHandler(EditOperationProduct.QuantityTextColumnValueNeeded),
+        "Количество", 20, 10);
+
       sdt.GridProducer.Columns.AddText("Quantity1", "Кол-во 1", 5, 2);
       sdt.GridProducer.Columns.LastAdded.Format = "0.###";
       sdt.GridProducer.Columns.LastAdded.SizeGroup = "Quantity";
@@ -119,8 +123,9 @@ namespace App
       sdt.GridProducer.ToolTips.AddText("Comment", String.Empty).DisplayName = "Комментарий (если задан)";
 
       sdt.GridProducer.DefaultConfig = new EFPDataGridViewConfig();
-      sdt.GridProducer.DefaultConfig.Columns.AddFill("Product.Name", 50);
-      sdt.GridProducer.DefaultConfig.Columns.AddFill("Description", 50);
+      sdt.GridProducer.DefaultConfig.Columns.AddFill("Product.Name", 35);
+      sdt.GridProducer.DefaultConfig.Columns.AddFill("Description", 35);
+      sdt.GridProducer.DefaultConfig.Columns.AddFill("QuantityText", 30);
       sdt.GridProducer.DefaultConfig.Columns.Add("RecordSum");
       sdt.GridProducer.DefaultConfig.ToolTips.Add("Comment");
 
@@ -245,7 +250,7 @@ namespace App
       sdt.GridProducer.Columns.LastAdded.SizeGroup = "MUName";
       sdt.GridProducer.Columns.AddText("MU3.Name", "Ед.изм 3", 10, 5);
       sdt.GridProducer.Columns.LastAdded.SizeGroup = "MUName";
-      
+
       sdt.GridProducer.NewDefaultConfig(false);
       sdt.GridProducer.DefaultConfig.Columns.AddFill("MU1.Name");
       sdt.GridProducer.DefaultConfig.Columns.AddFill("MU2.Name");
@@ -253,7 +258,7 @@ namespace App
       sdt.ImageKey = "MU";
       sdt.CanMultiEdit = false;
       sdt.CanInsertCopy = true;
-      sdt.InitEditForm+=new InitSubDocEditFormEventHandler(EditProductMUSet.InitSubDocEditForm);
+      sdt.InitEditForm += new InitSubDocEditFormEventHandler(EditProductMUSet.InitSubDocEditForm);
 
       #endregion
 

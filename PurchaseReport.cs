@@ -249,6 +249,10 @@ namespace App
       gridProducer.Columns.AddText("Product.Name", "Товар, услуга", 20, 5);
       gridProducer.Columns.AddText("Description", "Описание", 20, 5);
 
+      gridProducer.Columns.AddUserText("QuantityText", "Quantity1,MU1.Name,Quantity2,MU2.Name,Quantity3,MU3.Name",
+        new EFPGridProducerValueNeededEventHandler(EditOperationProduct.QuantityTextColumnValueNeeded),
+        "Количество", 20, 10);
+
       gridProducer.Columns.AddText("Quantity1", "Кол-во 1", 5, 2);
       gridProducer.Columns.LastAdded.Format = "0.###";
       gridProducer.Columns.LastAdded.SizeGroup = "Quantity";
@@ -276,14 +280,15 @@ namespace App
 
       gridProducer.NewDefaultConfig(false);
       gridProducer.DefaultConfig.Columns.Add("DocId.Date");
-      gridProducer.DefaultConfig.Columns.AddFill("Product.Name", 50);
-      gridProducer.DefaultConfig.Columns.AddFill("Description", 50);
-      gridProducer.DefaultConfig.Columns.Add("Quantity1");
-      gridProducer.DefaultConfig.Columns.Add("MU1.Name");
-      gridProducer.DefaultConfig.Columns.Add("Quantity2");
-      gridProducer.DefaultConfig.Columns.Add("MU2.Name");
-      gridProducer.DefaultConfig.Columns.Add("Quantity3");
-      gridProducer.DefaultConfig.Columns.Add("MU3.Name");
+      gridProducer.DefaultConfig.Columns.AddFill("Product.Name", 35);
+      gridProducer.DefaultConfig.Columns.AddFill("Description", 35);
+      gridProducer.DefaultConfig.Columns.AddFill("QuantityText", 30);
+      //gridProducer.DefaultConfig.Columns.Add("Quantity1");
+      //gridProducer.DefaultConfig.Columns.Add("MU1.Name");
+      //gridProducer.DefaultConfig.Columns.Add("Quantity2");
+      //gridProducer.DefaultConfig.Columns.Add("MU2.Name");
+      //gridProducer.DefaultConfig.Columns.Add("Quantity3");
+      //gridProducer.DefaultConfig.Columns.Add("MU3.Name");
       gridProducer.DefaultConfig.Columns.Add("RecordSum");
 
       return gridProducer;

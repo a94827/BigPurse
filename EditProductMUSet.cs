@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using FreeLibSet.Forms.Docs;
+using FreeLibSet.DependedValues;
 
 namespace App
 {
@@ -48,6 +49,25 @@ namespace App
       efpMU3 = new EFPDocComboBox(page.BaseProvider, cbMU3, ProgramDBUI.TheUI.DocTypes["MUs"]);
       efpMU3.CanBeEmpty = true;
       args.AddRef(efpMU3, "MU3", false);
+
+      AddMUValidators(efpMU1, efpMU2, efpMU3);
+    }
+
+    public static void AddMUValidators(EFPDocComboBox efpMU1, EFPDocComboBox efpMU2, EFPDocComboBox efpMU3)
+    {
+      efpMU2.Validators.AddError(DepNot.NotOutput(efpMU2.IsNotEmptyEx), "Вторая единица измерения не может задаваться без первой", DepNot.NotOutput(efpMU1.IsNotEmptyEx));
+      efpMU3.Validators.AddError(DepNot.NotOutput(efpMU3.IsNotEmptyEx), "Третья единица измерения не может задаваться без второй", DepNot.NotOutput(efpMU2.IsNotEmptyEx));
+
+      AddNotEqualValidator(efpMU1, efpMU2);
+      AddNotEqualValidator(efpMU2, efpMU3);
+      AddNotEqualValidator(efpMU1, efpMU3);
+    }
+
+    private static void AddNotEqualValidator(EFPDocComboBox efpMU1, EFPDocComboBox efpMU2)
+    {
+      efpMU2.Validators.AddError(DepNot.NotOutput(new DepEqual<Int32>(efpMU1.DocIdEx, efpMU2.DocIdEx)),
+        "Нельзя использовать одинаковые единицы измерения",
+        new DepAnd(efpMU1.IsNotEmptyEx, efpMU2.IsNotEmptyEx));
     }
 
     #endregion

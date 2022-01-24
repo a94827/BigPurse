@@ -29,6 +29,36 @@ namespace App
 
     #endregion
 
+    #region Табличный просмотр
+
+    public static void QuantityTextColumnValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args)
+    {
+      args.Value = GetQuantityText(args.GetSingle(0), args.GetString(1),
+        args.GetSingle(2), args.GetString(3), args.GetSingle(4), args.GetString(5));
+    }
+
+    private static string GetQuantityText(float q1, string muName1,
+      float q2, string muName2,
+      float q3, string muName3)
+    {
+      string[] a = new string[3];
+      a[0] = GetQuantityText(q1, muName1);
+      a[1] = GetQuantityText(q2, muName2);
+      a[2] = GetQuantityText(q3, muName3);
+
+      return DataTools.JoinNotEmptyStrings(", ", a);
+    }
+
+    private static string GetQuantityText(float q, string muName)
+    {
+      if (q == 0f && String.IsNullOrEmpty(muName))
+        return String.Empty;
+
+      return q.ToString("0.###") + " " + muName;
+    }
+
+    #endregion
+
     #region Редактор
 
     public static void InitSubDocEditForm(object sender, InitSubDocEditFormEventArgs args)
@@ -115,6 +145,8 @@ namespace App
       efpQuantity3.Validators.AddError(new DepEqual<float>(efpQuantity3.ValueEx, 0f),
         "Нельзя задавать третье количество без второго",
         new DepEqual<float>(efpQuantity2.ValueEx, 0f));
+
+      EditProductMUSet.AddMUValidators(efpMU1, efpMU2, efpMU3);
 
       #endregion
 
@@ -263,7 +295,7 @@ namespace App
       {
         if (!CB_Enter_ErrorLogged)
         {
-          LogoutTools.LogoutException(e, "Ошибка загрузки списка значений для единицы измерения "+nMU.ToString()+", ProductId= " + productId.ToString() + ". Повторные ошибки не регистрируются");
+          LogoutTools.LogoutException(e, "Ошибка загрузки списка значений для единицы измерения " + nMU.ToString() + ", ProductId= " + productId.ToString() + ". Повторные ошибки не регистрируются");
           CB_Enter_ErrorLogged = true;
         }
         EFPApp.ShowTempMessage("Не удалось получить список значений");
