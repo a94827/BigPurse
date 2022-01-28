@@ -30,7 +30,7 @@ namespace App
       dt.GridProducer.Columns.AddDate("Date", "Дата");
       dt.GridProducer.Columns.AddInt("OpOrder", "П.", 3);
       dt.GridProducer.Columns.LastAdded.DisplayName = "Порядок операции в пределах даты";
-      dt.GridProducer.Columns.AddInt("OpOrder2", "OpOrder2", 3); // !!!
+      //dt.GridProducer.Columns.AddInt("OpOrder2", "OpOrder2", 3); 
 
       dt.GridProducer.Columns.AddText("DisplayName", "Содержание", 40, 30);
 
@@ -52,6 +52,14 @@ namespace App
       dt.GridProducer.Columns.AddRefDocText("WalletCredit", this.DocTypes["Wallets"], "Кошелек кредит", 15, 10);
       dt.GridProducer.Columns.LastAdded.SizeGroup = "WalletText";
 
+      dt.GridProducer.Columns.AddUserText("Contra_Text", "OpType,IncomeSource,Shop,Debtor",
+        new EFPGridProducerValueNeededEventHandler(EditOperation.Contra_Text_ValueNeeded),
+        "Контрагент", 15, 5);
+      dt.GridProducer.Columns.LastAdded.DisplayName = "Контрагент (источник дохода, магазин, дебитор, кредитор)";
+      dt.GridProducer.Columns.AddText("IncomeSource.Name", "Источник дохода", 15, 5);
+      dt.GridProducer.Columns.AddText("Shop.Name", "Магазин", 15, 5);
+      dt.GridProducer.Columns.AddText("Debtor.Name", "Дебитор/кредитор", 15, 5);
+
       dt.GridProducer.Columns.AddText("Comment", "Комментарий", 30, 10);
 
       dt.GridProducer.ToolTips.AddText("DisplayName", "Содержание");
@@ -68,6 +76,7 @@ namespace App
       dt.GridProducer.DefaultConfig.Columns.AddFill("DisplayName", 100);
       dt.GridProducer.DefaultConfig.Columns.Add("Total");
       dt.GridProducer.DefaultConfig.Columns.Add("Wallet_Text");
+      dt.GridProducer.DefaultConfig.Columns.Add("Contra_Text");
       dt.GridProducer.DefaultConfig.ToolTips.Add("Comment");
 
       dt.AddImageHandler("Operation", new DBxColumns("OpType"), new DBxImageValueNeededEventHandler(EditOperation.ImageValueNeeded));

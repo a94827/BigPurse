@@ -70,6 +70,24 @@ namespace App
       args.Value = DataTools.JoinNotEmptyStrings(" <- ", new string[] { s1, s2 });
     }
 
+    public static void Contra_Text_ValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args)
+    {
+      OperationType opType = args.GetEnum<OperationType>(0);
+      switch (opType)
+      { 
+        case OperationType.Income:
+          args.Value = ProgramDBUI.TheUI.DocTypes["IncomeSources"].GetTextValue(args.GetInt(1));
+          break;
+        case OperationType.Expense:
+          args.Value = ProgramDBUI.TheUI.DocTypes["Shops"].GetTextValue(args.GetInt(2));
+          break;
+        case OperationType.Debt:
+        case OperationType.Credit:
+          args.Value = ProgramDBUI.TheUI.DocTypes["Debtors"].GetTextValue(args.GetInt(3));
+          break;
+      }
+    }
+
     /* ???
     private class WalletGridFilter : RefDocGridFilter
     {

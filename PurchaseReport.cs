@@ -34,6 +34,11 @@ namespace App
       efpWallets.CanBeEmpty = true;
       efpWallets.EmptyText = "[ Все кошельки ]";
       efpWallets.MaxTextItemCount = 3;
+
+      efpShops = new EFPMultiDocComboBox(FormProvider, cbShops, ProgramDBUI.TheUI.DocTypes["Shops"]);
+      efpShops.SelectionMode = DocSelectionMode.MultiCheckBoxes;
+      efpShops.CanBeEmpty = true;
+      efpShops.EmptyText = "[ Все магазины ]";
     }
 
     #endregion
@@ -45,6 +50,8 @@ namespace App
     public EFPMultiDocComboBox efpProducts;
 
     public EFPMultiDocComboBox efpWallets;
+
+    public EFPMultiDocComboBox efpShops;
 
     #endregion
   }
@@ -61,6 +68,8 @@ namespace App
 
     public Int32[] WalletIds;
 
+    public Int32[] ShopIds;
+
     #endregion
 
     #region Переопределенные методы
@@ -73,6 +82,8 @@ namespace App
 
       if (WalletIds != null && WalletIds.Length > 0)
         base.FilterInfo.Add("Кошельки", String.Join(", ", ProgramDBUI.TheUI.DocProvider.GetTextValues("Wallets", WalletIds)));
+      if (ShopIds != null && ShopIds.Length > 0)
+        base.FilterInfo.Add("Магазины", String.Join(", ", ProgramDBUI.TheUI.DocProvider.GetTextValues("Shops", ShopIds)));
     }
 
     public override EFPReportExtParamsForm CreateForm()
@@ -87,6 +98,7 @@ namespace App
       Form2.efpPeriod.Last.NValue = LastDate;
       Form2.efpProducts.DocIds = ProductIds;
       Form2.efpWallets.DocIds = WalletIds;
+      Form2.efpShops.DocIds = ShopIds;
     }
 
     public override void ReadFormValues(EFPReportExtParamsForm Form, EFPReportExtParamsPart Part)
@@ -94,8 +106,9 @@ namespace App
       PurchaseReportParamForm Form2 = (PurchaseReportParamForm)Form;
       FirstDate = Form2.efpPeriod.First.NValue;
       LastDate = Form2.efpPeriod.Last.NValue;
-      WalletIds = Form2.efpWallets.DocIds;
       ProductIds = Form2.efpProducts.DocIds;
+      WalletIds = Form2.efpWallets.DocIds;
+      ShopIds = Form2.efpShops.DocIds;
     }
 
     public override void WriteConfig(FreeLibSet.Config.CfgPart Config, EFPReportExtParamsPart Part)
@@ -104,6 +117,7 @@ namespace App
       Config.SetNullableDate("LastDate", LastDate);
       Config.SetIntCommaString("Products", ProductIds);
       Config.SetIntCommaString("Wallets", WalletIds);
+      Config.SetIntCommaString("Shops", ShopIds);
     }
 
     public override void ReadConfig(FreeLibSet.Config.CfgPart Config, EFPReportExtParamsPart Part)
@@ -112,6 +126,7 @@ namespace App
       LastDate = Config.GetNullableDate("LastDate");
       ProductIds = Config.GetIntCommaString("Products");
       WalletIds = Config.GetIntCommaString("Wallets");
+      ShopIds = Config.GetIntCommaString("Shops");
     }
 
     #endregion
@@ -171,6 +186,8 @@ namespace App
       filters.Add(new DateRangeFilter("DocId.Date", Params.FirstDate, Params.LastDate));
       if (Params.WalletIds != null && Params.WalletIds.Length > 0)
         filters.Add(new IdsFilter("DocId.WalletCredit", Params.WalletIds));
+      if (Params.ShopIds != null && Params.ShopIds.Length > 0)
+        filters.Add(new IdsFilter("DocId.Shop", Params.ShopIds));
       filters.Add(DBSSubDocType.DeletedFalseFilter);
       filters.Add(DBSSubDocType.DocIdDeletedFalseFilter);
       filters.Add(new ValueFilter("DocId.OpType", (int)OperationType.Expense)); // чтобы мусор не пролез

@@ -29,12 +29,14 @@ namespace App
     private void InitializeComponent()
     {
       this.groupBox2 = new System.Windows.Forms.GroupBox();
+      this.cbProducts = new FreeLibSet.Controls.UserSelComboBox();
+      this.label3 = new System.Windows.Forms.Label();
       this.cbWallets = new FreeLibSet.Controls.UserSelComboBox();
       this.label2 = new System.Windows.Forms.Label();
       this.edPeriod = new FreeLibSet.Controls.DateRangeBox();
       this.label1 = new System.Windows.Forms.Label();
-      this.cbProducts = new FreeLibSet.Controls.UserSelComboBox();
-      this.label3 = new System.Windows.Forms.Label();
+      this.cbShops = new FreeLibSet.Controls.UserSelComboBox();
+      this.label4 = new System.Windows.Forms.Label();
       this.MainPanel.SuspendLayout();
       this.groupBox2.SuspendLayout();
       this.SuspendLayout();
@@ -42,10 +44,12 @@ namespace App
       // MainPanel
       // 
       this.MainPanel.Controls.Add(this.groupBox2);
-      this.MainPanel.Size = new System.Drawing.Size(579, 127);
+      this.MainPanel.Size = new System.Drawing.Size(579, 157);
       // 
       // groupBox2
       // 
+      this.groupBox2.Controls.Add(this.cbShops);
+      this.groupBox2.Controls.Add(this.label4);
       this.groupBox2.Controls.Add(this.cbProducts);
       this.groupBox2.Controls.Add(this.label3);
       this.groupBox2.Controls.Add(this.cbWallets);
@@ -55,10 +59,28 @@ namespace App
       this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
       this.groupBox2.Location = new System.Drawing.Point(0, 0);
       this.groupBox2.Name = "groupBox2";
-      this.groupBox2.Size = new System.Drawing.Size(579, 127);
+      this.groupBox2.Size = new System.Drawing.Size(579, 157);
       this.groupBox2.TabIndex = 0;
       this.groupBox2.TabStop = false;
       this.groupBox2.Text = "Параметры отчета";
+      // 
+      // cbProducts
+      // 
+      this.cbProducts.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                  | System.Windows.Forms.AnchorStyles.Right)));
+      this.cbProducts.Location = new System.Drawing.Point(102, 73);
+      this.cbProducts.Name = "cbProducts";
+      this.cbProducts.Size = new System.Drawing.Size(471, 20);
+      this.cbProducts.TabIndex = 3;
+      // 
+      // label3
+      // 
+      this.label3.Location = new System.Drawing.Point(12, 73);
+      this.label3.Name = "label3";
+      this.label3.Size = new System.Drawing.Size(84, 19);
+      this.label3.TabIndex = 2;
+      this.label3.Text = "&Товары";
+      this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // cbWallets
       // 
@@ -94,29 +116,29 @@ namespace App
       this.label1.Text = "Период";
       this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
-      // cbProducts
+      // cbShops
       // 
-      this.cbProducts.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+      this.cbShops.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                   | System.Windows.Forms.AnchorStyles.Right)));
-      this.cbProducts.Location = new System.Drawing.Point(102, 73);
-      this.cbProducts.Name = "cbProducts";
-      this.cbProducts.Size = new System.Drawing.Size(471, 20);
-      this.cbProducts.TabIndex = 3;
+      this.cbShops.Location = new System.Drawing.Point(102, 125);
+      this.cbShops.Name = "cbShops";
+      this.cbShops.Size = new System.Drawing.Size(471, 20);
+      this.cbShops.TabIndex = 7;
       // 
-      // label3
+      // label4
       // 
-      this.label3.Location = new System.Drawing.Point(12, 73);
-      this.label3.Name = "label3";
-      this.label3.Size = new System.Drawing.Size(84, 19);
-      this.label3.TabIndex = 2;
-      this.label3.Text = "&Товары";
-      this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+      this.label4.Location = new System.Drawing.Point(12, 125);
+      this.label4.Name = "label4";
+      this.label4.Size = new System.Drawing.Size(84, 19);
+      this.label4.TabIndex = 6;
+      this.label4.Text = "Магазины";
+      this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // PurchaseReportParamForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(579, 175);
+      this.ClientSize = new System.Drawing.Size(579, 205);
       this.Name = "PurchaseReportParamForm";
       this.Text = "Покупки";
       this.MainPanel.ResumeLayout(false);
@@ -134,5 +156,7 @@ namespace App
     private System.Windows.Forms.Label label1;
     private FreeLibSet.Controls.UserSelComboBox cbProducts;
     private System.Windows.Forms.Label label3;
+    private FreeLibSet.Controls.UserSelComboBox cbShops;
+    private System.Windows.Forms.Label label4;
   }
 }
