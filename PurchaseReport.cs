@@ -417,7 +417,7 @@ namespace App
               args.AddRowError(" оличество должно быть заполнено", "Quantity1,MU1.Name");
               break;
             case PresenceType.WarningIfNone:
-              args.AddRowInformation(" оличество обычно должно быть заполнено", "Quantity1,MU1.Name");
+              args.AddRowWarning(" оличество обычно должно быть заполнено", "Quantity1,MU1.Name");
               break;
           }
         }

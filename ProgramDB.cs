@@ -311,8 +311,8 @@ namespace App
       dt.Struct.Columns.LastAdded.Nullable = true;
       dt.Struct.Columns.AddInt("QuantityPresence", DataTools.GetEnumRange(typeof(PresenceType)));
       dt.Struct.Columns.LastAdded.Nullable = true;
-      dt.Struct.Columns.AddBoolean("HasMUSets");
-      dt.CalculatedColumns.Add("HasMUSets");
+      dt.Struct.Columns.AddInt16("MUSetCount");
+      dt.CalculatedColumns.Add("MUSetCount");
 
       dt.Struct.Columns.AddMemo("Comment");
       dt.BeforeWrite += new ServerDocTypeBeforeWriteEventHandler(Product_BeforeWrite);
@@ -422,7 +422,7 @@ namespace App
 
     void Product_BeforeWrite(object sender, ServerDocTypeBeforeWriteEventArgs args)
     {
-      args.Doc.Values["HasMUSets"].SetBoolean(args.Doc.SubDocs["ProductMUSets"].NonDeletedSubDocCount > 0);
+      args.Doc.Values["MUSetCount"].SetInteger(args.Doc.SubDocs["ProductMUSets"].NonDeletedSubDocCount);
 
       ProductBuffer.ResetProductData();
     }
