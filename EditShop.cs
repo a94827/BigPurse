@@ -51,6 +51,10 @@ namespace App
       efpName.CanBeEmpty = false;
       args.AddText(efpName, "Name", false);
 
+      EFPDocComboBox efpGroup = new EFPDocComboBox(page.BaseProvider, cbGroup, ProgramDBUI.TheUI.DocTypes["ShopGroups"]);
+      efpGroup.CanBeEmpty = true;
+      args.AddRef(efpGroup, "GroupId", true);
+
       #region Комментарий
 
       EFPTextBox efpComment = new EFPTextBox(page.BaseProvider, edComment);

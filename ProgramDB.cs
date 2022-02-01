@@ -240,13 +240,35 @@ namespace App
 
       #region Магазины
 
+      #region Группы
+
+      dt = new DBxDocType("ShopGroups");
+      dt.SingularTitle = "Группа магазинов";
+      dt.PluralTitle = "Группы магазинов";
+      dt.Struct.Columns.AddString("Name", 40, false);
+      dt.Struct.Columns.AddReference("ParentId", "ShopGroups", true); // Построение дерева групп
+      dt.TreeParentColumnName = "ParentId";
+      dt.DefaultOrder = new DBxOrder("Name");
+      _DocTypes.Add(dt);
+
+      #endregion
+
+
+      #region Основной документ
+
       dt = new DBxDocType("Shops");
       dt.SingularTitle = "Магазин";
       dt.PluralTitle = "Магазины";
       dt.Struct.Columns.AddString("Name", 100, false);
       dt.Struct.Columns.AddMemo("Comment");
+
+      dt.Struct.Columns.AddReference("GroupId", "ShopGroups", true);
+      dt.GroupRefColumnName = "GroupId";
+
       dt.DefaultOrder = new DBxOrder("Name");
       _DocTypes.Add(dt);
+
+      #endregion
 
       #endregion
 

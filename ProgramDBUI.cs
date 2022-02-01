@@ -205,6 +205,7 @@ namespace App
       dt.GridProducer.Columns.AddText("Name", "Название", 40, 15);
       dt.GridProducer.Columns.LastAdded.CanIncSearch = true;
 
+      dt.GridProducer.Columns.AddText("GroupId.Name", "Группа", 15, 5);
       dt.GridProducer.Columns.AddText("Comment", "Комментарий", 30, 10);
 
       dt.GridProducer.ToolTips.AddText("Comment", String.Empty).DisplayName = "Комментарий (если задан)";
@@ -231,6 +232,8 @@ namespace App
 
       dt.GridProducer.Columns.AddText("Name", "Название", 40, 15);
       dt.GridProducer.Columns.LastAdded.CanIncSearch = true;
+
+      dt.GridProducer.Columns.AddText("ParentId.Name", "Родительский объект", 40, 15);
 
       dt.GridProducer.Columns.AddText("Comment", "Комментарий", 30, 10);
 

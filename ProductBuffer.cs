@@ -173,16 +173,16 @@ namespace App
         throw new BugException("QuantutyPresence");
 #endif
 
-      if (pd.MUSets.Length == 0)
-        pd.MaxQuantityLevel = 3;
-      else if (pd.QuantityPresence == PresenceType.Disabled)
+      if (pd.QuantityPresence == PresenceType.Disabled)
         pd.MaxQuantityLevel = 0;
+      else if (pd.MUSets.Length == 0)
+        pd.MaxQuantityLevel = 3;
       else
       {
         pd.MaxQuantityLevel = 1;
         for (int i = 0; i < pd.MUSets.Length; i++)
-        { 
-          int lvl=1;
+        {
+          int lvl = 1;
           if (pd.MUSets[i].MUId3 != 0)
             lvl = 3;
           else if (pd.MUSets[i].MUId2 != 0)
@@ -212,7 +212,7 @@ namespace App
       switch (columnName)
       {
         case "Description":
-          return pd.DescriptionPresence!=PresenceType.Disabled;
+          return pd.DescriptionPresence != PresenceType.Disabled;
         case "Quantity1":
         case "MU1":
           return pd.MaxQuantityLevel >= 1;
@@ -253,7 +253,7 @@ namespace App
       if (prs == PresenceType.Disabled)
         return DataTools.EmptyStrings;
       //if (fixedList == null)
-        return DoGetOpProductValues(productId, columnName); // истори€
+      return DoGetOpProductValues(productId, columnName); // истори€
       //else
       //  return fixedList;
     }
@@ -269,7 +269,7 @@ namespace App
       if (String.IsNullOrEmpty(value))
       {
         switch (pd.DescriptionPresence)
-        { 
+        {
           case PresenceType.Required:
             args.SetError("ѕоле должно быть заполнено");
             break;

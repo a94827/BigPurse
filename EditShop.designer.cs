@@ -36,6 +36,8 @@
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.edName = new System.Windows.Forms.TextBox();
       this.label1 = new System.Windows.Forms.Label();
+      this.cbGroup = new FreeLibSet.Controls.UserSelComboBox();
+      this.label2 = new System.Windows.Forms.Label();
       this.tabControl1.SuspendLayout();
       this.tabPage1.SuspendLayout();
       this.MainPanel1.SuspendLayout();
@@ -78,9 +80,9 @@
       // 
       this.groupBox5.Controls.Add(this.edComment);
       this.groupBox5.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.groupBox5.Location = new System.Drawing.Point(0, 53);
+      this.groupBox5.Location = new System.Drawing.Point(0, 77);
       this.groupBox5.Name = "groupBox5";
-      this.groupBox5.Size = new System.Drawing.Size(568, 173);
+      this.groupBox5.Size = new System.Drawing.Size(568, 149);
       this.groupBox5.TabIndex = 1;
       this.groupBox5.TabStop = false;
       this.groupBox5.Text = "Комментари&й";
@@ -94,17 +96,19 @@
       this.edComment.Multiline = true;
       this.edComment.Name = "edComment";
       this.edComment.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-      this.edComment.Size = new System.Drawing.Size(556, 148);
+      this.edComment.Size = new System.Drawing.Size(556, 124);
       this.edComment.TabIndex = 0;
       // 
       // groupBox1
       // 
+      this.groupBox1.Controls.Add(this.cbGroup);
+      this.groupBox1.Controls.Add(this.label2);
       this.groupBox1.Controls.Add(this.edName);
       this.groupBox1.Controls.Add(this.label1);
       this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
       this.groupBox1.Location = new System.Drawing.Point(0, 0);
       this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(568, 53);
+      this.groupBox1.Size = new System.Drawing.Size(568, 77);
       this.groupBox1.TabIndex = 0;
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "Магазин";
@@ -126,6 +130,24 @@
       this.label1.TabIndex = 0;
       this.label1.Text = "&Название";
       this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+      // 
+      // cbGroup
+      // 
+      this.cbGroup.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                  | System.Windows.Forms.AnchorStyles.Right)));
+      this.cbGroup.Location = new System.Drawing.Point(180, 45);
+      this.cbGroup.Name = "cbGroup";
+      this.cbGroup.Size = new System.Drawing.Size(372, 20);
+      this.cbGroup.TabIndex = 3;
+      // 
+      // label2
+      // 
+      this.label2.Location = new System.Drawing.Point(6, 45);
+      this.label2.Name = "label2";
+      this.label2.Size = new System.Drawing.Size(158, 20);
+      this.label2.TabIndex = 2;
+      this.label2.Text = "&Группа";
+      this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // EditShop
       // 
@@ -155,5 +177,7 @@
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.GroupBox groupBox5;
     private System.Windows.Forms.TextBox edComment;
+    private FreeLibSet.Controls.UserSelComboBox cbGroup;
+    private System.Windows.Forms.Label label2;
   }
 }
