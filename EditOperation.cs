@@ -229,6 +229,7 @@ namespace App
       {
         efpWalletDebt = new EFPDocComboBox(page.BaseProvider, cbWalletDebt, ProgramDBUI.TheUI.DocTypes["Wallets"]);
         efpWalletDebt.Label = lblWalletDebt;
+        efpWalletDebt.DisplayName = "Кошелек - дебет";
         efpWalletDebt.CanBeEmpty = false;
         args.AddRef(efpWalletDebt, "WalletDebt", true);
       }
@@ -244,6 +245,7 @@ namespace App
       {
         efpWalletCredit = new EFPDocComboBox(page.BaseProvider, cbWalletCredit, ProgramDBUI.TheUI.DocTypes["Wallets"]);
         efpWalletCredit.Label = lblWalletCredit;
+        efpWalletCredit.DisplayName = "Кошелек - кредит";
         efpWalletCredit.CanBeEmpty = false;
         args.AddRef(efpWalletCredit, "WalletCredit", true);
       }

@@ -37,7 +37,7 @@ namespace App
         args.GetSingle(2), args.GetString(3), args.GetSingle(4), args.GetString(5));
     }
 
-    private static string GetQuantityText(float q1, string muName1,
+    public static string GetQuantityText(float q1, string muName1,
       float q2, string muName2,
       float q3, string muName3)
     {

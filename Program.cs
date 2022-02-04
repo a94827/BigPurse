@@ -73,8 +73,11 @@ namespace App
             EFPApp.LoadMainWindowLayout();
             EFPApp.FormCreators.Add(ProgramDBUI.TheUI);
             EFPApp.LoadComposition();
-            if (EFPApp.Interface.ChildFormCount == 0)
-              EFPApp.Interface.ShowChildForm(new DocTableViewForm(ProgramDBUI.TheUI.DocTypes["Operations"], DocTableViewMode.Browse));
+
+            //if (EFPApp.Interface.ChildFormCount == 0)
+            //if (ProgramDBUI.TheUI.DocTypes["Operations"].FindAndActivate(String.Empty))
+            //  EFPApp.Interface.ShowChildForm(new DocTableViewForm(ProgramDBUI.TheUI.DocTypes["Operations"], DocTableViewMode.Browse));
+            ProgramDBUI.TheUI.DocTypes["Operations"].ShowOrOpen(null);
             EFPApp.BeforeClosing += new System.ComponentModel.CancelEventHandler(EFPApp_BeforeClosing);
 
             #endregion
