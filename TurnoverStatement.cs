@@ -131,19 +131,19 @@ namespace App
 
     protected override void BuildReport()
     {
-      DataTable Table = new DataTable();
-      Table.Columns.Add("Id", typeof(Int32));
-      Table.Columns.Add("Date", typeof(DateTime));
-      Table.Columns.Add("OpType", typeof(int));
-      Table.Columns.Add("InitialBalance", typeof(decimal));
-      Table.Columns.Add("DisplayName", typeof(string));
-      Table.Columns.Add("TotalDebt", typeof(decimal));
-      Table.Columns.Add("TotalCredit", typeof(decimal));
-      Table.Columns.Add("FinalBalance", typeof(decimal));
-      Table.Columns.Add("BalanceConfirmed", typeof(bool));
+      DataTable table = new DataTable();
+      table.Columns.Add("Id", typeof(Int32));
+      table.Columns.Add("Date", typeof(DateTime));
+      table.Columns.Add("OpType", typeof(int));
+      table.Columns.Add("InitialBalance", typeof(decimal));
+      table.Columns.Add("DisplayName", typeof(string));
+      table.Columns.Add("TotalDebt", typeof(decimal));
+      table.Columns.Add("TotalCredit", typeof(decimal));
+      table.Columns.Add("FinalBalance", typeof(decimal));
+      table.Columns.Add("BalanceConfirmed", typeof(bool));
+      table.Columns.Add("RecType", typeof(int)); // 0 - операция, 1 - итоги по кошелькам 2 - общий итог
 
-      decimal currSaldo = 0m;
-      decimal[] walletSaldo = new decimal[Params.WalletIds.Length];
+      decimal[] walletInitBalance = new decimal[Params.WalletIds.Length];
 
       #region Начальное сальдо
 
@@ -169,9 +169,14 @@ namespace App
         si2.Where = AndFilter.FromList(filters);
         decimal SumCredit = DataTools.GetDecimal(ProgramDBUI.TheUI.DocProvider.FillSelect(si2).Rows[0][0]);
 
-        walletSaldo[i] = SumDebt - SumCredit;
-        currSaldo += walletSaldo[i];
+        walletInitBalance[i] = SumDebt - SumCredit;
       }
+
+      decimal[] walletCurrBalance = (decimal[])(walletInitBalance.Clone());
+      decimal totalCurrBalance = DataTools.SumDecimal(walletCurrBalance);
+      decimal[] walletDebt = new decimal[Params.WalletIds.Length];
+      decimal[] walletCredit = new decimal[Params.WalletIds.Length];
+
 
       #endregion
 
@@ -196,7 +201,7 @@ namespace App
           continue;
 
 
-        DataRow resRow = Table.NewRow();
+        DataRow resRow = table.NewRow();
 
         DataTools.CopyRowValues(srcRow, resRow, true);
         if (pDebtWallet < 0)
@@ -204,18 +209,20 @@ namespace App
         if (pCreditWallet < 0)
           resRow["TotalCredit"] = DBNull.Value;
 
-        resRow["InitialBalance"] = currSaldo;
+        resRow["InitialBalance"] = totalCurrBalance;
         if (pDebtWallet >= 0)
         {
-          currSaldo += DataTools.GetDecimal(srcRow, "TotalDebt");
-          walletSaldo[pDebtWallet] += DataTools.GetDecimal(srcRow, "TotalDebt");
+          walletCurrBalance[pDebtWallet] += DataTools.GetDecimal(srcRow, "TotalDebt");
+          walletDebt[pDebtWallet] += DataTools.GetDecimal(srcRow, "TotalDebt");
+          totalCurrBalance += DataTools.GetDecimal(srcRow, "TotalDebt");
         }
         if (pCreditWallet >= 0)
         {
-          currSaldo -= DataTools.GetDecimal(srcRow, "TotalCredit");
-          walletSaldo[pCreditWallet] -= DataTools.GetDecimal(srcRow, "TotalCredit");
+          walletCurrBalance[pCreditWallet] -= DataTools.GetDecimal(srcRow, "TotalCredit");
+          walletCredit[pCreditWallet] += DataTools.GetDecimal(srcRow, "TotalCredit");
+          totalCurrBalance -= DataTools.GetDecimal(srcRow, "TotalCredit");
         }
-        resRow["FinalBalance"] = currSaldo;
+        resRow["FinalBalance"] = totalCurrBalance;
 
         if (opType == OperationType.Balance)
         {
@@ -229,7 +236,7 @@ namespace App
           decimal s = DataTools.GetDecimal(srcRow, "InlineSum");
           sb.Append(s.ToString(Tools.MoneyFormat));
           sb.Append(" - ");
-          if (s == walletSaldo[pDebtWallet])
+          if (s == walletCurrBalance[pDebtWallet])
           {
             resRow["BalanceConfirmed"] = true;
             sb.Append("Подтвержден");
@@ -238,17 +245,49 @@ namespace App
           {
             resRow["BalanceConfirmed"] = false;
             sb.Append("Не подтвержден. Реальный остаток: ");
-            sb.Append(walletSaldo[pDebtWallet].ToString(Tools.MoneyFormat));
+            sb.Append(walletCurrBalance[pDebtWallet].ToString(Tools.MoneyFormat));
           }
           resRow["DisplayName"] = sb.ToString();
         }
 
-        Table.Rows.Add(resRow);
+        table.Rows.Add(resRow);
       }
 
       #endregion
 
-      MainPage.DataSource = Table.DefaultView;
+      #region Конечное сальдо по кошелькам
+
+      if (Params.WalletIds.Length > 1)
+      {
+        for (int i = 0; i < Params.WalletIds.Length; i++)
+        {
+          DataRow walletRow = table.NewRow();
+          walletRow["DisplayName"] = ProgramDBUI.TheUI.DocTypes["Wallets"].GetTextValue(Params.WalletIds[i]);
+          walletRow["InitialBalance"] = walletInitBalance[i];
+          walletRow["TotalDebt"] = walletDebt[i];
+          walletRow["TotalCredit"] = walletCredit[i];
+          walletRow["FinalBalance"] = walletCurrBalance[i];
+          walletRow["RecType"] = 1;
+          table.Rows.Add(walletRow);
+        }
+      }
+
+      #endregion
+
+      #region Итоговая строка
+
+      DataRow totalRow = table.NewRow();
+      totalRow["DisplayName"] = "Итого";
+      totalRow["InitialBalance"] = DataTools.SumDecimal(walletInitBalance);
+      totalRow["TotalDebt"] = DataTools.SumDecimal(walletDebt);
+      totalRow["TotalCredit"] = DataTools.SumDecimal(walletCredit);
+      totalRow["FinalBalance"] = DataTools.SumDecimal(walletCurrBalance);
+      totalRow["RecType"] = 2;
+      table.Rows.Add(totalRow);
+
+      #endregion
+
+      MainPage.DataSource = table.DefaultView;
     }
 
     #endregion
@@ -286,6 +325,7 @@ namespace App
 
     void MainPage_InitGrid(object Sender, EventArgs Args)
     {
+      MainPage.ControlProvider.GetRowAttributes += new EFPDataGridViewRowAttributesEventHandler(MainPage_GetRowAttributes);
       MainPage.ControlProvider.GetCellAttributes += new EFPDataGridViewCellAttributesEventHandler(MainPage_GetCellAttributes);
 
       MainPage.ControlProvider.ReadOnly = false;
@@ -297,20 +337,57 @@ namespace App
       MainPage.ControlProvider.GetDocSel += new EFPDBxGridViewDocSelEventHandler(MainPage_GetDocSel);
     }
 
+    void MainPage_GetRowAttributes(object sender, EFPDataGridViewRowAttributesEventArgs args)
+    {
+      int recType = DataTools.GetInt(args.DataRow, "RecType");
+      switch (recType)
+      {
+        case 1: args.ColorType = EFPDataGridViewColorType.Total1; break;
+        case 2: args.ColorType = EFPDataGridViewColorType.TotalRow; break;
+      }
+    }
+
     void MainPage_GetCellAttributes(object sender, EFPDataGridViewCellAttributesEventArgs args)
     {
       switch (args.ColumnName)
-      { 
+      {
         case "InitialBalance":
         case "FinalBalance":
           if (DataTools.GetDecimal(args.DataRow, args.ColumnName) < 0)
             args.ColorType = EFPDataGridViewColorType.Error;
           break;
         case "DisplayName":
-          if (DataTools.GetEnum<OperationType>(args.DataRow, "OpType") == OperationType.Balance)
+          if (DataTools.GetInt(args.DataRow, "RecType") == 0 &&
+            DataTools.GetEnum<OperationType>(args.DataRow, "OpType") == OperationType.Balance)
           {
             if (!DataTools.GetBool(args.DataRow, "BalanceConfirmed"))
               args.ColorType = EFPDataGridViewColorType.Error;
+          }
+          break;
+        case "Id_Image":
+          switch (DataTools.GetInt(args.DataRow, "RecType"))
+          {
+            case 0:
+              if (DataTools.GetEnum<OperationType>(args.DataRow, "OpType") == OperationType.Balance)
+              {
+                if (DataTools.GetBool(args.DataRow, "BalanceConfirmed"))
+                {
+                  args.Value = EFPApp.MainImages.Images["OK"];
+                  args.ToolTipText = "Баланс совпадает";
+                }
+                else
+                {
+                  args.Value = EFPApp.MainImages.Images["Error"];
+                  args.ToolTipText = "Баланс не совпадает";
+                }
+              }
+              break;
+            case 1:
+              args.Value = EFPApp.MainImages.Images["Wallet"];
+              break;
+            case 2:
+              args.Value = EFPApp.MainImages.Images["Sum"];
+              break;
           }
           break;
       }

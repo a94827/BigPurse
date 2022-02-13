@@ -87,9 +87,11 @@ namespace App
       dt.CanInsertCopy = true;
       dt.CanMultiEdit = true;
 
-      dt.Columns["Date"].DefaultValue = DateTime.Today;
       dt.Columns["Date"].NewMode = ColumnNewMode.SavedIfChangedElseDefault;
+      //dt.Columns["Date"].DefaultValue = DateTime.Today;
+      dt.Columns["Date"].DefaultValue = null; // так удобнее, иначе забываю выбрать дату.
       dt.Columns["OpOrder"].NewMode = ColumnNewMode.SavedIfChangedElseDefault;
+      dt.Columns["OpOrder"].DefaultValue = 0;
       dt.Columns["OpType"].NewMode = ColumnNewMode.Saved;
       dt.Columns["WalletDebt"].NewMode = ColumnNewMode.Saved;
       dt.Columns["WalletCredit"].NewMode = ColumnNewMode.Saved;
