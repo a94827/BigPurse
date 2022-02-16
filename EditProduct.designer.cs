@@ -48,6 +48,8 @@
       this.label3 = new System.Windows.Forms.Label();
       this.label4 = new System.Windows.Forms.Label();
       this.cbQuantityPresence = new System.Windows.Forms.ComboBox();
+      this.cbPurposePresence = new System.Windows.Forms.ComboBox();
+      this.label5 = new System.Windows.Forms.Label();
       this.tabControl1.SuspendLayout();
       this.tabPage1.SuspendLayout();
       this.MainPanel1.SuspendLayout();
@@ -68,7 +70,7 @@
       this.tabControl1.Location = new System.Drawing.Point(0, 0);
       this.tabControl1.Name = "tabControl1";
       this.tabControl1.SelectedIndex = 0;
-      this.tabControl1.Size = new System.Drawing.Size(582, 316);
+      this.tabControl1.Size = new System.Drawing.Size(582, 361);
       this.tabControl1.TabIndex = 0;
       // 
       // tabPage1
@@ -171,7 +173,7 @@
       this.tabPage2.Location = new System.Drawing.Point(4, 22);
       this.tabPage2.Name = "tabPage2";
       this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-      this.tabPage2.Size = new System.Drawing.Size(574, 290);
+      this.tabPage2.Size = new System.Drawing.Size(574, 335);
       this.tabPage2.TabIndex = 1;
       this.tabPage2.Text = "В операции";
       this.tabPage2.UseVisualStyleBackColor = true;
@@ -183,7 +185,7 @@
       this.MainPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
       this.MainPanel2.Location = new System.Drawing.Point(3, 3);
       this.MainPanel2.Name = "MainPanel2";
-      this.MainPanel2.Size = new System.Drawing.Size(568, 284);
+      this.MainPanel2.Size = new System.Drawing.Size(568, 329);
       this.MainPanel2.TabIndex = 0;
       // 
       // groupBox3
@@ -191,9 +193,9 @@
       this.groupBox3.Controls.Add(this.grMUSets);
       this.groupBox3.Controls.Add(this.panSpbMUSets);
       this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.groupBox3.Location = new System.Drawing.Point(0, 89);
+      this.groupBox3.Location = new System.Drawing.Point(0, 118);
       this.groupBox3.Name = "groupBox3";
-      this.groupBox3.Size = new System.Drawing.Size(568, 195);
+      this.groupBox3.Size = new System.Drawing.Size(568, 211);
       this.groupBox3.TabIndex = 1;
       this.groupBox3.TabStop = false;
       this.groupBox3.Text = "Сочетания единиц измерения";
@@ -204,7 +206,7 @@
       this.grMUSets.Dock = System.Windows.Forms.DockStyle.Fill;
       this.grMUSets.Location = new System.Drawing.Point(3, 53);
       this.grMUSets.Name = "grMUSets";
-      this.grMUSets.Size = new System.Drawing.Size(562, 139);
+      this.grMUSets.Size = new System.Drawing.Size(562, 155);
       this.grMUSets.TabIndex = 1;
       // 
       // panSpbMUSets
@@ -217,6 +219,8 @@
       // 
       // groupBox2
       // 
+      this.groupBox2.Controls.Add(this.cbPurposePresence);
+      this.groupBox2.Controls.Add(this.label5);
       this.groupBox2.Controls.Add(this.cbDescriptionPresence);
       this.groupBox2.Controls.Add(this.label3);
       this.groupBox2.Controls.Add(this.label4);
@@ -224,8 +228,8 @@
       this.groupBox2.Dock = System.Windows.Forms.DockStyle.Top;
       this.groupBox2.Location = new System.Drawing.Point(0, 0);
       this.groupBox2.Name = "groupBox2";
-      this.groupBox2.Size = new System.Drawing.Size(568, 89);
-      this.groupBox2.TabIndex = 1;
+      this.groupBox2.Size = new System.Drawing.Size(568, 118);
+      this.groupBox2.TabIndex = 0;
       this.groupBox2.TabStop = false;
       this.groupBox2.Text = "Наличие данные";
       // 
@@ -246,16 +250,16 @@
       this.label3.Name = "label3";
       this.label3.Size = new System.Drawing.Size(130, 21);
       this.label3.TabIndex = 0;
-      this.label3.Text = "Описание";
+      this.label3.Text = "О&писание";
       this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // label4
       // 
-      this.label4.Location = new System.Drawing.Point(15, 54);
+      this.label4.Location = new System.Drawing.Point(15, 84);
       this.label4.Name = "label4";
       this.label4.Size = new System.Drawing.Size(130, 21);
-      this.label4.TabIndex = 2;
-      this.label4.Text = "Количество";
+      this.label4.TabIndex = 4;
+      this.label4.Text = "Коли&чество";
       this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // cbQuantityPresence
@@ -264,16 +268,36 @@
                   | System.Windows.Forms.AnchorStyles.Right)));
       this.cbQuantityPresence.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
       this.cbQuantityPresence.FormattingEnabled = true;
-      this.cbQuantityPresence.Location = new System.Drawing.Point(151, 54);
+      this.cbQuantityPresence.Location = new System.Drawing.Point(151, 84);
       this.cbQuantityPresence.Name = "cbQuantityPresence";
       this.cbQuantityPresence.Size = new System.Drawing.Size(400, 21);
-      this.cbQuantityPresence.TabIndex = 3;
+      this.cbQuantityPresence.TabIndex = 5;
+      // 
+      // cbPurposePresence
+      // 
+      this.cbPurposePresence.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                  | System.Windows.Forms.AnchorStyles.Right)));
+      this.cbPurposePresence.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.cbPurposePresence.FormattingEnabled = true;
+      this.cbPurposePresence.Location = new System.Drawing.Point(152, 55);
+      this.cbPurposePresence.Name = "cbPurposePresence";
+      this.cbPurposePresence.Size = new System.Drawing.Size(400, 21);
+      this.cbPurposePresence.TabIndex = 3;
+      // 
+      // label5
+      // 
+      this.label5.Location = new System.Drawing.Point(16, 55);
+      this.label5.Name = "label5";
+      this.label5.Size = new System.Drawing.Size(130, 21);
+      this.label5.TabIndex = 2;
+      this.label5.Text = "&Назначение";
+      this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
       // EditProduct
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(582, 316);
+      this.ClientSize = new System.Drawing.Size(582, 361);
       this.Controls.Add(this.tabControl1);
       this.Name = "EditProduct";
       this.tabControl1.ResumeLayout(false);
@@ -314,5 +338,7 @@
     private System.Windows.Forms.ComboBox cbDescriptionPresence;
     private System.Windows.Forms.DataGridView grMUSets;
     private System.Windows.Forms.Panel panSpbMUSets;
+    private System.Windows.Forms.ComboBox cbPurposePresence;
+    private System.Windows.Forms.Label label5;
   }
 }

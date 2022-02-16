@@ -41,6 +41,11 @@ namespace App
       public PresenceType DescriptionPresence;
 
       /// <summary>
+      /// Наличие поля "Назначение"
+      /// </summary>
+      public PresenceType PurposePresence;
+
+      /// <summary>
       /// Наличие количества и единиц измерения
       /// </summary>
       public PresenceType QuantityPresence;
@@ -64,6 +69,7 @@ namespace App
       {
         ProductData res = new ProductData();
         res.DescriptionPresence = this.DescriptionPresence;
+        res.PurposePresence = this.PurposePresence;
         res.QuantityPresence = this.QuantityPresence;
         res.MUSets = this.MUSets;
         res.MaxQuantityLevel = this.MaxQuantityLevel;
@@ -84,6 +90,7 @@ namespace App
     {
       ProductData obj = new ProductData();
       obj.DescriptionPresence = PresenceType.Optional;
+      obj.PurposePresence = PresenceType.Optional;
       obj.QuantityPresence = PresenceType.Optional;
       obj.MUSets = new MUSet[0];
       obj.MaxQuantityLevel = 3;
@@ -133,8 +140,8 @@ namespace App
       }
 
       object[] vals = ProgramDBUI.TheUI.DocProvider.GetValues("Products", productId,
-        //                 0              1                2          
-        new DBxColumns("ParentId,DescriptionPresence,QuantityPresence"));
+        //                 0              1                 2               3
+        new DBxColumns("ParentId,DescriptionPresence,PurposePresence,QuantityPresence"));
 
       ProductData parentData;
       Int32 parentId = DataTools.GetInt(vals[0]);
@@ -148,7 +155,11 @@ namespace App
       if (descripionPresence != PresenceType.Inherited)
         pd.DescriptionPresence = descripionPresence;
 
-      PresenceType quantityPresence = DataTools.GetEnum<PresenceType>(vals[2]);
+      PresenceType purposePresence = DataTools.GetEnum<PresenceType>(vals[2]);
+      if (purposePresence != PresenceType.Inherited)
+        pd.PurposePresence = purposePresence;
+
+      PresenceType quantityPresence = DataTools.GetEnum<PresenceType>(vals[3]);
       if (quantityPresence != PresenceType.Inherited)
         pd.QuantityPresence = quantityPresence;
 
@@ -169,6 +180,8 @@ namespace App
 #if DEBUG
       if (pd.DescriptionPresence == PresenceType.Inherited)
         throw new BugException("DescriptionPresence");
+      if (pd.PurposePresence == PresenceType.Inherited)
+        throw new BugException("PurposePresence");
       if (pd.QuantityPresence == PresenceType.Inherited)
         throw new BugException("QuantutyPresence");
 #endif
@@ -213,6 +226,8 @@ namespace App
       {
         case "Description":
           return pd.DescriptionPresence != PresenceType.Disabled;
+        case "Purpose":
+          return pd.PurposePresence != PresenceType.Disabled;
         case "Quantity1":
         case "MU1":
           return pd.MaxQuantityLevel >= 1;
@@ -283,6 +298,34 @@ namespace App
       if (pd.DescriptionPresence == PresenceType.Disabled)
       {
         args.SetError("Поле не должно заполняться");
+        return;
+      }
+    }
+
+    public static void ValidateProductPurpose(Int32 productId, Int32 purposeId, IUIValidableObject args)
+    {
+      if (args.ValidateState == UIValidateState.Error)
+        return;
+
+      ProductData pd = GetProductData(productId);
+
+      if (purposeId == 0)
+      {
+        switch (pd.PurposePresence)
+        {
+          case PresenceType.Required:
+            args.SetError("Назначение должно быть выбрано");
+            break;
+          case PresenceType.WarningIfNone:
+            args.SetWarning("Назначение обычно должно быть выбрано");
+            break;
+        }
+        return;
+      }
+
+      if (pd.PurposePresence == PresenceType.Disabled)
+      {
+        args.SetError("Назначение не должно заполняться");
         return;
       }
     }

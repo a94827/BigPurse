@@ -206,6 +206,7 @@ namespace App
       sdt.Struct.Columns.AddReference("MU3", "MUs", true);
       sdt.Struct.Columns.AddString("Formula", 100, true);
       sdt.Struct.Columns.AddMoney("RecordSum");
+      sdt.Struct.Columns.AddReference("Purpose", "Purposes", true);
       sdt.Struct.Columns.AddMemo("Comment");
       sdt.DefaultOrder = new DBxOrder("RecordOrder");
       dt.SubDocs.Add(sdt);
@@ -311,6 +312,8 @@ namespace App
       dt.Struct.Columns.LastAdded.Nullable = true;
       dt.Struct.Columns.AddInt("QuantityPresence", DataTools.GetEnumRange(typeof(PresenceType)));
       dt.Struct.Columns.LastAdded.Nullable = true;
+      dt.Struct.Columns.AddInt("PurposePresence", DataTools.GetEnumRange(typeof(PresenceType)));
+      dt.Struct.Columns.LastAdded.Nullable = true;
       dt.Struct.Columns.AddInt16("MUSetCount");
       dt.CalculatedColumns.Add("MUSetCount");
 
@@ -332,6 +335,18 @@ namespace App
       dt.SubDocs.Add(sdt);
 
       #endregion
+
+      #endregion
+
+      #region Назначения
+
+      dt = new DBxDocType("Purposes");
+      dt.SingularTitle = "Назначение";
+      dt.PluralTitle = "Назначения";
+      dt.Struct.Columns.AddString("Name", 50, false);
+      dt.Struct.Columns.AddMemo("Comment");
+      dt.DefaultOrder = new DBxOrder("Name");
+      _DocTypes.Add(dt);
 
       #endregion
 

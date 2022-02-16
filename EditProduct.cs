@@ -70,7 +70,7 @@ namespace App
 
     #region Страница 2 (В операции)
 
-    EFPListComboBox efpDescriptionPresence, efpQuantityPresence;
+    EFPListComboBox efpDescriptionPresence, efpPurposePresence, efpQuantityPresence;
     EFPSubDocGridView efpMUSets;
 
     private void AddPage2(InitDocEditFormEventArgs args)
@@ -83,6 +83,9 @@ namespace App
       efpDescriptionPresence = new EFPListComboBox(page.BaseProvider, cbDescriptionPresence);
       args.AddInt(efpDescriptionPresence, "DescriptionPresence", true);
 
+      cbPurposePresence.Items.AddRange(Tools.PresenceTypeNames);
+      efpPurposePresence = new EFPListComboBox(page.BaseProvider, cbPurposePresence);
+      args.AddInt(efpPurposePresence, "PurposePresence", true);
 
       cbQuantityPresence.Items.AddRange(Tools.PresenceTypeNames);
       efpQuantityPresence = new EFPListComboBox(page.BaseProvider, cbQuantityPresence);
@@ -102,6 +105,7 @@ namespace App
       ProductBuffer.ProductData pd = ProductBuffer.GetProductData(parentId);
 
       cbDescriptionPresence.Items[0] = "Унаследовано - " + Tools.ToString(pd.DescriptionPresence);
+      cbPurposePresence.Items[0] = "Унаследовано - " + Tools.ToString(pd.PurposePresence);
       cbQuantityPresence.Items[0] = "Унаследовано - " + Tools.ToString(pd.QuantityPresence);
     }
 

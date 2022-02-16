@@ -25,6 +25,7 @@ namespace App
       TextHandlers.Add("ProductMUSets", "MU1.Name,MU2.Name,MU3.Name");
       TextHandlers.Add("Debtors", "Name");
       TextHandlers.Add("MUs", "Name");
+      TextHandlers.Add("Purposes", "Name");
     }
 
     #endregion

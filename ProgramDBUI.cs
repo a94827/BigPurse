@@ -103,6 +103,7 @@ namespace App
       sdt = dt.SubDocTypes["OperationProducts"];
       sdt.GridProducer.Columns.AddText("Product.Name", "Товар, услуга", 20, 5);
       sdt.GridProducer.Columns.AddText("Description", "Описание", 20, 5);
+      sdt.GridProducer.Columns.AddText("Purpose.Name", "Назначение", 20, 5);
 
       sdt.GridProducer.Columns.AddUserText("QuantityText", "Quantity1,MU1.Name,Quantity2,MU2.Name,Quantity3,MU3.Name",
         new EFPGridProducerValueNeededEventHandler(EditOperationProduct.QuantityTextColumnValueNeeded),
@@ -329,6 +330,31 @@ namespace App
       dt.ImageKey = "MU";
 
       dt.InitEditForm += new InitDocEditFormEventHandler(EditMU.InitDocEditForm);
+      dt.CanInsertCopy = true;
+      dt.CanMultiEdit = true;
+      dt.DataBuffering = true;
+      dt.Columns["Name"].NewMode = ColumnNewMode.AlwaysDefaultValue;
+
+      #endregion
+
+      #region Назначения
+
+      dt = base.DocTypes["Purposes"];
+
+      dt.GridProducer.Columns.AddText("Name", "Название", 40, 15);
+      dt.GridProducer.Columns.LastAdded.CanIncSearch = true;
+
+      dt.GridProducer.Columns.AddText("Comment", "Комментарий", 30, 10);
+
+      dt.GridProducer.ToolTips.AddText("Comment", String.Empty).DisplayName = "Комментарий (если задан)";
+
+      dt.GridProducer.NewDefaultConfig(false);
+      dt.GridProducer.DefaultConfig.Columns.AddFill("Name", 100);
+      dt.GridProducer.DefaultConfig.ToolTips.Add("Comment");
+
+      dt.ImageKey = "Purpose";
+
+      dt.InitEditForm += new InitDocEditFormEventHandler(EditPurpose.InitDocEditForm);
       dt.CanInsertCopy = true;
       dt.CanMultiEdit = true;
       dt.DataBuffering = true;

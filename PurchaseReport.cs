@@ -40,6 +40,12 @@ namespace App
       efpShops.CanBeEmpty = true;
       efpShops.EmptyText = "[ Все магазины ]";
 
+      efpPurposes = new EFPMultiDocComboBox(FormProvider, cbPurposes, ProgramDBUI.TheUI.DocTypes["Purposes"]);
+      efpPurposes.SelectionMode = DocSelectionMode.MultiCheckBoxes;
+      efpPurposes.CanBeEmpty = true;
+      efpPurposes.EmptyText = "[ Любое назначение ]";
+      efpPurposes.MaxTextItemCount = 5;
+
       efpProductDet = new EFPListComboBox(FormProvider, cbProductDet);
     }
 
@@ -54,6 +60,8 @@ namespace App
     public EFPMultiDocComboBox efpWallets;
 
     public EFPMultiDocComboBox efpShops;
+
+    public EFPMultiDocComboBox efpPurposes;
 
     public EFPListComboBox efpProductDet;
 
@@ -76,6 +84,8 @@ namespace App
 
     public Int32[] ShopIds;
 
+    public Int32[] PurposeIds;
+
     public ProducDetLevel ProductDet;
 
     #endregion
@@ -92,6 +102,8 @@ namespace App
         base.FilterInfo.Add("Кошельки", String.Join(", ", ProgramDBUI.TheUI.DocProvider.GetTextValues("Wallets", WalletIds)));
       if (ShopIds != null && ShopIds.Length > 0)
         base.FilterInfo.Add("Магазины", String.Join(", ", ProgramDBUI.TheUI.DocProvider.GetTextValues("Shops", ShopIds)));
+      if (PurposeIds != null && PurposeIds.Length > 0)
+        base.FilterInfo.Add("Назначение", String.Join(", ", ProgramDBUI.TheUI.DocProvider.GetTextValues("Purposes", PurposeIds)));
     }
 
     public override EFPReportExtParamsForm CreateForm()
@@ -107,6 +119,7 @@ namespace App
       Form2.efpProducts.DocIds = ProductIds;
       Form2.efpWallets.DocIds = WalletIds;
       Form2.efpShops.DocIds = ShopIds;
+      Form2.efpPurposes.DocIds = PurposeIds;
       Form2.efpProductDet.SelectedIndex = (int)ProductDet;
     }
 
@@ -118,6 +131,7 @@ namespace App
       ProductIds = Form2.efpProducts.DocIds;
       WalletIds = Form2.efpWallets.DocIds;
       ShopIds = Form2.efpShops.DocIds;
+      PurposeIds = Form2.efpPurposes.DocIds;
       ProductDet = (ProducDetLevel)(Form2.efpProductDet.SelectedIndex);
     }
 
@@ -128,6 +142,7 @@ namespace App
       Config.SetIntCommaString("Products", ProductIds);
       Config.SetIntCommaString("Wallets", WalletIds);
       Config.SetIntCommaString("Shops", ShopIds);
+      Config.SetIntCommaString("Purposes", PurposeIds);
       Config.SetEnum<ProducDetLevel>("ProductDet", ProductDet);
     }
 
@@ -138,6 +153,7 @@ namespace App
       ProductIds = Config.GetIntCommaString("Products");
       WalletIds = Config.GetIntCommaString("Wallets");
       ShopIds = Config.GetIntCommaString("Shops");
+      PurposeIds = Config.GetIntCommaString("Purposes");
       ProductDet = Config.GetEnumDef<ProducDetLevel>("ProductDet", ProducDetLevel.Quantity);
     }
 
@@ -214,6 +230,8 @@ namespace App
       prodTable.Columns.Add("Product", typeof(Int32));
       prodTable.Columns.Add("Product.Name", typeof(string));
       prodTable.Columns.Add("Description", typeof(string));
+      prodTable.Columns.Add("Purpose", typeof(Int32));
+      prodTable.Columns.Add("Purpose.Name", typeof(string));
       prodTable.Columns.Add("Quantity1", typeof(float));
       prodTable.Columns.Add("MU1", typeof(Int32));
       prodTable.Columns.Add("MU1.Name", typeof(string));
@@ -282,7 +300,7 @@ namespace App
       DBxSelectInfo si = new DBxSelectInfo();
       si.TableName = "OperationProducts";
       si.Expressions.Add("Id"); // нужно только для EFPDBxGridView
-      si.Expressions.Add("DocId,RecordOrder,Product,Product.Name,Description,Quantity1,MU1,MU1.Name,Quantity2,MU2,MU2.Name,Quantity3,MU3,MU3.Name,Formula,RecordSum,Comment");
+      si.Expressions.Add("DocId,RecordOrder,Product,Product.Name,Description,Purpose,Purpose.Name,Quantity1,MU1,MU1.Name,Quantity2,MU2,MU2.Name,Quantity3,MU3,MU3.Name,Formula,RecordSum,Comment");
       si.Expressions.Add("DocId.Date,DocId.OpOrder,DocId.WalletCredit,DocId.WalletCredit.Name,DocId.Shop,DocId.Shop.Name,DocId.Comment");
 
       List<DBxFilter> filters = new List<DBxFilter>();
@@ -292,6 +310,8 @@ namespace App
         filters.Add(new IdsFilter("DocId.WalletCredit", Params.WalletIds));
       if (Params.ShopIds != null && Params.ShopIds.Length > 0)
         filters.Add(new IdsFilter("DocId.Shop", Params.ShopIds));
+      if (Params.PurposeIds != null && Params.PurposeIds.Length > 0)
+        filters.Add(new IdsFilter("Purpose", Params.PurposeIds));
       filters.Add(DBSSubDocType.DeletedFalseFilter);
       filters.Add(DBSSubDocType.DocIdDeletedFalseFilter);
       filters.Add(new ValueFilter("DocId.OpType", (int)OperationType.Expense)); // чтобы мусор не пролез
@@ -477,6 +497,7 @@ namespace App
 
       gridProducer.Columns.AddText("Product.Name", "Товар, услуга", 20, 5);
       gridProducer.Columns.AddText("Description", "Описание", 20, 5);
+      gridProducer.Columns.AddText("Purpose.Name", "Назначение", 20, 5);
 
       gridProducer.Columns.AddUserText("QuantityText", "Quantity1,MU1.Name,Quantity2,MU2.Name,Quantity3,MU3.Name",
         new EFPGridProducerValueNeededEventHandler(EditOperationProduct.QuantityTextColumnValueNeeded),
@@ -569,7 +590,30 @@ namespace App
         }
         else if (pd.DescriptionPresence == PresenceType.Disabled)
         {
-          args.AddRowError("Описание не должно заполняться");
+          args.AddRowError("Описание не должно заполняться", "Description");
+        }
+
+        #endregion
+
+        #region Назначение
+
+        Int32 purposeId = DataTools.GetInt(args.DataRow, "Purpose");
+
+        if (purposeId==0)
+        {
+          switch (pd.PurposePresence)
+          {
+            case PresenceType.Required:
+              args.AddRowError("Назначение должно быть выбрано", "Purpose.Name");
+              break;
+            case PresenceType.WarningIfNone:
+              args.AddRowInformation("Назначение обычно должно быть выбрано", "Purpose.Name");
+              break;
+          }
+        }
+        else if (pd.PurposePresence == PresenceType.Disabled)
+        {
+          args.AddRowError("Назначение не должно заполняться", "Purpose.Name");
         }
 
         #endregion
@@ -692,7 +736,7 @@ namespace App
 
     void ProdPage_InitGrid(object sender, EventArgs args)
     {
-      // Нельзя использовать GridProducer для таблицы, так как столбцы товара, описани и количества являются обязательными,
+      // Нельзя использовать GridProducer для таблицы, так как столбцы товара, описания и количества являются обязательными,
       // без них итоги будут бессмысленными
 
       ProdPage.ControlProvider.Control.AutoGenerateColumns = false;

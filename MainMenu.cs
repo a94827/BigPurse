@@ -126,6 +126,9 @@ namespace App
       ci = ProgramDBUI.TheUI.DocTypes["Debtors"].CreateMainMenuItem(MenuRB);
       SpeedPanelStandard.Add(ci);
 
+      ci = ProgramDBUI.TheUI.DocTypes["Purposes"].CreateMainMenuItem(MenuRB);
+      SpeedPanelStandard.Add(ci);
+
       #endregion
 
       #region ־עקועû

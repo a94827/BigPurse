@@ -73,8 +73,10 @@ namespace App
 
     EFPDocComboBox efpProduct;
     EFPTextComboBox efpDescription;
-    EFPDocComboBox efpMU1, efpMU2, efpMU3;
     DocValueTextBox dvDescription;
+    EFPDocComboBox efpPurpose;
+    DocValueDocComboBox dvPurpose;
+    EFPDocComboBox efpMU1, efpMU2, efpMU3;
     DocValueDocComboBox dvMU1, dvMU2, dvMU3;
     EFPSingleEditBox efpQuantity1, efpQuantity2, efpQuantity3;
     DocValueSingleEditBox dvQuantity1, dvQuantity2, dvQuantity3;
@@ -86,7 +88,7 @@ namespace App
     {
       DocEditPage page = args.AddPage("Общие", MainPanel);
 
-      #region Продукт и описание
+      #region Продукт, описание и назначение
 
       efpProduct = new EFPDocComboBox(page.BaseProvider, cbProduct, ProgramDBUI.TheUI.DocTypes["Products"]);
       efpProduct.CanBeEmpty = false;
@@ -100,6 +102,11 @@ namespace App
       efpDescription.CanBeEmpty = true;
       efpDescription.Validating += new UIValidatingEventHandler(efpDescription_Validating);
       dvDescription = args.AddText(efpDescription, "Description", false);
+
+      efpPurpose = new EFPDocComboBox(page.BaseProvider, cbPurpose, ProgramDBUI.TheUI.DocTypes["Purposes"]);
+      efpPurpose.CanBeEmpty = true;
+      efpPurpose.Validating += new UIValidatingEventHandler(efpPurpose_Validating);
+      dvPurpose = args.AddRef(efpPurpose, "Purpose", false);
 
       #endregion
 
@@ -127,7 +134,7 @@ namespace App
       efpMU2 = new EFPDocComboBox(page.BaseProvider, cbMU2, ProgramDBUI.TheUI.DocTypes["MUs"]);
       efpMU2.CanBeEmpty = true;
       efpMU2.DisplayName = "Ед. изм. 2";
-      efpMU2.DocIdEx.ValueChanged += new EventHandler(UpdateMUs); 
+      efpMU2.DocIdEx.ValueChanged += new EventHandler(UpdateMUs);
       dvMU2 = args.AddRef(efpMU2, "MU2", false);
       SetQuantityAndUnitValidation(efpQuantity2, efpMU2);
 
@@ -240,7 +247,10 @@ namespace App
       ProductBuffer.ValidateProductDescription(efpProduct.DocId, efpDescription.Text, args);
     }
 
-
+    void efpPurpose_Validating(object sender, UIValidatingEventArgs args)
+    {
+      ProductBuffer.ValidateProductPurpose(efpProduct.DocId, efpPurpose.DocId, args);
+    }
 
     void efpProduct_ValueChanged(object sender, EventArgs args)
     {
@@ -250,6 +260,9 @@ namespace App
       lvDescription = false;
       dvDescription.UserEnabled = ProductBuffer.GetColumnEnabled(efpProduct.DocId, "Description");
       efpDescription.Validate();
+
+      dvPurpose.UserEnabled = ProductBuffer.GetColumnEnabled(efpProduct.DocId, "Purpose");
+      efpPurpose.Validate();
 
       efpQuantity1.Validate();
       efpQuantity2.Validate();

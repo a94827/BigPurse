@@ -85,6 +85,12 @@
     <Compile Include="EditProductMUSet.Designer.cs">
       <DependentUpon>EditProductMUSet.cs</DependentUpon>
     </Compile>
+    <Compile Include="EditPurpose.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditPurpose.designer.cs">
+      <DependentUpon>EditPurpose.cs</DependentUpon>
+    </Compile>
     <Compile Include="EditShop.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -147,6 +153,10 @@
     <EmbeddedResource Include="EditProductMUSet.resx">
       <SubType>Designer</SubType>
       <DependentUpon>EditProductMUSet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditPurpose.resx">
+      <DependentUpon>EditPurpose.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="EditShop.resx">
       <DependentUpon>EditShop.cs</DependentUpon>
