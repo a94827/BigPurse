@@ -27,6 +27,8 @@ namespace App
 
       efpProducts = new EFPMultiDocComboBox(FormProvider, cbProducts, ProgramDBUI.TheUI.DocTypes["Products"]);
       efpProducts.SelectionMode = DocSelectionMode.MultiCheckBoxes;
+      efpProducts.CanBeEmpty = true;
+      efpProducts.EmptyText = "[ Все расходы ]";
       efpProducts.MaxTextItemCount = 5;
 
       efpWallets = new EFPMultiDocComboBox(FormProvider, cbWallets, ProgramDBUI.TheUI.DocTypes["Wallets"]);
@@ -96,8 +98,8 @@ namespace App
     {
       base.Title = "Покупки за " + DateRangeFormatter.Default.ToString(FirstDate, LastDate, true);
 
-      base.FilterInfo.Add("Товары", String.Join(", ", ProgramDBUI.TheUI.DocProvider.GetTextValues("Products", ProductIds)));
-
+      if (ProductIds != null && ProductIds.Length > 0)
+        base.FilterInfo.Add("Товары", String.Join(", ", ProgramDBUI.TheUI.DocProvider.GetTextValues("Products", ProductIds)));
       if (WalletIds != null && WalletIds.Length > 0)
         base.FilterInfo.Add("Кошельки", String.Join(", ", ProgramDBUI.TheUI.DocProvider.GetTextValues("Wallets", WalletIds)));
       if (ShopIds != null && ShopIds.Length > 0)
@@ -218,9 +220,13 @@ namespace App
     {
       #region Развернутый список идентификаторов видов товаров
 
-      IdList productIds2 = new IdList();
-      for (int i = 0; i < Params.ProductIds.Length; i++)
-        AddProductIds(productIds2, Params.ProductIds[i]); // рекурсивная процедура
+      IdList productIds2 = null;
+      if (Params.ProductIds != null && Params.ProductIds.Length > 0)
+      {
+        productIds2 = new IdList();
+        for (int i = 0; i < Params.ProductIds.Length; i++)
+          AddProductIds(productIds2, Params.ProductIds[i]); // рекурсивная процедура
+      }
 
       #endregion
 
@@ -304,7 +310,8 @@ namespace App
       si.Expressions.Add("DocId.Date,DocId.OpOrder,DocId.WalletCredit,DocId.WalletCredit.Name,DocId.Shop,DocId.Shop.Name,DocId.Comment");
 
       List<DBxFilter> filters = new List<DBxFilter>();
-      filters.Add(new IdsFilter("Product", productIds2));
+      if (productIds2 != null)
+        filters.Add(new IdsFilter("Product", productIds2));
       filters.Add(new DateRangeFilter("DocId.Date", Params.FirstDate, Params.LastDate));
       if (Params.WalletIds != null && Params.WalletIds.Length > 0)
         filters.Add(new IdsFilter("DocId.WalletCredit", Params.WalletIds));
@@ -550,6 +557,7 @@ namespace App
       OpPage.ControlProvider.GetRowAttributes += new EFPDataGridViewRowAttributesEventHandler(OpPage_GetRowAttributes);
       OpPage.ControlProvider.UseRowImages = true;
       OpPage.ControlProvider.ShowRowCountInTopLeftCellToolTipText = true;
+      //OpPage.ControlProvider.DisableOrdering();
 
       OpPage.ControlProvider.ReadOnly = false;
       OpPage.ControlProvider.Control.ReadOnly = true;
@@ -599,7 +607,7 @@ namespace App
 
         Int32 purposeId = DataTools.GetInt(args.DataRow, "Purpose");
 
-        if (purposeId==0)
+        if (purposeId == 0)
         {
           switch (pd.PurposePresence)
           {
