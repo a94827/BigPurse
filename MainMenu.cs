@@ -168,8 +168,20 @@ namespace App
       ci.MenuText = "Настройки";
       ci.ImageKey = "Settings";
       ci.Click += new EventHandler(ciSetting_Click);
+      ci.GroupBegin = true;
       EFPApp.CommandItems.Add(ci);
       SpeedPanelStandard.Add(ci);
+
+
+      ci = new EFPCommandItem("Сервис", "СменитьПароль");
+      ci.Parent = MenuService;
+      ci.MenuText = "Сменить пароль";
+      ci.ImageKey = "Password";
+      ci.Click += new EventHandler(ChangePasswordForm.ChangePassword);
+      ci.GroupEnd = true;
+      EFPApp.CommandItems.Add(ci);
+      SpeedPanelStandard.Add(ci);
+
 
       ci = new EFPCommandItem("Сервис", "ПросмотрДействийПользователя");
       ci.Parent = MenuService;

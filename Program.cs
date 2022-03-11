@@ -28,6 +28,7 @@ namespace App
         {
           using (Splash spl = new Splash(new string[] { 
           "Инициализация базы данных", 
+          "Аутентификация",
           "Инициализация главного окна"}))
           {
             #region Инициализация каталогов
@@ -55,8 +56,6 @@ namespace App
 
             spl.Complete();
 
-            #region Главное окно
-
             // Картинки
             DBUI.InitImages();
             DummyForm frm = new DummyForm();
@@ -67,6 +66,13 @@ namespace App
             //ProgramDBUI.TheUI.DebugShowIds = true; // показывать идентификаторы для отладки
             ProgramDBUI.ConfigSections = new ClientConfigSections(DB);
             EFPApp.ConfigManager = ProgramDBUI.ConfigSections; // должно быть до показа форм
+
+            if (!LoginForm.ProcessLogin())
+              return;
+            spl.Complete();
+
+            #region Главное окно
+
             MainMenu.Init();
             EFPApp.Interface = new EFPAppInterfaceSDI();
             EFPApp.MainWindowTitle = "Кошелек";

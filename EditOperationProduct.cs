@@ -359,9 +359,9 @@ namespace App
           efpMU1.FixedDocIds = null;
           efpMU2.FixedDocIds = null;
           efpMU3.FixedDocIds = null;
-          dvMU1.UserEnabled = true;
-          dvMU2.UserEnabled = true;
-          dvMU3.UserEnabled = true;
+          dvMU1.UserEnabled = dvQuantity1.UserEnabled;
+          dvMU2.UserEnabled = dvQuantity2.UserEnabled;
+          dvMU3.UserEnabled = dvQuantity3.UserEnabled;
         }
         else
         {
@@ -396,9 +396,9 @@ namespace App
           if (lst3.Count == 1 && efpQuantity3.NValue.HasValue && efpMU3.DocId == 0)
             efpMU3.DocId = lst3.SingleId;
 
-          dvMU1.UserEnabled = lst1.Count > 0;
-          dvMU2.UserEnabled = lst2.Count > 0;
-          dvMU3.UserEnabled = lst3.Count > 0;
+          dvMU1.UserEnabled = lst1.Count > 0 && dvQuantity1.UserEnabled;
+          dvMU2.UserEnabled = lst2.Count > 0 && dvQuantity2.UserEnabled;
+          dvMU3.UserEnabled = lst3.Count > 0 && dvQuantity3.UserEnabled;
         }
 
         // Это тоже не надо
@@ -409,7 +409,12 @@ namespace App
         //if (!efpQuantity3.NValue.HasValue)
         //  efpMU3.DocId = 0;
       }
-
+      else
+      {
+        dvMU1.UserEnabled = false;
+        dvMU2.UserEnabled = false;
+        dvMU3.UserEnabled = false;
+      }
 
 
       efpMU1.Validate();
