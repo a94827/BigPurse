@@ -141,20 +141,20 @@ namespace App
 
     public void WriteConfig()
     {
-      XmlCfgFile File = new XmlCfgFile(LocalConfigFilePath);
+      XmlCfgFile cfg = new XmlCfgFile(LocalConfigFilePath);
 
-      File.SetEnum<BackupModes>("BackupMode", BackupMode);
-      File.SetString("BackupDir", BackupDir);
+      cfg.SetEnum<BackupModes>("BackupMode", BackupMode);
+      cfg.SetString("BackupDir", BackupDir);
 
-      File.Save();
+      cfg.Save();
     }
 
     public void ReadConfig()
     {
-      XmlCfgFile File = new XmlCfgFile(LocalConfigFilePath);
+      XmlCfgFile cfg = new XmlCfgFile(LocalConfigFilePath);
 
-      File.GetEnum<BackupModes>("BackupMode", ref BackupMode);
-      BackupDir = File.GetString("BackupDir");
+      cfg.GetEnum<BackupModes>("BackupMode", ref BackupMode);
+      BackupDir = cfg.GetString("BackupDir");
     }
 
     #endregion

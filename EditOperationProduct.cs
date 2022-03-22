@@ -288,25 +288,25 @@ namespace App
       }
       catch (Exception e)
       {
-        if (!UpdateMUs_ErrorLogged)
+        if (!_UpdateMUs_ErrorLogged)
         {
           LogoutTools.LogoutException(e, "Ошибка загрузки списка значений для поля \"Description\", ProductId= " + productId.ToString() + ". Повторные ошибки не регистрируются");
-          UpdateMUs_ErrorLogged = true;
+          _UpdateMUs_ErrorLogged = true;
         }
         EFPApp.ShowTempMessage("Не удалось получить список значений");
       }
     }
 
-    private static bool UpdateMUs_ErrorLogged = false;
+    private static bool _UpdateMUs_ErrorLogged = false;
 
-    private bool InsideUpdateMUs;
+    private bool _InsideUpdateMUs;
 
     private void UpdateMUs(object sender, EventArgs args)
     {
-      if (InsideUpdateMUs)
+      if (_InsideUpdateMUs)
         return;
 
-      InsideUpdateMUs = true;
+      _InsideUpdateMUs = true;
       try
       {
         try
@@ -315,17 +315,17 @@ namespace App
         }
         catch (Exception e)
         {
-          if (!UpdateMUs_ErrorLogged)
+          if (!_UpdateMUs_ErrorLogged)
           {
             LogoutTools.LogoutException(e, "Ошибка загрузки списка значений для единиц измерения, ProductId= " + efpProduct.DocId.ToString() + ". Повторные ошибки не регистрируются");
-            UpdateMUs_ErrorLogged = true;
+            _UpdateMUs_ErrorLogged = true;
           }
           EFPApp.ShowTempMessage("Не удалось получить список значений");
         }
       }
       finally
       {
-        InsideUpdateMUs = false;
+        _InsideUpdateMUs = false;
       }
     }
 
@@ -461,12 +461,12 @@ namespace App
       try
       {
         ParsingData pd = new ParsingData(efpFormula.Text.Replace(',', '.'));
-        FormulaPL.Parse(pd);
+        _FormulaPL.Parse(pd);
         if (pd.FirstErrorToken != null)
           args.SetError(pd.FirstErrorToken.ErrorMessage.Value.Text);
         else
         {
-          IExpression expr = FormulaPL.CreateExpression(pd);
+          IExpression expr = _FormulaPL.CreateExpression(pd);
           if (pd.FirstErrorToken != null)
             args.SetError(pd.FirstErrorToken.ErrorMessage.Value.Text);
           else
@@ -484,12 +484,11 @@ namespace App
       dvSum.UserDisabledValue = sRes;
     }
 
-
     #endregion
 
     #region Вычислитель для формулы
 
-    private static ParserList FormulaPL = CreateFormulaPL();
+    private static ParserList _FormulaPL = CreateFormulaPL();
 
     private static ParserList CreateFormulaPL()
     {

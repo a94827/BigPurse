@@ -14,18 +14,18 @@ namespace App
   {
     #region Основной метод
 
-    public static void Init(DBxDocTextHandlers TextHandlers)
+    public static void Init(DBxDocTextHandlers textHandlers)
     {
-      TextHandlers.Add("Operations", "DisplayName");
-      TextHandlers.Add("OperationProducts", "Product.Name");
-      TextHandlers.Add("Wallets", "Name");
-      TextHandlers.Add("IncomeSources", "Name");
-      TextHandlers.Add("Shops", "Name");
-      TextHandlers.Add("Products", "Name");
-      TextHandlers.Add("ProductMUSets", "MU1.Name,MU2.Name,MU3.Name");
-      TextHandlers.Add("Debtors", "Name");
-      TextHandlers.Add("MUs", "Name");
-      TextHandlers.Add("Purposes", "Name");
+      textHandlers.Add("Operations", "DisplayName");
+      textHandlers.Add("OperationProducts", "Product.Name");
+      textHandlers.Add("Wallets", "Name");
+      textHandlers.Add("IncomeSources", "Name");
+      textHandlers.Add("Shops", "Name");
+      textHandlers.Add("Products", "Name");
+      textHandlers.Add("ProductMUSets", "MU1.Name,MU2.Name,MU3.Name");
+      textHandlers.Add("Debtors", "Name");
+      textHandlers.Add("MUs", "Name");
+      textHandlers.Add("Purposes", "Name");
     }
 
     #endregion

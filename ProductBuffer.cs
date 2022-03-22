@@ -363,10 +363,11 @@ namespace App
         EFPApp.BeginWait("Получение списка значений");
         try
         {
-          DBxFilter[] filters = new DBxFilter[3];
+          DBxFilter[] filters = new DBxFilter[4];
           filters[0] = new ValueFilter("Product", productId);
           filters[1] = DBSSubDocType.DeletedFalseFilter;
           filters[2] = DBSSubDocType.DocIdDeletedFalseFilter;
+          filters[3] = new ValueFilter(columnName, "", CompareKind.NotEqual,DBxColumnType.String);
           a = ProgramDBUI.TheUI.DocProvider.GetUniqueStringValues("OperationProducts", columnName,
             AndFilter.FromArray(filters));
 

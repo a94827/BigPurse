@@ -109,7 +109,6 @@ namespace App
       cbQuantityPresence.Items[0] = "Унаследовано - " + Tools.ToString(pd.QuantityPresence);
     }
 
-
     #endregion
 
     #endregion

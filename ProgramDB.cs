@@ -27,9 +27,9 @@ namespace App
     {
     }
 
-    protected override void Dispose(bool Disposing)
+    protected override void Dispose(bool disposing)
     {
-      if (Disposing)
+      if (disposing)
       {
         if (_GlobalDocData != null)
         {
@@ -42,23 +42,23 @@ namespace App
 
       _GlobalDocData = null;
 
-      base.Dispose(Disposing);
+      base.Dispose(disposing);
     }
 
     #endregion
 
     #region InitDB()
 
-    public void InitDB(AbsPath DBDir, ISplash Splash)
+    public void InitDB(AbsPath dbDir, ISplash spl)
     {
       #region ќбъ€вление видов документов
 
-      string OldPT = Splash.PhaseText;
-      Splash.PhaseText = "ќбъ€вление видов документов";
+      string oldPT = spl.PhaseText;
+      spl.PhaseText = "ќбъ€вление видов документов";
 
       InitDocTypes();
 
-      Splash.PhaseText = OldPT;
+      spl.PhaseText = oldPT;
 
       #endregion
 
@@ -66,14 +66,14 @@ namespace App
 
       #region »нициализаци€ DBConnectionHelper
 
-      InitDBConnectionHelper(DBDir);
+      InitDBConnectionHelper(dbDir);
 
       #endregion
 
       #region —оздание / обновление баз данных документов
 
       // DBxRealDocProviderGlobal.DefaultClearCacheBuffer = 30; // обновлени€ могут переключатьс€ не только по таймеру, но и при запуске процедур
-      _DBConnectionHelper.Splash = Splash;
+      _DBConnectionHelper.Splash = spl;
       _GlobalDocData = _DBConnectionHelper.CreateRealDocProviderGlobal();
       InitDocTextValues.Init(_GlobalDocData.TextHandlers);
       _DBConnectionHelper.Splash = null; // он скоро исчезнет
@@ -81,8 +81,8 @@ namespace App
       {
         // 13.05.2017
         // –егистрируем сообщени€ в log-файле
-        AbsPath LogFilePath = LogoutTools.GetLogFileName("DBChange", String.Empty);
-        using (StreamWriter wrt = new StreamWriter(LogFilePath.Path, false, LogoutTools.LogEncoding))
+        AbsPath logFilePath = LogoutTools.GetLogFileName("DBChange", String.Empty);
+        using (StreamWriter wrt = new StreamWriter(logFilePath.Path, false, LogoutTools.LogEncoding))
         {
           wrt.WriteLine("»зменение структуры баз данных BigPurse");
           wrt.WriteLine("¬рем€: " + DateTime.Now.ToString());
@@ -103,9 +103,9 @@ namespace App
         }
       }
 
-      using (DBxCon Con = new DBxCon(GlobalDocData.MainDBEntry))
+      using (DBxCon con = new DBxCon(GlobalDocData.MainDBEntry))
       {
-        _DataVersionHandler.InitTableRow(Con);
+        _DataVersionHandler.InitTableRow(con);
       }
 
       #endregion
@@ -123,7 +123,7 @@ namespace App
 
       #endregion
 
-      _DBDir = DBDir;
+      _DBDir = dbDir;
     }
 
     /// <summary>
@@ -253,7 +253,6 @@ namespace App
       _DocTypes.Add(dt);
 
       #endregion
-
 
       #region ќсновной документ
 
@@ -460,13 +459,13 @@ namespace App
     /// </summary>
     /// <param name="DBDir"></param>
     /// <returns></returns>
-    public void InitDBConnectionHelper(AbsPath DBDir)
+    public void InitDBConnectionHelper(AbsPath dbDir)
     {
       _DBConnectionHelper = new DBxDocDBConnectionHelper();
-      _DBConnectionHelper.DBDir = DBDir;
+      _DBConnectionHelper.DBDir = dbDir;
 
       _DBConnectionHelper.ProviderName = "SQLite";
-      AbsPath FileName = new AbsPath(DBDir, "db.db");
+      AbsPath FileName = new AbsPath(dbDir, "db.db");
       _DBConnectionHelper.ConnectionString = "Data Source=" + FileName.Path;
 
       _DBConnectionHelper.CommandTimeout = 0; // бесконечное врем€ выполнение команд

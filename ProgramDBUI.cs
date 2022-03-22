@@ -146,6 +146,7 @@ namespace App
       sdt.InitEditForm += new InitSubDocEditFormEventHandler(EditOperationProduct.InitSubDocEditForm);
 
       sdt.Columns["Product"].NewMode = ColumnNewMode.Saved;
+      sdt.Columns["Purpose"].NewMode = ColumnNewMode.Saved;
 
       #endregion
 
@@ -368,8 +369,8 @@ namespace App
 
     private static void DateColumn_DefaultValueNeeded(object Sender, EventArgs Args)
     {
-      ColumnUI ColUI = (ColumnUI)Sender;
-      ColUI.DefaultValue = DateTime.Today;
+      ColumnUI dolUI = (ColumnUI)Sender;
+      dolUI.DefaultValue = DateTime.Today;
     }
 
     #endregion

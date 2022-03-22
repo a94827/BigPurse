@@ -113,50 +113,50 @@ namespace App
       return new PurchaseReportParamForm();
     }
 
-    public override void WriteFormValues(EFPReportExtParamsForm Form, EFPReportExtParamsPart Part)
+    public override void WriteFormValues(EFPReportExtParamsForm form, EFPReportExtParamsPart part)
     {
-      PurchaseReportParamForm Form2 = (PurchaseReportParamForm)Form;
-      Form2.efpPeriod.First.NValue = FirstDate;
-      Form2.efpPeriod.Last.NValue = LastDate;
-      Form2.efpProducts.DocIds = ProductIds;
-      Form2.efpWallets.DocIds = WalletIds;
-      Form2.efpShops.DocIds = ShopIds;
-      Form2.efpPurposes.DocIds = PurposeIds;
-      Form2.efpProductDet.SelectedIndex = (int)ProductDet;
+      PurchaseReportParamForm form2 = (PurchaseReportParamForm)form;
+      form2.efpPeriod.First.NValue = FirstDate;
+      form2.efpPeriod.Last.NValue = LastDate;
+      form2.efpProducts.DocIds = ProductIds;
+      form2.efpWallets.DocIds = WalletIds;
+      form2.efpShops.DocIds = ShopIds;
+      form2.efpPurposes.DocIds = PurposeIds;
+      form2.efpProductDet.SelectedIndex = (int)ProductDet;
     }
 
-    public override void ReadFormValues(EFPReportExtParamsForm Form, EFPReportExtParamsPart Part)
+    public override void ReadFormValues(EFPReportExtParamsForm form, EFPReportExtParamsPart part)
     {
-      PurchaseReportParamForm Form2 = (PurchaseReportParamForm)Form;
-      FirstDate = Form2.efpPeriod.First.NValue;
-      LastDate = Form2.efpPeriod.Last.NValue;
-      ProductIds = Form2.efpProducts.DocIds;
-      WalletIds = Form2.efpWallets.DocIds;
-      ShopIds = Form2.efpShops.DocIds;
-      PurposeIds = Form2.efpPurposes.DocIds;
-      ProductDet = (ProducDetLevel)(Form2.efpProductDet.SelectedIndex);
+      PurchaseReportParamForm form2 = (PurchaseReportParamForm)form;
+      FirstDate = form2.efpPeriod.First.NValue;
+      LastDate = form2.efpPeriod.Last.NValue;
+      ProductIds = form2.efpProducts.DocIds;
+      WalletIds = form2.efpWallets.DocIds;
+      ShopIds = form2.efpShops.DocIds;
+      PurposeIds = form2.efpPurposes.DocIds;
+      ProductDet = (ProducDetLevel)(form2.efpProductDet.SelectedIndex);
     }
 
-    public override void WriteConfig(FreeLibSet.Config.CfgPart Config, EFPReportExtParamsPart Part)
+    public override void WriteConfig(FreeLibSet.Config.CfgPart cfg, EFPReportExtParamsPart part)
     {
-      Config.SetNullableDate("FirstDate", FirstDate);
-      Config.SetNullableDate("LastDate", LastDate);
-      Config.SetIntCommaString("Products", ProductIds);
-      Config.SetIntCommaString("Wallets", WalletIds);
-      Config.SetIntCommaString("Shops", ShopIds);
-      Config.SetIntCommaString("Purposes", PurposeIds);
-      Config.SetEnum<ProducDetLevel>("ProductDet", ProductDet);
+      cfg.SetNullableDate("FirstDate", FirstDate);
+      cfg.SetNullableDate("LastDate", LastDate);
+      cfg.SetIntCommaString("Products", ProductIds);
+      cfg.SetIntCommaString("Wallets", WalletIds);
+      cfg.SetIntCommaString("Shops", ShopIds);
+      cfg.SetIntCommaString("Purposes", PurposeIds);
+      cfg.SetEnum<ProducDetLevel>("ProductDet", ProductDet);
     }
 
-    public override void ReadConfig(FreeLibSet.Config.CfgPart Config, EFPReportExtParamsPart Part)
+    public override void ReadConfig(FreeLibSet.Config.CfgPart cfg, EFPReportExtParamsPart part)
     {
-      FirstDate = Config.GetNullableDate("FirstDate");
-      LastDate = Config.GetNullableDate("LastDate");
-      ProductIds = Config.GetIntCommaString("Products");
-      WalletIds = Config.GetIntCommaString("Wallets");
-      ShopIds = Config.GetIntCommaString("Shops");
-      PurposeIds = Config.GetIntCommaString("Purposes");
-      ProductDet = Config.GetEnumDef<ProducDetLevel>("ProductDet", ProducDetLevel.Quantity);
+      FirstDate = cfg.GetNullableDate("FirstDate");
+      LastDate = cfg.GetNullableDate("LastDate");
+      ProductIds = cfg.GetIntCommaString("Products");
+      WalletIds = cfg.GetIntCommaString("Wallets");
+      ShopIds = cfg.GetIntCommaString("Shops");
+      PurposeIds = cfg.GetIntCommaString("Purposes");
+      ProductDet = cfg.GetEnumDef<ProducDetLevel>("ProductDet", ProducDetLevel.Quantity);
     }
 
     #endregion
@@ -171,34 +171,34 @@ namespace App
     {
       MainImageKey = "PurchaseReport";
 
-      OpPage = new EFPReportDBxGridPage(ProgramDBUI.TheUI);
-      OpPage.Title = "Операции";
-      OpPage.ImageKey = "Operation";
-      OpPage.InitGrid += new EventHandler(OpPage_InitGrid);
-      OpPage.ShowToolBar = true;
-      OpPage.GridProducer = OpPage_CreateGridProducer();
-      Pages.Add(OpPage);
+      _OpPage = new EFPReportDBxGridPage(ProgramDBUI.TheUI);
+      _OpPage.Title = "Операции";
+      _OpPage.ImageKey = "Operation";
+      _OpPage.InitGrid += new EventHandler(OpPage_InitGrid);
+      _OpPage.ShowToolBar = true;
+      _OpPage.GridProducer = OpPage_CreateGridProducer();
+      Pages.Add(_OpPage);
 
-      ProdPage = new EFPReportDBxGridPage(ProgramDBUI.TheUI);
-      ProdPage.Title = "Товары";
-      ProdPage.ImageKey = "Product";
-      ProdPage.InitGrid += new EventHandler(ProdPage_InitGrid);
-      ProdPage.ShowToolBar = true;
-      Pages.Add(ProdPage);
+      _ProdPage = new EFPReportDBxGridPage(ProgramDBUI.TheUI);
+      _ProdPage.Title = "Товары";
+      _ProdPage.ImageKey = "Product";
+      _ProdPage.InitGrid += new EventHandler(ProdPage_InitGrid);
+      _ProdPage.ShowToolBar = true;
+      Pages.Add(_ProdPage);
 
-      ShopPage = new EFPReportDBxGridPage(ProgramDBUI.TheUI);
-      ShopPage.Title = "Магазины";
-      ShopPage.ImageKey = "Shop";
-      ShopPage.InitGrid += new EventHandler(ShopPage_InitGrid);
-      ShopPage.ShowToolBar = true;
-      Pages.Add(ShopPage);
+      _ShopPage = new EFPReportDBxGridPage(ProgramDBUI.TheUI);
+      _ShopPage.Title = "Магазины";
+      _ShopPage.ImageKey = "Shop";
+      _ShopPage.InitGrid += new EventHandler(ShopPage_InitGrid);
+      _ShopPage.ShowToolBar = true;
+      Pages.Add(_ShopPage);
 
-      WalletPage = new EFPReportDBxGridPage(ProgramDBUI.TheUI);
-      WalletPage.Title = "Кошельки";
-      WalletPage.ImageKey = "Wallet";
-      WalletPage.InitGrid += new EventHandler(WalletPage_InitGrid);
-      WalletPage.ShowToolBar = true;
-      Pages.Add(WalletPage);
+      _WalletPage = new EFPReportDBxGridPage(ProgramDBUI.TheUI);
+      _WalletPage.Title = "Кошельки";
+      _WalletPage.ImageKey = "Wallet";
+      _WalletPage.InitGrid += new EventHandler(WalletPage_InitGrid);
+      _WalletPage.ShowToolBar = true;
+      Pages.Add(_WalletPage);
     }
 
     #endregion
@@ -271,7 +271,7 @@ namespace App
           throw new BugException("ProductDet=" + Params.ProductDet.ToString());
       }
 
-      ProdTableOps = new Dictionary<DataRow, IdList>();
+      _ProdTableOps = new Dictionary<DataRow, IdList>();
 
       #endregion
 
@@ -284,7 +284,7 @@ namespace App
       shopTable.Columns.Add("RecType", typeof(int)); // 0-обычная запись, 1-итог
       shopTable.DefaultView.Sort = "Id";
 
-      ShopTableOps = new Dictionary<DataRow, IdList>();
+      _ShopTableOps = new Dictionary<DataRow, IdList>();
 
       #endregion
 
@@ -297,7 +297,7 @@ namespace App
       walletTable.Columns.Add("RecType", typeof(int)); // 0-обычная запись, 1-итог
       walletTable.DefaultView.Sort = "Id";
 
-      WalletTableOps = new Dictionary<DataRow, IdList>();
+      _WalletTableOps = new Dictionary<DataRow, IdList>();
 
       #endregion
 
@@ -371,12 +371,12 @@ namespace App
             prodRow["MU2.Name"] = row1["MU2.Name"];
             prodRow["MU3.Name"] = row1["MU3.Name"];
           }
-          ProdTableOps.Add(prodRow, new IdList());
+          _ProdTableOps.Add(prodRow, new IdList());
         }
         if (Params.ProductDet >= PurchaseReportParams.ProducDetLevel.Quantity)
           DataTools.IncSingle(row1, prodRow, "Quantity1");
         DataTools.IncDecimal(row1, prodRow, "RecordSum");
-        ProdTableOps[prodRow].Add(DataTools.GetInt(row1, "DocId"));
+        _ProdTableOps[prodRow].Add(DataTools.GetInt(row1, "DocId"));
 
         DataRow shopRow;
         if (DataTools.FindOrAddDataRow(shopTable.DefaultView, row1["DocId.Shop"], out shopRow))
@@ -385,19 +385,19 @@ namespace App
             shopRow["Shop.Name"] = "[ Магазин не задан ]";
           else
             shopRow["Shop.Name"] = row1["DocId.Shop.Name"];
-          ShopTableOps.Add(shopRow, new IdList());
+          _ShopTableOps.Add(shopRow, new IdList());
         }
         DataTools.IncDecimal(row1, shopRow, "RecordSum");
-        ShopTableOps[shopRow].Add(DataTools.GetInt(row1, "DocId"));
+        _ShopTableOps[shopRow].Add(DataTools.GetInt(row1, "DocId"));
 
         DataRow walletRow;
         if (DataTools.FindOrAddDataRow(walletTable.DefaultView, row1["DocId.WalletCredit"], out walletRow))
         {
           walletRow["Wallet.Name"] = row1["DocId.WalletCredit.Name"];
-          WalletTableOps.Add(walletRow, new IdList());
+          _WalletTableOps.Add(walletRow, new IdList());
         }
         DataTools.IncDecimal(row1, walletRow, "RecordSum");
-        WalletTableOps[walletRow].Add(DataTools.GetInt(row1, "DocId"));
+        _WalletTableOps[walletRow].Add(DataTools.GetInt(row1, "DocId"));
       }
 
       DataRow opTotalRow = table2.NewRow();
@@ -408,7 +408,7 @@ namespace App
 
       table2.DefaultView.Sort = "TotalRow,DocId.Date,DocId.OpOrder,RecordOrder";
 
-      OpPage.DataSource = table2.DefaultView;
+      _OpPage.DataSource = table2.DefaultView;
 
       #endregion
 
@@ -443,7 +443,7 @@ namespace App
           prodTable.DefaultView.Sort = "RecType,Product.Name,Product,Description,QuantityText";
           break;
       }
-      ProdPage.DataSource = prodTable.DefaultView;
+      _ProdPage.DataSource = prodTable.DefaultView;
 
       #endregion
 
@@ -455,7 +455,7 @@ namespace App
       DataTools.SumDecimal(shopTotalRow, "RecordSum");
       shopTable.Rows.Add(shopTotalRow);
       shopTable.DefaultView.Sort = "RecType,Shop.Name,Id";
-      ShopPage.DataSource = shopTable.DefaultView;
+      _ShopPage.DataSource = shopTable.DefaultView;
 
       #endregion
 
@@ -467,7 +467,7 @@ namespace App
       DataTools.SumDecimal(walletTotalRow, "RecordSum");
       walletTable.Rows.Add(walletTotalRow);
       walletTable.DefaultView.Sort = "RecType,Wallet.Name,Id";
-      WalletPage.DataSource = walletTable.DefaultView;
+      _WalletPage.DataSource = walletTable.DefaultView;
 
       #endregion
     }
@@ -493,79 +493,79 @@ namespace App
 
     #region Страница "Операции"
 
-    EFPReportDBxGridPage OpPage;
+    EFPReportDBxGridPage _OpPage;
 
     private EFPGridProducer OpPage_CreateGridProducer()
     {
-      EFPDBxGridProducer gridProducer = new EFPDBxGridProducer(ProgramDBUI.TheUI);
-      gridProducer.Columns.AddDate("DocId.Date", "Дата");
-      gridProducer.Columns.AddText("DocId.WalletCredit.Name", "Кошелек", 15, 10);
-      gridProducer.Columns.AddText("DocId.Shop.Name", "Магазин", 25, 10);
+      EFPDBxGridProducer producer = new EFPDBxGridProducer(ProgramDBUI.TheUI);
+      producer.Columns.AddDate("DocId.Date", "Дата");
+      producer.Columns.AddText("DocId.WalletCredit.Name", "Кошелек", 15, 10);
+      producer.Columns.AddText("DocId.Shop.Name", "Магазин", 25, 10);
 
-      gridProducer.Columns.AddText("Product.Name", "Товар, услуга", 20, 5);
-      gridProducer.Columns.AddText("Description", "Описание", 20, 5);
-      gridProducer.Columns.AddText("Purpose.Name", "Назначение", 20, 5);
+      producer.Columns.AddText("Product.Name", "Товар, услуга", 20, 5);
+      producer.Columns.AddText("Description", "Описание", 20, 5);
+      producer.Columns.AddText("Purpose.Name", "Назначение", 20, 5);
 
-      gridProducer.Columns.AddUserText("QuantityText", "Quantity1,MU1.Name,Quantity2,MU2.Name,Quantity3,MU3.Name",
+      producer.Columns.AddUserText("QuantityText", "Quantity1,MU1.Name,Quantity2,MU2.Name,Quantity3,MU3.Name",
         new EFPGridProducerValueNeededEventHandler(EditOperationProduct.QuantityTextColumnValueNeeded),
         "Количество", 20, 10);
 
-      gridProducer.Columns.AddText("Quantity1", "Кол-во 1", 5, 2);
-      gridProducer.Columns.LastAdded.Format = "0.###";
-      gridProducer.Columns.LastAdded.SizeGroup = "Quantity";
-      gridProducer.Columns.AddText("MU1.Name", "Ед. изм. 1", 5, 2);
-      gridProducer.Columns.LastAdded.SizeGroup = "MUName";
+      producer.Columns.AddText("Quantity1", "Кол-во 1", 5, 2);
+      producer.Columns.LastAdded.Format = "0.###";
+      producer.Columns.LastAdded.SizeGroup = "Quantity";
+      producer.Columns.AddText("MU1.Name", "Ед. изм. 1", 5, 2);
+      producer.Columns.LastAdded.SizeGroup = "MUName";
 
-      gridProducer.Columns.AddText("Quantity2", "Кол-во 2", 5, 2);
-      gridProducer.Columns.LastAdded.Format = "0.###";
-      gridProducer.Columns.LastAdded.SizeGroup = "Quantity";
-      gridProducer.Columns.AddText("MU2.Name", "Ед. изм. 2", 5, 2);
-      gridProducer.Columns.LastAdded.SizeGroup = "MUName";
+      producer.Columns.AddText("Quantity2", "Кол-во 2", 5, 2);
+      producer.Columns.LastAdded.Format = "0.###";
+      producer.Columns.LastAdded.SizeGroup = "Quantity";
+      producer.Columns.AddText("MU2.Name", "Ед. изм. 2", 5, 2);
+      producer.Columns.LastAdded.SizeGroup = "MUName";
 
-      gridProducer.Columns.AddText("Quantity3", "Кол-во 3", 5, 2);
-      gridProducer.Columns.LastAdded.Format = "0.###";
-      gridProducer.Columns.LastAdded.SizeGroup = "Quantity";
-      gridProducer.Columns.AddText("MU3.Name", "Ед. изм. 3", 5, 2);
-      gridProducer.Columns.LastAdded.SizeGroup = "MUName";
+      producer.Columns.AddText("Quantity3", "Кол-во 3", 5, 2);
+      producer.Columns.LastAdded.Format = "0.###";
+      producer.Columns.LastAdded.SizeGroup = "Quantity";
+      producer.Columns.AddText("MU3.Name", "Ед. изм. 3", 5, 2);
+      producer.Columns.LastAdded.SizeGroup = "MUName";
 
-      gridProducer.Columns.AddText("Formula", "Формула", 15, 5);
-      gridProducer.Columns.AddMoney("RecordSum", "Сумма");
-      gridProducer.Columns.LastAdded.Format = Tools.MoneyFormat;
+      producer.Columns.AddText("Formula", "Формула", 15, 5);
+      producer.Columns.AddMoney("RecordSum", "Сумма");
+      producer.Columns.LastAdded.Format = Tools.MoneyFormat;
 
 
-      gridProducer.Columns.AddText("Comment", "Комментарий", 30, 10);
+      producer.Columns.AddText("Comment", "Комментарий", 30, 10);
 
-      gridProducer.NewDefaultConfig(false);
-      gridProducer.DefaultConfig.Columns.Add("DocId.Date");
-      gridProducer.DefaultConfig.Columns.AddFill("Product.Name", 35);
-      gridProducer.DefaultConfig.Columns.AddFill("Description", 35);
-      gridProducer.DefaultConfig.Columns.AddFill("QuantityText", 30);
+      producer.NewDefaultConfig(false);
+      producer.DefaultConfig.Columns.Add("DocId.Date");
+      producer.DefaultConfig.Columns.AddFill("Product.Name", 35);
+      producer.DefaultConfig.Columns.AddFill("Description", 35);
+      producer.DefaultConfig.Columns.AddFill("QuantityText", 30);
       //gridProducer.DefaultConfig.Columns.Add("Quantity1");
       //gridProducer.DefaultConfig.Columns.Add("MU1.Name");
       //gridProducer.DefaultConfig.Columns.Add("Quantity2");
       //gridProducer.DefaultConfig.Columns.Add("MU2.Name");
       //gridProducer.DefaultConfig.Columns.Add("Quantity3");
       //gridProducer.DefaultConfig.Columns.Add("MU3.Name");
-      gridProducer.DefaultConfig.Columns.Add("RecordSum");
+      producer.DefaultConfig.Columns.Add("RecordSum");
 
-      return gridProducer;
+      return producer;
     }
 
     void OpPage_InitGrid(object sender, EventArgs args)
     {
-      OpPage.ControlProvider.ConfigSectionName = "PurchaseReportOperations";
-      OpPage.ControlProvider.GetRowAttributes += new EFPDataGridViewRowAttributesEventHandler(OpPage_GetRowAttributes);
-      OpPage.ControlProvider.UseRowImages = true;
-      OpPage.ControlProvider.ShowRowCountInTopLeftCellToolTipText = true;
+      _OpPage.ControlProvider.ConfigSectionName = "PurchaseReportOperations";
+      _OpPage.ControlProvider.GetRowAttributes += new EFPDataGridViewRowAttributesEventHandler(OpPage_GetRowAttributes);
+      _OpPage.ControlProvider.UseRowImages = true;
+      _OpPage.ControlProvider.ShowRowCountInTopLeftCellToolTipText = true;
       //OpPage.ControlProvider.DisableOrdering();
 
-      OpPage.ControlProvider.ReadOnly = false;
-      OpPage.ControlProvider.Control.ReadOnly = true;
-      OpPage.ControlProvider.CanInsert = false;
-      OpPage.ControlProvider.CanDelete = false;
-      OpPage.ControlProvider.EditData += new EventHandler(OpPage_EditData);
+      _OpPage.ControlProvider.ReadOnly = false;
+      _OpPage.ControlProvider.Control.ReadOnly = true;
+      _OpPage.ControlProvider.CanInsert = false;
+      _OpPage.ControlProvider.CanDelete = false;
+      _OpPage.ControlProvider.EditData += new EventHandler(OpPage_EditData);
 
-      OpPage.ControlProvider.GetDocSel += new EFPDBxGridViewDocSelEventHandler(MainPage_GetDocSel);
+      _OpPage.ControlProvider.GetDocSel += new EFPDBxGridViewDocSelEventHandler(MainPage_GetDocSel);
     }
 
     void OpPage_GetRowAttributes(object sender, EFPDataGridViewRowAttributesEventArgs args)
@@ -716,10 +716,10 @@ namespace App
 
     void OpPage_EditData(object sender, EventArgs args)
     {
-      Int32[] docIds = DataTools.GetIdsFromColumn(OpPage.ControlProvider.SelectedDataRows, "DocId");
+      Int32[] docIds = DataTools.GetIdsFromColumn(_OpPage.ControlProvider.SelectedDataRows, "DocId");
       if (docIds.Length == 0)
         EFPApp.ShowTempMessage("Нет выбранных операций");
-      ProgramDBUI.TheUI.DocTypes["Operations"].PerformEditing(docIds, OpPage.ControlProvider.State, false);
+      ProgramDBUI.TheUI.DocTypes["Operations"].PerformEditing(docIds, _OpPage.ControlProvider.State, false);
     }
 
     void MainPage_GetDocSel(object sender, EFPDBxGridViewDocSelEventArgs args)
@@ -734,38 +734,38 @@ namespace App
 
     #region Страница "Продукты"
 
-    EFPReportDBxGridPage ProdPage;
+    EFPReportDBxGridPage _ProdPage;
 
     /// <summary>
     /// Ключ - строка таблицы операций
     /// Значение - идентификаторы операций
     /// </summary>
-    Dictionary<DataRow, IdList> ProdTableOps;
+    Dictionary<DataRow, IdList> _ProdTableOps;
 
     void ProdPage_InitGrid(object sender, EventArgs args)
     {
       // Нельзя использовать GridProducer для таблицы, так как столбцы товара, описания и количества являются обязательными,
       // без них итоги будут бессмысленными
 
-      ProdPage.ControlProvider.Control.AutoGenerateColumns = false;
-      ProdPage.ControlProvider.Columns.AddTextFill("Product.Name", true, "Товар, услуга", 35, 5);
+      _ProdPage.ControlProvider.Control.AutoGenerateColumns = false;
+      _ProdPage.ControlProvider.Columns.AddTextFill("Product.Name", true, "Товар, услуга", 35, 5);
       if (Params.ProductDet >= PurchaseReportParams.ProducDetLevel.Description)
-        ProdPage.ControlProvider.Columns.AddTextFill("Description", true, "Описание", 35, 5);
+        _ProdPage.ControlProvider.Columns.AddTextFill("Description", true, "Описание", 35, 5);
 
       if (Params.ProductDet >= PurchaseReportParams.ProducDetLevel.Quantity)
-        ProdPage.ControlProvider.Columns.AddTextFill("QuantityText", true, "Количество", 30, 10);
-      ProdPage.ControlProvider.Columns.AddText("RecordSum", true, "Сумма");
-      ProdPage.ControlProvider.Columns.LastAdded.TextAlign = HorizontalAlignment.Right;
-      ProdPage.ControlProvider.Columns.LastAdded.GridColumn.DefaultCellStyle.Format = Tools.MoneyFormat;
-      ProdPage.ControlProvider.DisableOrdering();
-      ProdPage.ControlProvider.GetRowAttributes += new EFPDataGridViewRowAttributesEventHandler(ProdPage_GetRowAttributes);
+        _ProdPage.ControlProvider.Columns.AddTextFill("QuantityText", true, "Количество", 30, 10);
+      _ProdPage.ControlProvider.Columns.AddText("RecordSum", true, "Сумма");
+      _ProdPage.ControlProvider.Columns.LastAdded.TextAlign = HorizontalAlignment.Right;
+      _ProdPage.ControlProvider.Columns.LastAdded.GridColumn.DefaultCellStyle.Format = Tools.MoneyFormat;
+      _ProdPage.ControlProvider.DisableOrdering();
+      _ProdPage.ControlProvider.GetRowAttributes += new EFPDataGridViewRowAttributesEventHandler(ProdPage_GetRowAttributes);
 
-      ProdPage.ControlProvider.Control.ReadOnly = true;
-      ProdPage.ControlProvider.ReadOnly = false;
-      ProdPage.ControlProvider.CanInsert = false;
-      ProdPage.ControlProvider.CanDelete = false;
-      ProdPage.ControlProvider.EditData += new EventHandler(ProdPage_EditData);
-      ProdPage.ControlProvider.GetDocSel += new EFPDBxGridViewDocSelEventHandler(ProdPage_GetDocSel);
+      _ProdPage.ControlProvider.Control.ReadOnly = true;
+      _ProdPage.ControlProvider.ReadOnly = false;
+      _ProdPage.ControlProvider.CanInsert = false;
+      _ProdPage.ControlProvider.CanDelete = false;
+      _ProdPage.ControlProvider.EditData += new EventHandler(ProdPage_EditData);
+      _ProdPage.ControlProvider.GetDocSel += new EFPDBxGridViewDocSelEventHandler(ProdPage_GetDocSel);
     }
 
     void ProdPage_GetRowAttributes(object sender, EFPDataGridViewRowAttributesEventArgs args)
@@ -776,12 +776,12 @@ namespace App
 
     void ProdPage_EditData(object sender, EventArgs args)
     {
-      DataRow[] rows = ProdPage.ControlProvider.SelectedDataRows;
+      DataRow[] rows = _ProdPage.ControlProvider.SelectedDataRows;
       IdList allOps = new IdList();
       for (int i = 0; i < rows.Length; i++)
       {
         IdList lst;
-        if (ProdTableOps.TryGetValue(rows[i], out lst))
+        if (_ProdTableOps.TryGetValue(rows[i], out lst))
           allOps.Add(lst);
       }
 
@@ -806,7 +806,7 @@ namespace App
       for (int i = 0; i < args.DataRows.Length; i++)
       {
         IdList lst;
-        if (ProdTableOps.TryGetValue(args.DataRows[i], out lst))
+        if (_ProdTableOps.TryGetValue(args.DataRows[i], out lst))
           allOps.Add(lst);
       }
       args.DocSel.Add("Operations", allOps);
@@ -817,30 +817,30 @@ namespace App
 
     #region Страница "Магазины"
 
-    EFPReportDBxGridPage ShopPage;
+    EFPReportDBxGridPage _ShopPage;
 
     /// <summary>
     /// Ключ - строка таблицы операций
     /// Значение - идентификаторы операций
     /// </summary>
-    Dictionary<DataRow, IdList> ShopTableOps;
+    Dictionary<DataRow, IdList> _ShopTableOps;
 
     void ShopPage_InitGrid(object sender, EventArgs args)
     {
-      ShopPage.ControlProvider.Control.AutoGenerateColumns = false;
-      ShopPage.ControlProvider.Columns.AddTextFill("Shop.Name", true, "Магазин", 100, 20);
-      ShopPage.ControlProvider.Columns.AddText("RecordSum", true, "Сумма");
-      ShopPage.ControlProvider.Columns.LastAdded.TextAlign = HorizontalAlignment.Right;
-      ShopPage.ControlProvider.Columns.LastAdded.GridColumn.DefaultCellStyle.Format = Tools.MoneyFormat;
-      ShopPage.ControlProvider.DisableOrdering();
-      ShopPage.ControlProvider.GetRowAttributes += new EFPDataGridViewRowAttributesEventHandler(ShopPage_GetRowAttributes);
+      _ShopPage.ControlProvider.Control.AutoGenerateColumns = false;
+      _ShopPage.ControlProvider.Columns.AddTextFill("Shop.Name", true, "Магазин", 100, 20);
+      _ShopPage.ControlProvider.Columns.AddText("RecordSum", true, "Сумма");
+      _ShopPage.ControlProvider.Columns.LastAdded.TextAlign = HorizontalAlignment.Right;
+      _ShopPage.ControlProvider.Columns.LastAdded.GridColumn.DefaultCellStyle.Format = Tools.MoneyFormat;
+      _ShopPage.ControlProvider.DisableOrdering();
+      _ShopPage.ControlProvider.GetRowAttributes += new EFPDataGridViewRowAttributesEventHandler(ShopPage_GetRowAttributes);
 
-      ShopPage.ControlProvider.Control.ReadOnly = true;
-      ShopPage.ControlProvider.ReadOnly = false;
-      ShopPage.ControlProvider.CanInsert = false;
-      ShopPage.ControlProvider.CanDelete = false;
-      ShopPage.ControlProvider.EditData += new EventHandler(ShopPage_EditData);
-      ShopPage.ControlProvider.GetDocSel += new EFPDBxGridViewDocSelEventHandler(ShopPage_GetDocSel);
+      _ShopPage.ControlProvider.Control.ReadOnly = true;
+      _ShopPage.ControlProvider.ReadOnly = false;
+      _ShopPage.ControlProvider.CanInsert = false;
+      _ShopPage.ControlProvider.CanDelete = false;
+      _ShopPage.ControlProvider.EditData += new EventHandler(ShopPage_EditData);
+      _ShopPage.ControlProvider.GetDocSel += new EFPDBxGridViewDocSelEventHandler(ShopPage_GetDocSel);
     }
 
     void ShopPage_GetRowAttributes(object sender, EFPDataGridViewRowAttributesEventArgs args)
@@ -851,12 +851,12 @@ namespace App
 
     void ShopPage_EditData(object sender, EventArgs args)
     {
-      DataRow[] rows = ShopPage.ControlProvider.SelectedDataRows;
+      DataRow[] rows = _ShopPage.ControlProvider.SelectedDataRows;
       IdList allOps = new IdList();
       for (int i = 0; i < rows.Length; i++)
       {
         IdList lst;
-        if (ShopTableOps.TryGetValue(rows[i], out lst))
+        if (_ShopTableOps.TryGetValue(rows[i], out lst))
           allOps.Add(lst);
       }
 
@@ -881,7 +881,7 @@ namespace App
       for (int i = 0; i < args.DataRows.Length; i++)
       {
         IdList lst;
-        if (ShopTableOps.TryGetValue(args.DataRows[i], out lst))
+        if (_ShopTableOps.TryGetValue(args.DataRows[i], out lst))
           allOps.Add(lst);
       }
       args.DocSel.Add("Operations", allOps);
@@ -892,30 +892,30 @@ namespace App
 
     #region Страница "Кошельки"
 
-    EFPReportDBxGridPage WalletPage;
+    EFPReportDBxGridPage _WalletPage;
 
     /// <summary>
     /// Ключ - строка таблицы операций
     /// Значение - идентификаторы операций
     /// </summary>
-    Dictionary<DataRow, IdList> WalletTableOps;
+    Dictionary<DataRow, IdList> _WalletTableOps;
 
     void WalletPage_InitGrid(object sender, EventArgs args)
     {
-      WalletPage.ControlProvider.Control.AutoGenerateColumns = false;
-      WalletPage.ControlProvider.Columns.AddTextFill("Wallet.Name", true, "Кошелек", 100, 20);
-      WalletPage.ControlProvider.Columns.AddText("RecordSum", true, "Сумма");
-      WalletPage.ControlProvider.Columns.LastAdded.TextAlign = HorizontalAlignment.Right;
-      WalletPage.ControlProvider.Columns.LastAdded.GridColumn.DefaultCellStyle.Format = Tools.MoneyFormat;
-      WalletPage.ControlProvider.DisableOrdering();
-      WalletPage.ControlProvider.GetRowAttributes += new EFPDataGridViewRowAttributesEventHandler(WalletPage_GetRowAttributes);
+      _WalletPage.ControlProvider.Control.AutoGenerateColumns = false;
+      _WalletPage.ControlProvider.Columns.AddTextFill("Wallet.Name", true, "Кошелек", 100, 20);
+      _WalletPage.ControlProvider.Columns.AddText("RecordSum", true, "Сумма");
+      _WalletPage.ControlProvider.Columns.LastAdded.TextAlign = HorizontalAlignment.Right;
+      _WalletPage.ControlProvider.Columns.LastAdded.GridColumn.DefaultCellStyle.Format = Tools.MoneyFormat;
+      _WalletPage.ControlProvider.DisableOrdering();
+      _WalletPage.ControlProvider.GetRowAttributes += new EFPDataGridViewRowAttributesEventHandler(WalletPage_GetRowAttributes);
 
-      WalletPage.ControlProvider.Control.ReadOnly = true;
-      WalletPage.ControlProvider.ReadOnly = false;
-      WalletPage.ControlProvider.CanInsert = false;
-      WalletPage.ControlProvider.CanDelete = false;
-      WalletPage.ControlProvider.EditData += new EventHandler(WalletPage_EditData);
-      WalletPage.ControlProvider.GetDocSel += new EFPDBxGridViewDocSelEventHandler(WalletPage_GetDocSel);
+      _WalletPage.ControlProvider.Control.ReadOnly = true;
+      _WalletPage.ControlProvider.ReadOnly = false;
+      _WalletPage.ControlProvider.CanInsert = false;
+      _WalletPage.ControlProvider.CanDelete = false;
+      _WalletPage.ControlProvider.EditData += new EventHandler(WalletPage_EditData);
+      _WalletPage.ControlProvider.GetDocSel += new EFPDBxGridViewDocSelEventHandler(WalletPage_GetDocSel);
     }
 
     void WalletPage_GetRowAttributes(object sender, EFPDataGridViewRowAttributesEventArgs args)
@@ -926,12 +926,12 @@ namespace App
 
     void WalletPage_EditData(object sender, EventArgs args)
     {
-      DataRow[] rows = WalletPage.ControlProvider.SelectedDataRows;
+      DataRow[] rows = _WalletPage.ControlProvider.SelectedDataRows;
       IdList allOps = new IdList();
       for (int i = 0; i < rows.Length; i++)
       {
         IdList lst;
-        if (WalletTableOps.TryGetValue(rows[i], out lst))
+        if (_WalletTableOps.TryGetValue(rows[i], out lst))
           allOps.Add(lst);
       }
 
@@ -956,7 +956,7 @@ namespace App
       for (int i = 0; i < args.DataRows.Length; i++)
       {
         IdList lst;
-        if (WalletTableOps.TryGetValue(args.DataRows[i], out lst))
+        if (_WalletTableOps.TryGetValue(args.DataRows[i], out lst))
           allOps.Add(lst);
       }
       args.DocSel.Add("Operations", allOps);

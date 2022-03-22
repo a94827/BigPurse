@@ -65,34 +65,34 @@ namespace App
       return new TurnoverStatementParamForm();
     }
 
-    public override void WriteFormValues(EFPReportExtParamsForm Form, EFPReportExtParamsPart Part)
+    public override void WriteFormValues(EFPReportExtParamsForm form, EFPReportExtParamsPart part)
     {
-      TurnoverStatementParamForm Form2 = (TurnoverStatementParamForm)Form;
-      Form2.efpPeriod.First.NValue = FirstDate;
-      Form2.efpPeriod.Last.NValue = LastDate;
-      Form2.efpWallets.DocIds = WalletIds;
+      TurnoverStatementParamForm form2 = (TurnoverStatementParamForm)form;
+      form2.efpPeriod.First.NValue = FirstDate;
+      form2.efpPeriod.Last.NValue = LastDate;
+      form2.efpWallets.DocIds = WalletIds;
     }
 
-    public override void ReadFormValues(EFPReportExtParamsForm Form, EFPReportExtParamsPart Part)
+    public override void ReadFormValues(EFPReportExtParamsForm form, EFPReportExtParamsPart part)
     {
-      TurnoverStatementParamForm Form2 = (TurnoverStatementParamForm)Form;
-      FirstDate = Form2.efpPeriod.First.NValue;
-      LastDate = Form2.efpPeriod.Last.NValue;
-      WalletIds = Form2.efpWallets.DocIds;
+      TurnoverStatementParamForm form2 = (TurnoverStatementParamForm)form;
+      FirstDate = form2.efpPeriod.First.NValue;
+      LastDate = form2.efpPeriod.Last.NValue;
+      WalletIds = form2.efpWallets.DocIds;
     }
 
-    public override void WriteConfig(FreeLibSet.Config.CfgPart Config, EFPReportExtParamsPart Part)
+    public override void WriteConfig(FreeLibSet.Config.CfgPart cfg, EFPReportExtParamsPart part)
     {
-      Config.SetNullableDate("FirstDate", FirstDate);
-      Config.SetNullableDate("LastDate", LastDate);
-      Config.SetIntCommaString("Wallets", WalletIds);
+      cfg.SetNullableDate("FirstDate", FirstDate);
+      cfg.SetNullableDate("LastDate", LastDate);
+      cfg.SetIntCommaString("Wallets", WalletIds);
     }
 
-    public override void ReadConfig(FreeLibSet.Config.CfgPart Config, EFPReportExtParamsPart Part)
+    public override void ReadConfig(FreeLibSet.Config.CfgPart cfg, EFPReportExtParamsPart part)
     {
-      FirstDate = Config.GetNullableDate("FirstDate");
-      LastDate = Config.GetNullableDate("LastDate");
-      WalletIds = Config.GetIntCommaString("Wallets");
+      FirstDate = cfg.GetNullableDate("FirstDate");
+      LastDate = cfg.GetNullableDate("LastDate");
+      WalletIds = cfg.GetIntCommaString("Wallets");
     }
 
     #endregion
@@ -107,11 +107,11 @@ namespace App
     {
       MainImageKey = "TurnoverStatement";
 
-      MainPage = new EFPReportDBxGridPage(ProgramDBUI.TheUI);
-      MainPage.InitGrid += new EventHandler(MainPage_InitGrid);
-      MainPage.ShowToolBar = true;
-      MainPage.GridProducer = CreateMainPageGridProducer();
-      Pages.Add(MainPage);
+      _MainPage = new EFPReportDBxGridPage(ProgramDBUI.TheUI);
+      _MainPage.InitGrid += new EventHandler(MainPage_InitGrid);
+      _MainPage.ShowToolBar = true;
+      _MainPage.GridProducer = CreateMainPageGridProducer();
+      Pages.Add(_MainPage);
     }
 
     #endregion
@@ -287,54 +287,54 @@ namespace App
 
       #endregion
 
-      MainPage.DataSource = table.DefaultView;
+      _MainPage.DataSource = table.DefaultView;
     }
 
     #endregion
 
     #region Страница отчета
 
-    EFPReportDBxGridPage MainPage;
+    EFPReportDBxGridPage _MainPage;
 
     private EFPGridProducer CreateMainPageGridProducer()
     {
-      EFPDBxGridProducer gridProducer = new EFPDBxGridProducer(ProgramDBUI.TheUI);
-      gridProducer.Columns.AddDate("Date", "Дата");
-      gridProducer.Columns.AddMoney("InitialBalance", "Начальное сальдо");
-      gridProducer.Columns.LastAdded.Format = Tools.MoneyFormat;
-      gridProducer.Columns.AddRefDocImage("Id", ProgramDBUI.TheUI.DocTypes["Operations"]);
-      gridProducer.Columns.AddText("DisplayName", "Содержание операции", 20, 15);
-      gridProducer.Columns.AddMoney("TotalDebt", "Дебет");
-      gridProducer.Columns.LastAdded.Format = Tools.MoneyFormat;
-      gridProducer.Columns.AddMoney("TotalCredit", "Кредит");
-      gridProducer.Columns.LastAdded.Format = Tools.MoneyFormat;
-      gridProducer.Columns.AddMoney("FinalBalance", "Конечное сальдо");
-      gridProducer.Columns.LastAdded.Format = Tools.MoneyFormat;
+      EFPDBxGridProducer producer = new EFPDBxGridProducer(ProgramDBUI.TheUI);
+      producer.Columns.AddDate("Date", "Дата");
+      producer.Columns.AddMoney("InitialBalance", "Начальное сальдо");
+      producer.Columns.LastAdded.Format = Tools.MoneyFormat;
+      producer.Columns.AddRefDocImage("Id", ProgramDBUI.TheUI.DocTypes["Operations"]);
+      producer.Columns.AddText("DisplayName", "Содержание операции", 20, 15);
+      producer.Columns.AddMoney("TotalDebt", "Дебет");
+      producer.Columns.LastAdded.Format = Tools.MoneyFormat;
+      producer.Columns.AddMoney("TotalCredit", "Кредит");
+      producer.Columns.LastAdded.Format = Tools.MoneyFormat;
+      producer.Columns.AddMoney("FinalBalance", "Конечное сальдо");
+      producer.Columns.LastAdded.Format = Tools.MoneyFormat;
 
-      gridProducer.NewDefaultConfig(false);
-      gridProducer.DefaultConfig.Columns.Add("Date");
-      gridProducer.DefaultConfig.Columns.Add("InitialBalance");
-      gridProducer.DefaultConfig.Columns.Add("Id_Image");
-      gridProducer.DefaultConfig.Columns.AddFill("DisplayName");
-      gridProducer.DefaultConfig.Columns.Add("TotalDebt");
-      gridProducer.DefaultConfig.Columns.Add("TotalCredit");
-      gridProducer.DefaultConfig.Columns.Add("FinalBalance");
+      producer.NewDefaultConfig(false);
+      producer.DefaultConfig.Columns.Add("Date");
+      producer.DefaultConfig.Columns.Add("InitialBalance");
+      producer.DefaultConfig.Columns.Add("Id_Image");
+      producer.DefaultConfig.Columns.AddFill("DisplayName");
+      producer.DefaultConfig.Columns.Add("TotalDebt");
+      producer.DefaultConfig.Columns.Add("TotalCredit");
+      producer.DefaultConfig.Columns.Add("FinalBalance");
 
-      return gridProducer;
+      return producer;
     }
 
-    void MainPage_InitGrid(object Sender, EventArgs Args)
+    void MainPage_InitGrid(object sender, EventArgs args)
     {
-      MainPage.ControlProvider.GetRowAttributes += new EFPDataGridViewRowAttributesEventHandler(MainPage_GetRowAttributes);
-      MainPage.ControlProvider.GetCellAttributes += new EFPDataGridViewCellAttributesEventHandler(MainPage_GetCellAttributes);
+      _MainPage.ControlProvider.GetRowAttributes += new EFPDataGridViewRowAttributesEventHandler(MainPage_GetRowAttributes);
+      _MainPage.ControlProvider.GetCellAttributes += new EFPDataGridViewCellAttributesEventHandler(MainPage_GetCellAttributes);
 
-      MainPage.ControlProvider.ReadOnly = false;
-      MainPage.ControlProvider.Control.ReadOnly = true;
-      MainPage.ControlProvider.CanInsert = false;
-      MainPage.ControlProvider.CanDelete = false;
-      MainPage.ControlProvider.EditData += new EventHandler(MainPage_EditData);
+      _MainPage.ControlProvider.ReadOnly = false;
+      _MainPage.ControlProvider.Control.ReadOnly = true;
+      _MainPage.ControlProvider.CanInsert = false;
+      _MainPage.ControlProvider.CanDelete = false;
+      _MainPage.ControlProvider.EditData += new EventHandler(MainPage_EditData);
 
-      MainPage.ControlProvider.GetDocSel += new EFPDBxGridViewDocSelEventHandler(MainPage_GetDocSel);
+      _MainPage.ControlProvider.GetDocSel += new EFPDBxGridViewDocSelEventHandler(MainPage_GetDocSel);
     }
 
     void MainPage_GetRowAttributes(object sender, EFPDataGridViewRowAttributesEventArgs args)
@@ -393,17 +393,17 @@ namespace App
       }
     }
 
-    void MainPage_EditData(object Sender, EventArgs Args)
+    void MainPage_EditData(object sender, EventArgs args)
     {
-      Int32[] DocIds = DataTools.GetIdsFromColumn(MainPage.ControlProvider.SelectedDataRows, "Id");
-      if (DocIds.Length == 0)
+      Int32[] docIds = DataTools.GetIdsFromColumn(_MainPage.ControlProvider.SelectedDataRows, "Id");
+      if (docIds.Length == 0)
         EFPApp.ShowTempMessage("Нет выбранных операций");
-      ProgramDBUI.TheUI.DocTypes["Operations"].PerformEditing(DocIds, MainPage.ControlProvider.State, false);
+      ProgramDBUI.TheUI.DocTypes["Operations"].PerformEditing(docIds, _MainPage.ControlProvider.State, false);
     }
 
-    void MainPage_GetDocSel(object Sender, EFPDBxGridViewDocSelEventArgs Args)
+    void MainPage_GetDocSel(object sender, EFPDBxGridViewDocSelEventArgs args)
     {
-      Args.AddFromColumn("Operations", "Id");
+      args.AddFromColumn("Operations", "Id");
     }
 
     #endregion

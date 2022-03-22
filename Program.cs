@@ -24,7 +24,7 @@ namespace App
       EFPApp.InitApp();
       try
       {
-        using (ProgramDB DB = new ProgramDB())
+        using (ProgramDB db = new ProgramDB())
         {
           using (Splash spl = new Splash(new string[] { 
           "Инициализация базы данных", 
@@ -41,18 +41,18 @@ namespace App
             if (!CreateDir(TempDirectory.RootDir))
               return;
 
-            AbsPath DBDir = FileTools.ApplicationBaseDir + "DB";
-            if (!CreateDir(DBDir))
+            AbsPath dbDir = FileTools.ApplicationBaseDir + "DB";
+            if (!CreateDir(dbDir))
               return;
 
             #endregion
 
-            DB.InitDB(DBDir, spl);
+            db.InitDB(dbDir, spl);
 
             ProgramDBUI.Settings = new UserSettings();
             ProgramDBUI.Settings.ReadConfig();
 
-            BalanceCalc.MainEntry = DB.MainEntry;
+            BalanceCalc.MainEntry = db.MainEntry;
 
             spl.Complete();
 
@@ -62,9 +62,9 @@ namespace App
             EFPApp.AddMainImages(frm.MainImageList);
             EFPFormProvider.UseErrorProvider = false;
 
-            ProgramDBUI.TheUI = new ProgramDBUI(DB.CreateDocProvider().CreateProxy());
+            ProgramDBUI.TheUI = new ProgramDBUI(db.CreateDocProvider().CreateProxy());
             //ProgramDBUI.TheUI.DebugShowIds = true; // показывать идентификаторы для отладки
-            ProgramDBUI.ConfigSections = new ClientConfigSections(DB);
+            ProgramDBUI.ConfigSections = new ClientConfigSections(db);
             EFPApp.ConfigManager = ProgramDBUI.ConfigSections; // должно быть до показа форм
 
             if (!LoginForm.ProcessLogin())
@@ -100,14 +100,14 @@ namespace App
               switch (ProgramDBUI.Settings.BackupMode)
               {
                 case UserSettings.BackupModes.AfterEveryRun:
-                  DB.CreateBackup(spl);
+                  db.CreateBackup(spl);
                   break;
                 case UserSettings.BackupModes.EveryDay:
                   if (!HasDailyBackup())
-                    DB.CreateBackup(spl);
+                    db.CreateBackup(spl);
                   break;
               }
-              DB.RemoveOldBackups(spl);
+              db.RemoveOldBackups(spl);
             }
           }
 
@@ -119,22 +119,22 @@ namespace App
         EFPApp.ShowException(e, "Ошибка запуска программы");
       }
     }
-    static void EFPApp_BeforeClosing(object sender, System.ComponentModel.CancelEventArgs e)
+    static void EFPApp_BeforeClosing(object sender, System.ComponentModel.CancelEventArgs args)
     {
       EFPApp.SaveComposition();
       EFPApp.SaveMainWindowLayout();
     }
 
-    private static bool CreateDir(AbsPath Dir)
+    private static bool CreateDir(AbsPath dir)
     {
       try
       {
-        FileTools.ForceDirs(Dir);
+        FileTools.ForceDirs(dir);
         return true;
       }
       catch (System.IO.IOException e)
       {
-        EFPApp.ErrorMessageBox("Невозможно создать каталог \"" + Dir.Path + "\". " + e.Message);
+        EFPApp.ErrorMessageBox("Невозможно создать каталог \"" + dir.Path + "\". " + e.Message);
         return false;
       }
     }

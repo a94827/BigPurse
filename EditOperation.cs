@@ -33,7 +33,7 @@ namespace App
       args.ImageKey = GetImageKey(opType);
     }
 
-    private static readonly string[] ImageKeys = new string[] { 
+    public static readonly string[] ImageKeys = new string[] { 
       "OperationBalance",
       "OperationIncome",
       "OperationExpense",
