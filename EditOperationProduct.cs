@@ -66,7 +66,10 @@ namespace App
       EditOperationProduct form = new EditOperationProduct();
       form._Editor = args.Editor;
       form.AddPage(args);
-      args.Editor.AfterWrite += new SubDocEditEventHandler(form.Editor_AfterWrite);
+      if (!args.Editor.IsReadOnly)
+      {
+        args.Editor.AfterWrite += new SubDocEditEventHandler(form.Editor_AfterWrite);
+      }
     }
 
     private SubDocumentEditor _Editor;
@@ -422,9 +425,28 @@ namespace App
       efpMU3.Validate();
     }
 
-
     void Editor_AfterWrite(object sender, SubDocEditEventArgs args)
     {
+      if (!dvDescription.UserEnabled)
+        args.Editor.SubDocs.Values["Description"].SetNull();
+      if (!dvPurpose.UserEnabled)
+        args.Editor.SubDocs.Values["Purpose"].SetNull();
+      if (!dvQuantity1.UserEnabled)
+      {
+        args.Editor.SubDocs.Values["Quantity1"].SetNull();
+        args.Editor.SubDocs.Values["MU1"].SetNull();
+      }
+      if (!dvQuantity2.UserEnabled)
+      {
+        args.Editor.SubDocs.Values["Quantity2"].SetNull();
+        args.Editor.SubDocs.Values["MU2"].SetNull();
+      }
+      if (!dvQuantity3.UserEnabled)
+      {
+        args.Editor.SubDocs.Values["Quantity3"].SetNull();
+        args.Editor.SubDocs.Values["MU3"].SetNull();
+      }
+
       ProductBuffer.AddOpProductValues(efpProduct.DocId, "Description", efpDescription.Text);
     }
 
