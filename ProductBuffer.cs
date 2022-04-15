@@ -138,6 +138,7 @@ namespace App
         _ProductDict[productId] = _ZeroProductData;
         return _ZeroProductData; // Предотвращение зацикливания
       }
+      treeIds.Add(productId); // 15.04.2022
 
       object[] vals = ProgramDBUI.TheUI.DocProvider.GetValues("Products", productId,
         //                 0              1                 2               3
