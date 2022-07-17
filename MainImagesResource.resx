@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,60 +117,53 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="MainImageList.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>31, 17</value>
-  </metadata>
-  <data name="MainImageList.ImageStream" mimetype="application/x-microsoft.net.object.binary.base64">
-    <value>
-        AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj0yLjAuMC4w
-        LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
-        ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAACK
-        CgAAAk1TRnQBSQFMAgEBEAEAAUQBAAFEAQABEAEAARABAAT/AQUBAAj/AUIBTQF2BwABdgMAASgDAAFA
-        AwABUAMAAQEBAAEEBgABChgAAYACAAGAAwACgAEAAYADAAGAAQABgAEAAoACAAPAAQADgAMAAf8CAAH/
-        AwAC/wEAAf8DAAH/AQAB/wEAAv8CAAP//wD/AAgAAyIdAAMiAgABDwL/AfAYAAEiAwAE/wIAAQ8G/wHw
-        AQoGqgGgBgABIgIAAQ8B/wHwAQ8B/wHwAQABDwb/AfABCgGqBAABqgGgBgABIgIAAf8B8AEPAfABDwH/
-        AQABDwEvAf8BLwH/AS8B8gHwAQoBqgEHAncBcAGqAaAGAAEiAQABDwH/AQ8C/wHwAf8B8AEPAiIBLwH/
-        AS8B8gHwAQoBqgEHAncBcAGqAaABzALAAQwCAAEiAQABDwH/AQ8B8AEPAfAB/wHwAQ8C8gL/Ai8B8AEK
-        AaoBBwJ3AXABqgGgAcABAAHMAQwCAAEiAQABDwHwAf8CAAH/AQ8B8AEPAvIC/wEiAf8B8AEKAaoBBwJ3
-        AXABqgGgAcwCwAHMAgABIgEAAQ8B8AH/AgAB/wEPAfABDwPyAS8BIgH/AfABCgGqAQcBxwF8AXABqgGg
-        AcABAAHAAQwBAgEgASIBAAEPAf8BDwHwAQ8B8AH/AfABDwLyAv8CLwHwAQoBqgEAAcABDAEAAaoBoAHM
-        AsABDAECAiIBAAEPAf8BDwL/AfAB/wHwAQ8C8gL/AS8B8gHwAQoCqgHKAawCqgGgBQACIgIAAf8B8AEP
-        AfABDwH/AQABDwH/ASIC/wEvAfIB8AEKAqoBygGsAqoBoAUAAQIBIgIAAQ8B/wHwAQ8B/wHwAQABDwb/
-        AfABCgKqAawBygKqAaAFAAECASIDAAT/AgABDwb/AfABCgaqAaAGAAEiAwABDwL/AfAYAAECIQAIiAEA
-        ASAEAAFQDAABwAQAAQgGiAGAAQIBIgMAAQUBVQsAAQwBzAQAAQgBuwMAAQsBuwGAAiIBIAIAAlUBUAkA
-        AcABAAHAAgABwAEAAQgBuwEPAfAB/wELAbsBgAECASICAAEFA1UIAAEMAcwDAAEMAcwBAAEIAbsBDwGg
-        Aa8BCwG7AYABAAEgAgABBQNVCQABwAQAAcABAAEIAbsBDwHwAf8BCwG7AYAFAAJVAVAQAAEIAbsBDwHw
-        Af8BCwG7AYAFAAEFAVUJAAECBiIBIAEIAbsDAAELAbsBgAYAAVAJAAgiAQgGuwGAEAAIIgiIBAABCQGZ
-        CgAIIgEIBogBgAQAApkBkAUAAQ8B/wIACCIBAAaIAQADzAHAApkBkAUAAf8BnwHwAQAIIgEJAQACkAEJ
-        AQABkAEAA8wBwAKZAZAFAAL/AfABAAgiAQAGkAEAAQwCzAEAAQkBmQYAAvwB8AEACCIBCQEAAZkDkAGZ
-        AgABzAHACQAC/wHwAQABAgYiASABAAOQAQkBAAGZAgABDCAAAf8NAAEDAjMCAAIzATAKAAHxAfAFAAYz
-        AQABAwIzAgACMwEwBQABDwHwAQAC/wHxAR8EAAEDBDMBMAEzATABAwIzAgACMwEwBQABDwEvAQAB8QMR
-        AfADAAEDBDMBMAEzATAMAAL/ASIB8AHxAxEB8AMAAQMEMwEwATMBMAwAAfICIgEvAv8B8QEfBAABAwYz
-        ATAMAAHyAiIBLwIAAfEB8AQAAQMBMwQAATMBMAwAAv8BIgHwAgAB/wYABjMGAAH/BwABDwEvCgABAwQz
-        ATAGAAH8AfAGAAEPAfALAAQzAgABDwT/AfwBzwIAAQ8B/woAAf8B8AIAAQMEAAEwAQABDwbMAfABAAH/
-        AZ8B8AgAAQ8B+QH/AgABAwQzATABAAEPBswB8AEAAv8B8AgAAQ8C/wkAAQ8E/wH8Ac8CAAL8AfAIAAEP
-        As8OAAH8AfACAAL/AfAIAAEPAv8OAAH/JQABBAHwFQABCwK7AbAFAAFCAU8FAAEPAv8NAAS7BAABBAEi
-        ASQB8AQAAQ8BzAHPDAABCwS7AbADAAFCASoBIgFPBAABDwHMAc8MAAG7AbwCzAHLAbsDAAEiAaABogEk
-        AfADAAEPAcwBzwsAAQsBuwG8AswBywG7AbACAAEqAQABCgEiAU8DAAEPAcwBzwMACP8BCwa7AbACAAGg
-        AgABogEkAfAD/wHMAc8C/wHwAfwGzAHPAQsCuwGyASsCuwGwBQABCgEiAU8B/AbMAfAB/AbMAc8BCwK7
-        AbIBKwK7AbAGAAGiASQB/AbMAfAB/AbMAc8BCwG7AbICIgErAbsBsAEPA/8B8AEAAQoBIgH8BswB8Aj/
-        AQsBuwGyAiIBKwG7AbAEzAHwAgABogP/AcwBzwL/AfAJAAK7AbIBKwK7AQAEzAMAAQoCAAEPAcwBzwwA
-        AQsBuwGyASsBuwGwCwABDwHMAc8NAAS7AgABDwP/AfAFAAEPAcwBzw0AAQsCuwGwAgAEzAHwBQABDwHM
-        Ac8TAATMBgABDwL/CwABQgFNAT4HAAE+AwABKAMAAUADAAFQAwABAQEAAQEFAAGAAQIWAAP/gQAB/wHA
-        AfgBHwX/AcAB8AEPBAAB/wHzAcABAwQAAf8B8wHAAQMEAAH/AfMBgAEBBAAB/wHzBgABFgHzBgABcgHz
-        BgABFAHzBgABdgGTBgABFgGDBgAB/wHDAYABAQQAAf8B4wHAAQMEAAH/AeMBwAEDBAAB/wHzAfABDwEA
-        AQEBAAEBAf8B+wH4AR8G/wIAAd8B9wH/Aa8B/QH/AYABAQGPAeMB/wGvAfgB/wGAAQEBBwHBAf8BrwHd
-        AfcBgAEBAY8BgAH/Aa8BjwHjAYABAQHfAYAB/wLfAfcBgAEBAf8BwQH/Ad8C/wGAAQEB/wHjAf8B3wGA
-        AQEBgAEBAf8B9wH/AQcCAAGAAQEC/wH8AdkEAAH/AY8B8wGOAgABgAEBAf8BBwH3AQcCAAHAAQMBAQEH
-        Ae4BAwIAAbUBtwEBAQcBngEDAgAB1QFXAYMBjwF+AQMCAAGxAVMBxwH/Af4BAwGAAQEB1QGzAe8C/wEH
-        AYMBwQHrAf8B8wHXAcABAwEBAYAB6wH/AfEB1wGAAgEBgAHrAecBAAHXAgABAQGAAesB4wEAAVcCAAGD
-        AcEB9wEBAQABbwIAAYMBwQH3AgAB7wIAAdcB6wH3AQAB8QHvAgAC/wHBAQEB8wGDAYABAQH/Ac8BNgFj
-        Af4BbAHAAQMB/wHHAeMB5wH/AccBwAEDAYABAwHBAv8BgwHAAQMBgAEBAYAC/wEBAcABAwGAAQEBgAL/
-        AQEB4AEHAYABAwGAAv8BAQH9Ab8B/wHHAYAC/wEBAfoBXwH/Ac8BwQL/AYMB/QG/AfgBHwH+AX8E/wHw
-        AQ8B/AE/AfgBPwL/AcABAwH4AR8B+AE/Av8BwAEDAfABDwH4AT8C/wGAAQEB8QEHAfgBPwL/AgAB8wGD
-        AfgBPwQAAfcBwQEAAQEEAAH/AeABAAEBBAAB/wHwAQABAQQAAYABeAEAAQEFAAF8AQABAQL/AYABAQEA
-        Af4B+AE/Av8BwAEDAv8B+AE/Av8BwAEDAYABfwH4AT8C/wHwAQ8BAAF/AfgBPwL/AfgBHwEAAf8B+AE/
-        Av8L
-</value>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="Debtor" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Images\Main\Debtor.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IncomeSource" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Images\Main\IncomeSource.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="MU" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Images\Main\MU.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Operation" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Images\Main\Operation.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="OperationBalance" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Images\Main\OperationBalance.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="OperationCredit" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Images\Main\OperationCredit.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="OperationDebt" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Images\Main\OperationDebt.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="OperationExpense" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Images\Main\OperationExpense.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="OperationIncome" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Images\Main\OperationIncome.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="OperationMove" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Images\Main\OperationMove.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Product" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Images\Main\Product.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="PurchaseReport" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Images\Main\PurchaseReport.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Purpose" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Images\Main\Purpose.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Shop" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Images\Main\Shop.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TurnoverStatement" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Images\Main\TurnoverStatement.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Wallet" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Images\Main\Wallet.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

@@ -19,7 +19,7 @@ namespace App
     public ChangePasswordForm()
     {
       InitializeComponent();
-      Icon = EFPApp.MainImageIcon("Password");
+      Icon = EFPApp.MainImages.Icons["Password"];
 
       EFPFormProvider efpForm = new EFPFormProvider(this);
       efpForm.HelpContext = "UI/ChangePassword.html";

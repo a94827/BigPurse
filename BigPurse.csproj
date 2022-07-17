@@ -129,12 +129,6 @@
       <DependentUpon>EditWallet.cs</DependentUpon>
     </Compile>
     <Compile Include="DBxDataVersionHandler.cs" />
-    <Compile Include="DummyForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="DummyForm.designer.cs">
-      <DependentUpon>DummyForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="EditIncomeSource.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -146,6 +140,11 @@
     </Compile>
     <Compile Include="LoginForm.designer.cs">
       <DependentUpon>LoginForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainImagesResource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MainImagesResource.resx</DependentUpon>
     </Compile>
     <Compile Include="Tools.cs" />
     <Compile Include="InitDocTextValues.cs" />
@@ -195,10 +194,6 @@
       <DependentUpon>EditWallet.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="DummyForm.resx">
-      <DependentUpon>DummyForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="EditIncomeSource.resx">
       <DependentUpon>EditIncomeSource.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -206,6 +201,11 @@
     <EmbeddedResource Include="LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainImagesResource.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MainImagesResource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -287,6 +287,22 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Images\Main\Debtor.png" />
+    <None Include="Images\Main\IncomeSource.png" />
+    <None Include="Images\Main\MU.png" />
+    <None Include="Images\Main\Operation.png" />
+    <None Include="Images\Main\OperationBalance.png" />
+    <None Include="Images\Main\OperationCredit.png" />
+    <None Include="Images\Main\OperationDebt.png" />
+    <None Include="Images\Main\OperationExpense.png" />
+    <None Include="Images\Main\OperationIncome.png" />
+    <None Include="Images\Main\OperationMove.png" />
+    <None Include="Images\Main\Product.png" />
+    <None Include="Images\Main\PurchaseReport.png" />
+    <None Include="Images\Main\Purpose.png" />
+    <None Include="Images\Main\Shop.png" />
+    <None Include="Images\Main\TurnoverStatement.png" />
+    <None Include="Images\Main\Wallet.png" />
     <Content Include="Program.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

@@ -18,7 +18,7 @@ namespace App
     public LoginForm()
     {
       InitializeComponent();
-      Icon = EFPApp.MainImageIcon("Password");
+      Icon = EFPApp.MainImages.Icons["Password"];
 
       EFPFormProvider efpForm = new EFPFormProvider(this);
       efpForm.OwnStatusBar = false; // иначе из-за поля "Пароль" будет статусная строка
