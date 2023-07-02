@@ -152,7 +152,7 @@ namespace App
         List<DBxFilter> filters = new List<DBxFilter>();
         DBxSelectInfo si1 = new DBxSelectInfo();
         si1.TableName = "Operations";
-        si1.Expressions.Add(new DBxAgregateFunction(DBxAgregateFunctionKind.Sum, "TotalDebt"), "SumDebt");
+        si1.Expressions.Add(new DBxAggregateFunction(DBxAggregateFunctionKind.Sum, "TotalDebt"), "SumDebt");
         filters.Add(new ValueFilter("Date", Params.FirstDate.Value, CompareKind.LessThan));
         filters.Add(new ValueFilter("WalletDebt", Params.WalletIds[i]));
         filters.Add(DBSDocType.DeletedFalseFilter);
@@ -161,7 +161,7 @@ namespace App
 
         DBxSelectInfo si2 = new DBxSelectInfo();
         si2.TableName = "Operations";
-        si2.Expressions.Add(new DBxAgregateFunction(DBxAgregateFunctionKind.Sum, "TotalCredit"), "SumCredit");
+        si2.Expressions.Add(new DBxAggregateFunction(DBxAggregateFunctionKind.Sum, "TotalCredit"), "SumCredit");
         filters.Clear();
         filters.Add(new ValueFilter("Date", Params.FirstDate.Value, CompareKind.LessThan));
         filters.Add(new ValueFilter("WalletCredit", Params.WalletIds[i]));
@@ -372,7 +372,7 @@ namespace App
               {
                 if (DataTools.GetBool(args.DataRow, "BalanceConfirmed"))
                 {
-                  args.Value = EFPApp.MainImages.Images["OK"];
+                  args.Value = EFPApp.MainImages.Images["Ok"];
                   args.ToolTipText = "Баланс совпадает";
                 }
                 else

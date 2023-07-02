@@ -1,3 +1,4 @@
+#define USE_SUM // Можно ли использовать SQL-функцию SUM?
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -100,22 +101,38 @@ namespace App
         List<DBxFilter> filters = new List<DBxFilter>();
         DBxSelectInfo si1 = new DBxSelectInfo();
         si1.TableName = "Operations";
-        si1.Expressions.Add(new DBxAgregateFunction(DBxAgregateFunctionKind.Sum, "TotalDebt"), "SumDebt");
+#if USE_SUM
+        si1.Expressions.Add(new DBxAggregateFunction(DBxAggregateFunctionKind.Sum, "TotalDebt"), "SumDebt");
+#else
+        si1.Expressions.Add("TotalDebt");
+#endif
         filters.Add(new ValueFilter("Date", Date.Value, CompareKind.LessThan));
         filters.Add(new ValueFilter("WalletDebt", WalletId));
         filters.Add(DBSDocType.DeletedFalseFilter);
         si1.Where = AndFilter.FromList(filters);
-        decimal SumDebt = DataTools.GetDecimal(con.FillSelect(si1).Rows[0][0]);
+#if USE_SUM
+        decimal sumDebt = DataTools.GetDecimal(con.FillSelect(si1).Rows[0][0]);
+#else
+        decimal sumDebt = DataTools.SumDecimal(con.FillSelect(si1), "TotalDebt");
+#endif
 
         DBxSelectInfo si2 = new DBxSelectInfo();
         si2.TableName = "Operations";
-        si2.Expressions.Add(new DBxAgregateFunction(DBxAgregateFunctionKind.Sum, "TotalCredit"), "SumCredit");
+#if USE_SUM
+        si2.Expressions.Add(new DBxAggregateFunction(DBxAggregateFunctionKind.Sum, "TotalCredit"), "SumCredit");
+#else
+        si2.Expressions.Add("TotalCredit");
+#endif
         filters.Clear();
         filters.Add(new ValueFilter("Date", Date.Value, CompareKind.LessThan));
         filters.Add(new ValueFilter("WalletCredit", WalletId));
         filters.Add(DBSDocType.DeletedFalseFilter);
         si2.Where = AndFilter.FromList(filters);
-        decimal SumCredit = DataTools.GetDecimal(con.FillSelect(si2).Rows[0][0]);
+#if USE_SUM
+        decimal sumCredit = DataTools.GetDecimal(con.FillSelect(si2).Rows[0][0]);
+#else
+        decimal sumCredit = DataTools.SumDecimal(con.FillSelect(si2), "TotalCredit");
+#endif
 
         #endregion
 
@@ -145,14 +162,14 @@ namespace App
           }
 
           if (DataTools.GetInt(row, "WalletDebt") == WalletId)
-            SumDebt += DataTools.GetDecimal(row, "TotalDebt");
+            sumDebt += DataTools.GetDecimal(row, "TotalDebt");
           if (DataTools.GetInt(row, "WalletCredit") == WalletId)
-            SumCredit += DataTools.GetDecimal(row, "TotalCredit");
+            sumCredit += DataTools.GetDecimal(row, "TotalCredit");
         }
 
         #endregion
 
-        Balance = SumDebt - SumCredit;
+        Balance = sumDebt - sumCredit;
         IsComplete = true;
       }
     }

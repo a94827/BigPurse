@@ -57,12 +57,13 @@ namespace App
             spl.Complete();
 
             ProgramDBUI.TheUI = new ProgramDBUI(db.CreateDocProvider().CreateProxy());
+            // Картинки
+            EFPApp.MainImages.Add(MainImagesResource.ResourceManager);
+
             //ProgramDBUI.TheUI.DebugShowIds = true; // показывать идентификаторы для отладки
             ProgramDBUI.ConfigSections = new ClientConfigSections(db);
             EFPApp.ConfigManager = ProgramDBUI.ConfigSections; // должно быть до показа форм
 
-            // Картинки
-            EFPApp.MainImages.Add(MainImagesResource.ResourceManager, System.Drawing.Color.Magenta);
 
             if (!LoginForm.ProcessLogin())
               return;
@@ -77,10 +78,11 @@ namespace App
             EFPApp.FormCreators.Add(ProgramDBUI.TheUI);
             EFPApp.LoadComposition();
 
-            //if (EFPApp.Interface.ChildFormCount == 0)
-            //if (ProgramDBUI.TheUI.DocTypes["Operations"].FindAndActivate(String.Empty))
-            //  EFPApp.Interface.ShowChildForm(new DocTableViewForm(ProgramDBUI.TheUI.DocTypes["Operations"], DocTableViewMode.Browse));
-            ProgramDBUI.TheUI.DocTypes["Operations"].ShowOrOpen(null);
+            //ProgramDBUI.TheUI.DocTypes["Operations"].ShowOrOpen(null);
+            // 02.07.2023
+            if (EFPApp.Interface.ChildFormCount == 0)
+              EFPApp.Interface.ShowChildForm(new DocTableViewForm(ProgramDBUI.TheUI.DocTypes["Operations"], DocTableViewMode.Browse));
+
             EFPApp.BeforeClosing += new System.ComponentModel.CancelEventHandler(EFPApp_BeforeClosing);
 
             #endregion
