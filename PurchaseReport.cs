@@ -12,6 +12,7 @@ using FreeLibSet.Data;
 using FreeLibSet.Data.Docs;
 using FreeLibSet.Core;
 using FreeLibSet.UICore;
+using FreeLibSet.Config;
 
 namespace App
 {
@@ -113,7 +114,7 @@ namespace App
       return new PurchaseReportParamForm();
     }
 
-    public override void WriteFormValues(EFPReportExtParamsForm form, EFPReportExtParamsPart part)
+    public override void WriteFormValues(EFPReportExtParamsForm form, SettingsPart part)
     {
       PurchaseReportParamForm form2 = (PurchaseReportParamForm)form;
       form2.efpPeriod.First.NValue = FirstDate;
@@ -125,7 +126,7 @@ namespace App
       form2.efpProductDet.SelectedIndex = (int)ProductDet;
     }
 
-    public override void ReadFormValues(EFPReportExtParamsForm form, EFPReportExtParamsPart part)
+    public override void ReadFormValues(EFPReportExtParamsForm form, SettingsPart part)
     {
       PurchaseReportParamForm form2 = (PurchaseReportParamForm)form;
       FirstDate = form2.efpPeriod.First.NValue;
@@ -137,7 +138,7 @@ namespace App
       ProductDet = (ProducDetLevel)(form2.efpProductDet.SelectedIndex);
     }
 
-    public override void WriteConfig(FreeLibSet.Config.CfgPart cfg, EFPReportExtParamsPart part)
+    public override void WriteConfig(CfgPart cfg, SettingsPart part)
     {
       cfg.SetNullableDate("FirstDate", FirstDate);
       cfg.SetNullableDate("LastDate", LastDate);
@@ -148,7 +149,7 @@ namespace App
       cfg.SetEnum<ProducDetLevel>("ProductDet", ProductDet);
     }
 
-    public override void ReadConfig(FreeLibSet.Config.CfgPart cfg, EFPReportExtParamsPart part)
+    public override void ReadConfig(CfgPart cfg, SettingsPart part)
     {
       FirstDate = cfg.GetNullableDate("FirstDate");
       LastDate = cfg.GetNullableDate("LastDate");

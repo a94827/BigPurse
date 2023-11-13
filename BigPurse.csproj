@@ -281,12 +281,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\FreeLibSet\Others\x86\SQLite.Interop.dll">
-      <Link>SQLite.Interop.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Images\Main\Debtor.png" />
     <None Include="Images\Main\IncomeSource.png" />
     <None Include="Images\Main\MU.png" />
@@ -303,6 +297,14 @@
     <None Include="Images\Main\Shop.png" />
     <None Include="Images\Main\TurnoverStatement.png" />
     <None Include="Images\Main\Wallet.png" />
+    <Content Include="..\FreeLibSet\Others\x64\sqlite3.dll">
+      <Link>x64\sqlite3.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\FreeLibSet\Others\x86\sqlite3.dll">
+      <Link>x86\sqlite3.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Program.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

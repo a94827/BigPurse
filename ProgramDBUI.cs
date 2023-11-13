@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using FreeLibSet.Forms;
 using System.ComponentModel;
 using FreeLibSet.Core;
+using FreeLibSet.Reporting;
 
 namespace App
 {
@@ -95,6 +96,8 @@ namespace App
       dt.Columns["OpType"].NewMode = ColumnNewMode.Saved;
       dt.Columns["WalletDebt"].NewMode = ColumnNewMode.Saved;
       dt.Columns["WalletCredit"].NewMode = ColumnNewMode.Saved;
+
+      dt.GridProducer.OutItem.Default.PageSetup.SetOrientation(BROrientation.Landscape, true);
 
       #endregion
 

@@ -11,6 +11,7 @@ using FreeLibSet.Calendar;
 using FreeLibSet.Core;
 using FreeLibSet.Data;
 using FreeLibSet.Data.Docs;
+using FreeLibSet.Config;
 
 namespace App
 {
@@ -65,7 +66,7 @@ namespace App
       return new TurnoverStatementParamForm();
     }
 
-    public override void WriteFormValues(EFPReportExtParamsForm form, EFPReportExtParamsPart part)
+    public override void WriteFormValues(EFPReportExtParamsForm form, SettingsPart part)
     {
       TurnoverStatementParamForm form2 = (TurnoverStatementParamForm)form;
       form2.efpPeriod.First.NValue = FirstDate;
@@ -73,7 +74,7 @@ namespace App
       form2.efpWallets.DocIds = WalletIds;
     }
 
-    public override void ReadFormValues(EFPReportExtParamsForm form, EFPReportExtParamsPart part)
+    public override void ReadFormValues(EFPReportExtParamsForm form, SettingsPart part)
     {
       TurnoverStatementParamForm form2 = (TurnoverStatementParamForm)form;
       FirstDate = form2.efpPeriod.First.NValue;
@@ -81,14 +82,14 @@ namespace App
       WalletIds = form2.efpWallets.DocIds;
     }
 
-    public override void WriteConfig(FreeLibSet.Config.CfgPart cfg, EFPReportExtParamsPart part)
+    public override void WriteConfig(CfgPart cfg, SettingsPart part)
     {
       cfg.SetNullableDate("FirstDate", FirstDate);
       cfg.SetNullableDate("LastDate", LastDate);
       cfg.SetIntCommaString("Wallets", WalletIds);
     }
 
-    public override void ReadConfig(FreeLibSet.Config.CfgPart cfg, EFPReportExtParamsPart part)
+    public override void ReadConfig(CfgPart cfg, SettingsPart part)
     {
       FirstDate = cfg.GetNullableDate("FirstDate");
       LastDate = cfg.GetNullableDate("LastDate");
