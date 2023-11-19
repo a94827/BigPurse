@@ -35,10 +35,12 @@ namespace App
 
       dt.GridProducer.Columns.AddText("DisplayName", "Содержание", 40, 30);
 
-      dt.GridProducer.Columns.AddUserMoney("Total", "TotalDebt,TotalCredit,InlineSum",
-        new EFPGridProducerValueNeededEventHandler(EditOperation.Total_ValueNeeded),
-        "Сумма");
+      //dt.GridProducer.Columns.AddUserMoney("Total", "TotalDebt,TotalCredit,InlineSum",
+      //  new EFPGridProducerValueNeededEventHandler(EditOperation.Total_ValueNeeded),
+      //  "Сумма");
+      dt.GridProducer.Columns.AddMoney("Total", "Сумма"); // 19.11.2023. Больше не является вычисляемым столбцом
       dt.GridProducer.Columns.LastAdded.Format = Tools.MoneyFormat;
+
       dt.GridProducer.Columns.AddMoney("TotalDebt", "Сумма дебет");
       dt.GridProducer.Columns.LastAdded.Format = Tools.MoneyFormat;
       dt.GridProducer.Columns.AddMoney("TotalCredit", "Сумма кредит");
@@ -66,7 +68,8 @@ namespace App
       dt.GridProducer.ToolTips.AddText("DisplayName", "Содержание");
       dt.GridProducer.ToolTips.AddText("Comment", String.Empty).DisplayName = "Комментарий (если задан)";
 
-      dt.GridProducer.Orders.Add("Date,OpOrder,OpOrder2,Id", "Основной порядок");
+      dt.GridProducer.Orders.Add("Date,OpOrder,OpOrder2,Id", "По дате (по возрастанию)", new EFPDataGridViewSortInfo("Date", ListSortDirection.Ascending));
+      dt.GridProducer.Orders.Add("Date DESC,OpOrder DESC,OpOrder2 DESC,Id", "По дате (по убыванию)", new EFPDataGridViewSortInfo("Date", ListSortDirection.Descending)); // 19.11.2023
       dt.GridProducer.FixedColumns.Add("Date");
       dt.GridProducer.FixedColumns.Add("OpOrder");
       dt.GridProducer.FixedColumns.Add("OpOrder2");

@@ -49,18 +49,18 @@ namespace App
         return ImageKeys[(int)opType];
     }
 
-    public static void Total_ValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args)
-    {
-      for (int i = 0; i < 3; i++)
-      {
-        decimal s = args.GetDecimal(i);
-        if (s != 0m)
-        {
-          args.Value = s;
-          break;
-        }
-      }
-    }
+    //public static void Total_ValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args)
+    //{
+    //  for (int i = 0; i < 3; i++)
+    //  {
+    //    decimal s = args.GetDecimal(i);
+    //    if (s != 0m)
+    //    {
+    //      args.Value = s;
+    //      break;
+    //    }
+    //  }
+    //}
 
     public static void Wallet_Text_ValueNeeded(object sender, EFPGridProducerValueNeededEventArgs args)
     {
@@ -74,7 +74,7 @@ namespace App
     {
       OperationType opType = args.GetEnum<OperationType>(0);
       switch (opType)
-      { 
+      {
         case OperationType.Income:
           args.Value = ProgramDBUI.TheUI.DocTypes["IncomeSources"].GetTextValue(args.GetInt(1));
           break;
@@ -114,6 +114,10 @@ namespace App
       filtOpType.DisplayName = "Тип операции";
       filtOpType.ImageKeys = ImageKeys;
       args.ControlProvider.Filters.Add(filtOpType);
+
+      DecimalRangeGridFilter filtSum = new DecimalRangeGridFilter("Total");
+      filtSum.DisplayName = "Сумма операции";
+      args.ControlProvider.Filters.Add(filtSum);
 
       #endregion
     }

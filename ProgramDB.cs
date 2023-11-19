@@ -179,6 +179,7 @@ namespace App
       dt.Struct.Columns.AddString("DisplayName", 100, false);
       dt.CalculatedColumns.Add("DisplayName");
       dt.Struct.Columns.AddInt("OpOrder2", 1, 2, false);
+      dt.Struct.Columns.AddMoney("Total");
 
       #endregion
 
@@ -378,18 +379,22 @@ namespace App
       decimal totalDebt = 0m;
       decimal totalCredit = 0m;
       decimal inlineSum = args.Doc.Values["InlineSum"].AsDecimal;
+      decimal total;
       switch (opType)
       {
         case OperationType.Balance:
+          total = inlineSum;
           break;
         case OperationType.Income:
           totalDebt = inlineSum;
+          total = inlineSum;
           Int32 incSrcId = args.Doc.Values["IncomeSource"].AsInteger;
           sName = args.Doc.DocProvider.GetTextValue("IncomeSources", incSrcId);
           break;
         case OperationType.Expense:
           DataTable table = args.Doc.SubDocs["OperationProducts"].CreateSubDocsData();
           totalCredit = DataTools.SumDecimal(table, "RecordSum") + inlineSum;
+          total = totalCredit;
           if (table.Rows.Count > 0)
           {
             SingleScopeStringList lst = new SingleScopeStringList(false);
@@ -410,15 +415,19 @@ namespace App
         case OperationType.Move:
           totalDebt = inlineSum;
           totalCredit = inlineSum;
+          total = inlineSum;
           break;
         case OperationType.Debt:
           totalDebt = inlineSum;
+          total = inlineSum;
           break;
         case OperationType.Credit:
           totalCredit = inlineSum;
+          total = inlineSum;
           break;
         default:
           sName = "Неизвестный тип операции";
+          total = 0m;
           break;
       }
 
@@ -428,6 +437,7 @@ namespace App
       args.Doc.Values["DisplayName"].SetString(sName);
       args.Doc.Values["TotalDebt"].SetDecimal(totalDebt);
       args.Doc.Values["TotalCredit"].SetDecimal(totalCredit);
+      args.Doc.Values["Total"].SetDecimal(total);
     }
 
     #endregion
