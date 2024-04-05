@@ -342,12 +342,14 @@ namespace App
         {
           efpSumOp.ReadOnly = true;
           page.PageShow += new DocEditPageEventHandler(Page1_PageShow_CalcExpenseSum);
+          if (!args.Editor.IsReadOnly)
+            efpSumOp.ValueEx.ValueChanged += efpSumOp_ValueChanged_Expense;
         }
         else
         {
-          efpSumOp.Validating += new FreeLibSet.UICore.UIValidatingEventHandler(efpSumOp_Validating);
           args.AddDecimal(efpSumOp, "InlineSum", false);
         }
+        efpSumOp.Validating += new FreeLibSet.UICore.UIValidatingEventHandler(efpSumOp_Validating);
         if (opType == OperationType.Balance)
         {
           efpSumOp.Label.Text = "Реальный остаток";
@@ -390,8 +392,49 @@ namespace App
 
     void Page1_PageShow_CalcExpenseSum(object sender, DocEditPageEventArgs args)
     {
+      efpSumOp.ReadOnly = true; // заранее отключаем чтобы не срабатывал обработчик ValueChanged
       efpSumOp.Value = DataTools.SumDecimal(sdgProducts.SourceAsDataView, "RecordSum");
+      string productName;
+      if ((!_Editor.IsReadOnly) && IsSingleProductSum(out productName))
+      {
+        efpSumOp.ReadOnly = false;
+        efpSumOp.ToolTipText = "Сумма для товара \"" + productName + "\"";
+      }
+      else
+        efpSumOp.ToolTipText = "Сумма по всем товарам";
     }
+
+    /// <summary>
+    /// Можно ли редактировать сумму на первой вкладке для одновременной записи.
+    /// Требуется, чтобы в таблице "Товары" была ровно одна строка и не было формулы
+    /// </summary>
+    /// <param name="productName">Сюда помещается название товара, если редактирование возможно</param>
+    /// <returns></returns>
+    private bool IsSingleProductSum(out string productName)
+    {
+      productName = null;
+      if (sdgProducts.SourceAsDataView.Count != 1)
+        return false;
+      DataRow row = sdgProducts.SourceAsDataView[0].Row;
+      if (DataTools.GetString(row["Formula"]).Length > 0)
+        return false;
+
+      Int32 productId = DataTools.GetInt(row, "Product");
+      productName = ProgramDBUI.TheUI.DocTypes["Products"].GetTextValue(productId);
+      return true;
+    }
+
+    private void efpSumOp_ValueChanged_Expense(object sender, EventArgs args)
+    {
+      if (efpSumOp.ReadOnly)
+        return;
+      DataRow row = sdgProducts.SourceAsDataView[0].Row;
+      if (DataTools.GetDecimal(row, "RecordSum") == efpSumOp.Value)
+        return;
+      DataTools.SetDecimal(row, "RecordSum", efpSumOp.Value);
+      _Editor.SubDocsChangeInfo.Changed = true;
+    }
+
 
     /// <summary>
     /// Проверка, что кошельки не совпадают для операции перемещения
