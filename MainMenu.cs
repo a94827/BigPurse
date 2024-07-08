@@ -27,9 +27,8 @@ namespace App
 
       EFPCommandItem menuFile = EFPApp.CommandItems.Add(EFPAppStdCommandItems.MenuFile, null);
 
-      ci = EFPApp.CommandItems.Add(EFPAppStdCommandItems.Exit, menuFile);
-      ci.Click += new EventHandler(EFPApp.CommandItems.Exit_Click);
-      ci.GroupBegin = true;
+      helpers.AddExit(menuFile);
+      helpers.Exit.GroupBegin = true;
 
       #endregion
 
