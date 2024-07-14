@@ -38,7 +38,7 @@ namespace App
     Debt = 4,
 
     /// <summary>
-    /// Получение в долг
+    /// Дача в долг
     /// </summary>
     Credit = 5,
   }

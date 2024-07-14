@@ -74,6 +74,7 @@
       <DependentUpon>ChangePasswordForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ConfigSection.cs" />
+    <Compile Include="DebtReport.cs" />
     <Compile Include="EditMU.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -305,6 +306,7 @@
       <Link>x86\sqlite3.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Images\Main\DebtReport.png" />
     <Content Include="Program.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

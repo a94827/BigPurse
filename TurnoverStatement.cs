@@ -158,7 +158,7 @@ namespace App
         filters.Add(new ValueFilter("WalletDebt", Params.WalletIds[i]));
         filters.Add(DBSDocType.DeletedFalseFilter);
         si1.Where = AndFilter.FromList(filters);
-        decimal SumDebt = DataTools.GetDecimal(ProgramDBUI.TheUI.DocProvider.FillSelect(si1).Rows[0][0]);
+        decimal sumDebt = DataTools.GetDecimal(ProgramDBUI.TheUI.DocProvider.FillSelect(si1).Rows[0][0]);
 
         DBxSelectInfo si2 = new DBxSelectInfo();
         si2.TableName = "Operations";
@@ -168,9 +168,9 @@ namespace App
         filters.Add(new ValueFilter("WalletCredit", Params.WalletIds[i]));
         filters.Add(DBSDocType.DeletedFalseFilter);
         si2.Where = AndFilter.FromList(filters);
-        decimal SumCredit = DataTools.GetDecimal(ProgramDBUI.TheUI.DocProvider.FillSelect(si2).Rows[0][0]);
+        decimal sumCredit = DataTools.GetDecimal(ProgramDBUI.TheUI.DocProvider.FillSelect(si2).Rows[0][0]);
 
-        walletInitBalance[i] = SumDebt - SumCredit;
+        walletInitBalance[i] = sumDebt - sumCredit;
       }
 
       decimal[] walletCurrBalance = (decimal[])(walletInitBalance.Clone());
