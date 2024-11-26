@@ -9,6 +9,7 @@ using FreeLibSet.Data;
 using FreeLibSet.Data.Docs;
 using FreeLibSet.Forms;
 using FreeLibSet.Forms.Docs;
+using FreeLibSet.UICore;
 
 namespace App
 {
@@ -220,7 +221,7 @@ namespace App
     private void MainPage_GetRowAttributes(object sender, EFPDataGridViewRowAttributesEventArgs args)
     {
       if (DataTools.GetInt(args.DataRow, "RecType") == 1)
-        args.ColorType = EFPDataGridViewColorType.TotalRow;
+        args.ColorType = UIDataViewColorType.TotalRow;
       else if (DataTools.GetDecimal(args.DataRow, "TotalDebt") == 0m && DataTools.GetDecimal(args.DataRow, "TotalCredit") == 0m)
         args.Grayed = true;
     }
@@ -353,7 +354,7 @@ namespace App
     private void DebtorPage_GetRowAttributes(object sender, EFPDataGridViewRowAttributesEventArgs args)
     {
       if (DataTools.GetInt(args.DataRow, "RecType") == 1)
-        args.ColorType = EFPDataGridViewColorType.TotalRow;
+        args.ColorType = UIDataViewColorType.TotalRow;
     }
 
     private void DebtorPage_EditData(object sender, EventArgs args)

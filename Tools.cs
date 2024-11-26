@@ -157,6 +157,24 @@ namespace App
       }
     }
 
+    /// <summary>
+    /// ¬озвращает true, если дл€ операции нельз€ использовать кошелек с признаком "¬клад"
+    /// </summary>
+    /// <param name="opType"></param>
+    /// <returns></returns>
+    public static bool DontUseDepositWallet(OperationType opType)
+    {
+      switch (opType)
+      {
+        case OperationType.Expense:
+        case OperationType.Debt:
+        case OperationType.Credit:
+          return true;
+        default:
+          return false;
+      }
+    }
+
     public static int GetOpOrder2(OperationType opType)
     {
       if (opType == OperationType.Balance)

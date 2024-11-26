@@ -61,6 +61,11 @@ namespace App
       /// </summary>
       public int MaxQuantityLevel;
 
+      /// <summary>
+      /// Возвращает true, если данный продукт не является группой и его можно выбирать из списка в редакторе операции
+      /// </summary>
+      public bool IsLeaf;
+
       #endregion
 
       #region ICloneable Members
@@ -94,6 +99,7 @@ namespace App
       obj.QuantityPresence = PresenceType.Optional;
       obj.MUSets = new MUSet[0];
       obj.MaxQuantityLevel = 3;
+      obj.IsLeaf = false;
       return obj;
     }
 
@@ -112,7 +118,7 @@ namespace App
         try
         {
           IdList treeIds = new IdList(); // для отслеживания зацикливания дерева
-          pd = DoInitProductData(productId, treeIds);
+          pd = DoInitProductData(productId, treeIds, true);
         }
         finally
         {
@@ -129,7 +135,7 @@ namespace App
     /// <param name="productId"></param>
     /// <param name="treeIds"></param>
     /// <returns></returns>
-    private static ProductData DoInitProductData(Int32 productId, IdList treeIds)
+    private static ProductData DoInitProductData(Int32 productId, IdList treeIds, bool detectIsLeaf)
     {
       //if (productId == 0)
       //  return _ZeroProductData;
@@ -149,7 +155,7 @@ namespace App
       if (parentId == 0)
         parentData = _ZeroProductData;
       else
-        parentData = DoInitProductData(parentId, treeIds);
+        parentData = DoInitProductData(parentId, treeIds, false);
 
       ProductData pd = parentData.Clone();
       PresenceType descripionPresence = DataTools.GetEnum<PresenceType>(vals[1]);
@@ -204,6 +210,19 @@ namespace App
           pd.MaxQuantityLevel = Math.Max(pd.MaxQuantityLevel, lvl);
         }
       }
+
+      if (detectIsLeaf)
+      {
+        DBxFilter[] filters = new DBxFilter[]
+        {
+          new ValueFilter("ParentId", productId),
+          DBSDocType.DeletedFalseFilter
+        };
+
+        pd.IsLeaf = (ProgramDBUI.TheUI.DocProvider.GetRecordCount("Products", AndFilter.FromArray(filters)) == 0);
+      }
+      else
+        pd.IsLeaf = false;
 
       _ProductDict[productId] = pd;
       return pd;
@@ -368,7 +387,7 @@ namespace App
           filters[0] = new ValueFilter("Product", productId);
           filters[1] = DBSSubDocType.DeletedFalseFilter;
           filters[2] = DBSSubDocType.DocIdDeletedFalseFilter;
-          filters[3] = new ValueFilter(columnName, "", CompareKind.NotEqual,DBxColumnType.String);
+          filters[3] = new ValueFilter(columnName, "", CompareKind.NotEqual, DBxColumnType.String);
           a = ProgramDBUI.TheUI.DocProvider.GetUniqueStringValues("OperationProducts", columnName,
             AndFilter.FromArray(filters));
 

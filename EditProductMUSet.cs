@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using FreeLibSet.Forms.Docs;
 using FreeLibSet.DependedValues;
+using FreeLibSet.Forms;
 
 namespace App
 {
@@ -36,7 +37,7 @@ namespace App
 
     private void AddPage(InitSubDocEditFormEventArgs args)
     {
-      DocEditPage page = args.AddPage("Общие", MainPanel);
+      ExtEditPage page = args.AddPage("Общие", MainPanel);
 
       efpMU1 = new EFPDocComboBox(page.BaseProvider, cbMU1, ProgramDBUI.TheUI.DocTypes["MUs"]);
       efpMU1.CanBeEmpty = false;

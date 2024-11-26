@@ -169,9 +169,9 @@ namespace App
       dt.Struct.Columns.AddReference("IncomeSource", "IncomeSources", true);
       dt.Struct.Columns.AddReference("Shop", "Shops", true);
       dt.Struct.Columns.AddReference("Debtor", "Debtors", true);
-      dt.Struct.Columns.AddMoney("InlineSum");
-      dt.Struct.Columns.AddMoney("TotalDebt");
-      dt.Struct.Columns.AddMoney("TotalCredit");
+      dt.Struct.Columns.AddDecimal("InlineSum");
+      dt.Struct.Columns.AddDecimal("TotalDebt");
+      dt.Struct.Columns.AddDecimal("TotalCredit");
       dt.Struct.Columns.AddMemo("Comment");
 
       #region Вычисляемые поля
@@ -179,7 +179,7 @@ namespace App
       dt.Struct.Columns.AddString("DisplayName", 100, false);
       dt.CalculatedColumns.Add("DisplayName");
       dt.Struct.Columns.AddInt("OpOrder2", 1, 2, false);
-      dt.Struct.Columns.AddMoney("Total");
+      dt.Struct.Columns.AddDecimal("Total");
 
       #endregion
 
@@ -206,9 +206,9 @@ namespace App
       sdt.Struct.Columns.AddSingle("Quantity3", true);
       sdt.Struct.Columns.AddReference("MU3", "MUs", true);
       sdt.Struct.Columns.AddString("Formula", 100, true);
-      sdt.Struct.Columns.AddMoney("RecordSum");
+      sdt.Struct.Columns.AddDecimal("RecordSum");
       sdt.Struct.Columns.AddReference("Purpose", "Purposes", true);
-      sdt.Struct.Columns.AddMemo("Comment");
+      sdt.Struct.Columns.AddMemo("Comment"); // отзыв о товаре
       sdt.DefaultOrder = new DBxOrder("RecordOrder");
       dt.SubDocs.Add(sdt);
 
@@ -222,6 +222,9 @@ namespace App
       dt.SingularTitle = "Кошелек";
       dt.PluralTitle = "Кошельки";
       dt.Struct.Columns.AddString("Name", 50, false);
+      dt.Struct.Columns.AddDate("FirstDate", true); // 20.09.2024
+      dt.Struct.Columns.AddDate("LastDate", true);
+      dt.Struct.Columns.AddBoolean("Deposit"); // 24.09.2024
       dt.Struct.Columns.AddMemo("Comment");
       dt.DefaultOrder = new DBxOrder("Name");
       _DocTypes.Add(dt);
@@ -234,6 +237,8 @@ namespace App
       dt.SingularTitle = "Источник дохода";
       dt.PluralTitle = "Источники дохода";
       dt.Struct.Columns.AddString("Name", 100, false);
+      dt.Struct.Columns.AddDate("FirstDate", true); // 20.09.2024
+      dt.Struct.Columns.AddDate("LastDate", true);
       dt.Struct.Columns.AddMemo("Comment");
       dt.DefaultOrder = new DBxOrder("Name");
       _DocTypes.Add(dt);
@@ -261,6 +266,8 @@ namespace App
       dt.SingularTitle = "Магазин";
       dt.PluralTitle = "Магазины";
       dt.Struct.Columns.AddString("Name", 100, false);
+      dt.Struct.Columns.AddDate("FirstDate", true); // 20.09.2024
+      dt.Struct.Columns.AddDate("LastDate", true);
       dt.Struct.Columns.AddMemo("Comment");
 
       dt.Struct.Columns.AddReference("GroupId", "ShopGroups", true);
@@ -279,6 +286,8 @@ namespace App
       dt.SingularTitle = "Дебитор/кредитор";
       dt.PluralTitle = "Дебиторы/кредиторы";
       dt.Struct.Columns.AddString("Name", 100, false);
+      dt.Struct.Columns.AddDate("FirstDate", true); // 20.09.2024
+      dt.Struct.Columns.AddDate("LastDate", true);
       dt.Struct.Columns.AddMemo("Comment");
       dt.DefaultOrder = new DBxOrder("Name");
       _DocTypes.Add(dt);
@@ -344,6 +353,8 @@ namespace App
       dt.SingularTitle = "Назначение";
       dt.PluralTitle = "Назначения";
       dt.Struct.Columns.AddString("Name", 50, false);
+      dt.Struct.Columns.AddDate("FirstDate", true); // 20.09.2024
+      dt.Struct.Columns.AddDate("LastDate", true);
       dt.Struct.Columns.AddMemo("Comment");
       dt.DefaultOrder = new DBxOrder("Name");
       _DocTypes.Add(dt);

@@ -78,10 +78,10 @@ namespace App
             EFPApp.FormCreators.Add(ProgramDBUI.TheUI);
             EFPApp.LoadComposition();
 
-            //ProgramDBUI.TheUI.DocTypes["Operations"].ShowOrOpen(null);
-            // 02.07.2023
-            if (EFPApp.Interface.ChildFormCount == 0)
-              EFPApp.Interface.ShowChildForm(new DocTableViewForm(ProgramDBUI.TheUI.DocTypes["Operations"], DocTableViewMode.Browse));
+            // 02.07.2023, убрано 07.10.2024
+            //if (EFPApp.Interface.ChildFormCount == 0)
+            //  EFPApp.Interface.ShowChildForm(new DocTableViewForm(ProgramDBUI.TheUI.DocTypes["Operations"], DocTableViewMode.Browse));
+            ProgramDBUI.TheUI.DocTypes["Operations"].ShowOrOpen(null);
 
             EFPApp.BeforeClosing += new System.ComponentModel.CancelEventHandler(EFPApp_BeforeClosing);
 

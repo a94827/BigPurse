@@ -83,6 +83,26 @@ namespace App {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Feedback {
+            get {
+                object obj = ResourceManager.GetObject("Feedback", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap FeedbackReport {
+            get {
+                object obj = ResourceManager.GetObject("FeedbackReport", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap IncomeSource {
             get {
                 object obj = ResourceManager.GetObject("IncomeSource", resourceCulture);

@@ -15,6 +15,7 @@ using FreeLibSet.Data.Docs;
 using FreeLibSet.Logging;
 using FreeLibSet.UICore;
 using FreeLibSet.Data;
+using FreeLibSet.Forms.Data;
 
 namespace App
 {
@@ -76,20 +77,20 @@ namespace App
 
     EFPDocComboBox efpProduct;
     EFPTextComboBox efpDescription;
-    DocValueTextBox dvDescription;
+    ExtValueTextBox dvDescription;
     EFPDocComboBox efpPurpose;
-    DocValueDocComboBox dvPurpose;
+    ExtValueDocComboBox dvPurpose;
     EFPDocComboBox efpMU1, efpMU2, efpMU3;
-    DocValueDocComboBox dvMU1, dvMU2, dvMU3;
+    ExtValueDocComboBox dvMU1, dvMU2, dvMU3;
     EFPSingleEditBox efpQuantity1, efpQuantity2, efpQuantity3;
-    DocValueSingleEditBox dvQuantity1, dvQuantity2, dvQuantity3;
+    ExtValueSingleEditBox dvQuantity1, dvQuantity2, dvQuantity3;
     EFPTextBox efpFormula;
     EFPDecimalEditBox efpSum;
-    DocValueDecimalEditBox dvSum;
+    ExtValueDecimalEditBox dvSum;
 
     private void AddPage(InitSubDocEditFormEventArgs args)
     {
-      DocEditPage page = args.AddPage("Общие", MainPanel);
+      ExtEditPage page = args.AddPage("Общие", MainPanel);
 
       #region Продукт, описание и назначение
 
@@ -110,6 +111,12 @@ namespace App
       efpPurpose.CanBeEmpty = true;
       efpPurpose.Validating += new UIValidatingEventHandler(efpPurpose_Validating);
       dvPurpose = args.AddRef(efpPurpose, "Purpose", false);
+
+      EFPDateTimeBox efpDate = (EFPDateTimeBox)(args.MainEditor.Properties["EFPDate"]);
+      DateRangeInclusionGridFilter filtPurposeDate = new DateRangeInclusionGridFilter("FirstDate", "LastDate");
+      filtPurposeDate.DisplayName = "Период действия";
+      efpPurpose.Filters.Add(filtPurposeDate);
+      filtPurposeDate.Value = efpDate.NValue;
 
       #endregion
 
@@ -175,13 +182,13 @@ namespace App
       efpFormula.CanBeEmpty = true;
       efpFormula.Validating += new FreeLibSet.UICore.UIValidatingEventHandler(efpFormula_Validating);
       DocValueFormula dvFormula = new DocValueFormula(args.Values["Formula"], efpFormula);
-      args.AddDocEditItem(dvFormula);
+      args.AddEditItem(dvFormula);
 
       efpSum = new EFPDecimalEditBox(page.BaseProvider, edSum);
       efpSum.CanBeEmpty = false;
       efpSum.Control.Format = Tools.MoneyFormat;
       dvSum = args.AddDecimal(efpSum, "RecordSum", false);
-      dvSum.UserDisabledMode = DocValueUserDisabledMode.AlwaysReplace;
+      dvSum.UserDisabledMode = ExtValueUserDisabledMode.AlwaysReplace;
       dvSum.UserEnabledEx = new DepNot(efpFormula.IsNotEmptyEx);
 
       efpSum.Validators.AddWarning(new DepNot(new DepEqual<decimal>(efpSum.ValueEx, 0m)), "Сумма должна быть задана");
@@ -452,21 +459,21 @@ namespace App
 
     #endregion
 
-    private class DocValueFormula : DocValueTextBox
+    private class DocValueFormula : ExtValueTextBox
     {
-      public DocValueFormula(DBxDocValue docValue, IEFPTextBox controlProvider)
-        : base(docValue, controlProvider, false)
+      public DocValueFormula(DBxExtValue extValue, IEFPTextBox controlProvider)
+        : base(extValue, controlProvider, false)
       {
       }
 
       protected override void ValueToControl()
       {
-        CurrentValueEx.Value = DocValue.AsString.Replace(".", CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator);
+        CurrentValueEx.Value = ExtValue.AsString.Replace(".", CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator);
       }
 
       protected override void ValueFromControl()
       {
-        DocValue.SetString(CurrentValueEx.Value.Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."));
+        ExtValue.SetString(CurrentValueEx.Value.Replace(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator, "."));
       }
     }
 

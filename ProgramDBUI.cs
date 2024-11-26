@@ -138,7 +138,7 @@ namespace App
       sdt.GridProducer.Columns.LastAdded.Format = Tools.MoneyFormat;
       sdt.GridProducer.Columns.AddText("Comment", "Комментарий", 30, 10);
 
-      sdt.GridProducer.ToolTips.AddText("Comment", String.Empty).DisplayName = "Комментарий (если задан)";
+      sdt.GridProducer.ToolTips.AddText("Comment", String.Empty).DisplayName = "Комментарий - отзыв о товаре (если задан)";
 
       sdt.GridProducer.DefaultConfig = new EFPDataGridViewConfig();
       sdt.GridProducer.DefaultConfig.Columns.AddFill("Product.Name", 35);
@@ -164,16 +164,19 @@ namespace App
 
       dt.GridProducer.Columns.AddText("Name", "Название", 40, 15);
       dt.GridProducer.Columns.LastAdded.CanIncSearch = true;
-
+      dt.GridProducer.Columns.AddDate("FirstDate", "Начало действия");
+      dt.GridProducer.Columns.AddDate("LastDate", "Окончание действия");
+      dt.GridProducer.Columns.AddBool("Deposit", "Вклад");
       dt.GridProducer.Columns.AddText("Comment", "Комментарий", 30, 10);
 
+      dt.GridProducer.ToolTips.AddDateRange("FirstDate", "LastDate", "Период действия");
       dt.GridProducer.ToolTips.AddText("Comment", String.Empty).DisplayName = "Комментарий (если задан)";
 
       dt.GridProducer.NewDefaultConfig(false);
       dt.GridProducer.DefaultConfig.Columns.AddFill("Name", 100);
       dt.GridProducer.DefaultConfig.ToolTips.Add("Comment");
 
-      dt.ImageKey = "Wallet";
+      dt.AddImageHandler("Wallet", new DBxColumns("FirstDate,LastDate"), EditWallet.ImageValueNeeded);
 
       dt.InitEditForm += new InitDocEditFormEventHandler(EditWallet.InitDocEditForm);
       dt.CanInsertCopy = true;
@@ -189,16 +192,18 @@ namespace App
 
       dt.GridProducer.Columns.AddText("Name", "Название", 40, 15);
       dt.GridProducer.Columns.LastAdded.CanIncSearch = true;
-
+      dt.GridProducer.Columns.AddDate("FirstDate", "Начало действия");
+      dt.GridProducer.Columns.AddDate("LastDate", "Окончание действия");
       dt.GridProducer.Columns.AddText("Comment", "Комментарий", 30, 10);
 
+      dt.GridProducer.ToolTips.AddDateRange("FirstDate", "LastDate", "Период действия");
       dt.GridProducer.ToolTips.AddText("Comment", String.Empty).DisplayName = "Комментарий (если задан)";
 
       dt.GridProducer.NewDefaultConfig(false);
       dt.GridProducer.DefaultConfig.Columns.AddFill("Name", 100);
       dt.GridProducer.DefaultConfig.ToolTips.Add("Comment");
 
-      dt.ImageKey = "IncomeSource";
+      dt.AddImageHandler("IncomeSource", new DBxColumns("FirstDate,LastDate"), EditIncomeSource.ImageValueNeeded);
 
       dt.InitEditForm += new InitDocEditFormEventHandler(EditIncomeSource.InitDocEditForm);
       dt.CanInsertCopy = true;
@@ -214,17 +219,19 @@ namespace App
 
       dt.GridProducer.Columns.AddText("Name", "Название", 40, 15);
       dt.GridProducer.Columns.LastAdded.CanIncSearch = true;
-
+      dt.GridProducer.Columns.AddDate("FirstDate", "Начало действия");
+      dt.GridProducer.Columns.AddDate("LastDate", "Окончание действия");
       dt.GridProducer.Columns.AddText("GroupId.Name", "Группа", 15, 5);
       dt.GridProducer.Columns.AddText("Comment", "Комментарий", 30, 10);
 
+      dt.GridProducer.ToolTips.AddDateRange("FirstDate", "LastDate", "Период действия");
       dt.GridProducer.ToolTips.AddText("Comment", String.Empty).DisplayName = "Комментарий (если задан)";
 
       dt.GridProducer.NewDefaultConfig(false);
       dt.GridProducer.DefaultConfig.Columns.AddFill("Name", 100);
       dt.GridProducer.DefaultConfig.ToolTips.Add("Comment");
 
-      dt.ImageKey = "Shop";
+      dt.AddImageHandler("Shop", new DBxColumns("FirstDate,LastDate"), EditShop.ImageValueNeeded);
 
       dt.InitEditForm += new InitDocEditFormEventHandler(EditShop.InitDocEditForm);
       dt.CanInsertCopy = true;
@@ -300,16 +307,18 @@ namespace App
 
       dt.GridProducer.Columns.AddText("Name", "Название", 40, 15);
       dt.GridProducer.Columns.LastAdded.CanIncSearch = true;
-
+      dt.GridProducer.Columns.AddDate("FirstDate", "Начало действия");
+      dt.GridProducer.Columns.AddDate("LastDate", "Окончание действия");
       dt.GridProducer.Columns.AddText("Comment", "Комментарий", 30, 10);
 
+      dt.GridProducer.ToolTips.AddDateRange("FirstDate", "LastDate", "Период действия");
       dt.GridProducer.ToolTips.AddText("Comment", String.Empty).DisplayName = "Комментарий (если задан)";
 
       dt.GridProducer.NewDefaultConfig(false);
       dt.GridProducer.DefaultConfig.Columns.AddFill("Name", 100);
       dt.GridProducer.DefaultConfig.ToolTips.Add("Comment");
 
-      dt.ImageKey = "Debtor";
+      dt.AddImageHandler("Debtor", new DBxColumns("FirstDate,LastDate"), EditDebtor.ImageValueNeeded);
 
       dt.InitEditForm += new InitDocEditFormEventHandler(EditDebtor.InitDocEditForm);
       dt.CanInsertCopy = true;
@@ -350,16 +359,18 @@ namespace App
 
       dt.GridProducer.Columns.AddText("Name", "Название", 40, 15);
       dt.GridProducer.Columns.LastAdded.CanIncSearch = true;
-
+      dt.GridProducer.Columns.AddDate("FirstDate", "Начало действия");
+      dt.GridProducer.Columns.AddDate("LastDate", "Окончание действия");
       dt.GridProducer.Columns.AddText("Comment", "Комментарий", 30, 10);
 
+      dt.GridProducer.ToolTips.AddDateRange("FirstDate", "LastDate", "Период действия");
       dt.GridProducer.ToolTips.AddText("Comment", String.Empty).DisplayName = "Комментарий (если задан)";
 
       dt.GridProducer.NewDefaultConfig(false);
       dt.GridProducer.DefaultConfig.Columns.AddFill("Name", 100);
       dt.GridProducer.DefaultConfig.ToolTips.Add("Comment");
 
-      dt.ImageKey = "Purpose";
+      dt.AddImageHandler("Purpose", new DBxColumns("FirstDate,LastDate"), EditPurpose.ImageValueNeeded);
 
       dt.InitEditForm += new InitDocEditFormEventHandler(EditPurpose.InitDocEditForm);
       dt.CanInsertCopy = true;

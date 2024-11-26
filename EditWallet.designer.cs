@@ -34,8 +34,11 @@
       this.groupBox5 = new System.Windows.Forms.GroupBox();
       this.edComment = new System.Windows.Forms.TextBox();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
+      this.edPeriod = new FreeLibSet.Controls.DateRangeBox();
+      this.label2 = new System.Windows.Forms.Label();
       this.edName = new System.Windows.Forms.TextBox();
       this.label1 = new System.Windows.Forms.Label();
+      this.cbDeposit = new System.Windows.Forms.CheckBox();
       this.tabControl1.SuspendLayout();
       this.tabPage1.SuspendLayout();
       this.MainPanel1.SuspendLayout();
@@ -48,18 +51,20 @@
       this.tabControl1.Controls.Add(this.tabPage1);
       this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
       this.tabControl1.Location = new System.Drawing.Point(0, 0);
+      this.tabControl1.Margin = new System.Windows.Forms.Padding(4);
       this.tabControl1.Name = "tabControl1";
       this.tabControl1.SelectedIndex = 0;
-      this.tabControl1.Size = new System.Drawing.Size(582, 258);
+      this.tabControl1.Size = new System.Drawing.Size(776, 318);
       this.tabControl1.TabIndex = 0;
       // 
       // tabPage1
       // 
       this.tabPage1.Controls.Add(this.MainPanel1);
-      this.tabPage1.Location = new System.Drawing.Point(4, 22);
+      this.tabPage1.Location = new System.Drawing.Point(4, 25);
+      this.tabPage1.Margin = new System.Windows.Forms.Padding(4);
       this.tabPage1.Name = "tabPage1";
-      this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-      this.tabPage1.Size = new System.Drawing.Size(574, 232);
+      this.tabPage1.Padding = new System.Windows.Forms.Padding(4);
+      this.tabPage1.Size = new System.Drawing.Size(768, 289);
       this.tabPage1.TabIndex = 0;
       this.tabPage1.Text = "Общие";
       this.tabPage1.UseVisualStyleBackColor = true;
@@ -69,70 +74,110 @@
       this.MainPanel1.Controls.Add(this.groupBox5);
       this.MainPanel1.Controls.Add(this.groupBox1);
       this.MainPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.MainPanel1.Location = new System.Drawing.Point(3, 3);
+      this.MainPanel1.Location = new System.Drawing.Point(4, 4);
+      this.MainPanel1.Margin = new System.Windows.Forms.Padding(4);
       this.MainPanel1.Name = "MainPanel1";
-      this.MainPanel1.Size = new System.Drawing.Size(568, 226);
+      this.MainPanel1.Size = new System.Drawing.Size(760, 281);
       this.MainPanel1.TabIndex = 0;
       // 
       // groupBox5
       // 
       this.groupBox5.Controls.Add(this.edComment);
       this.groupBox5.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.groupBox5.Location = new System.Drawing.Point(0, 53);
+      this.groupBox5.Location = new System.Drawing.Point(0, 155);
+      this.groupBox5.Margin = new System.Windows.Forms.Padding(4);
       this.groupBox5.Name = "groupBox5";
-      this.groupBox5.Size = new System.Drawing.Size(568, 173);
+      this.groupBox5.Padding = new System.Windows.Forms.Padding(4);
+      this.groupBox5.Size = new System.Drawing.Size(760, 126);
       this.groupBox5.TabIndex = 1;
       this.groupBox5.TabStop = false;
       this.groupBox5.Text = "Комментари&й";
       // 
       // edComment
       // 
-      this.edComment.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                  | System.Windows.Forms.AnchorStyles.Left)
-                  | System.Windows.Forms.AnchorStyles.Right)));
-      this.edComment.Location = new System.Drawing.Point(6, 19);
+      this.edComment.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.edComment.Location = new System.Drawing.Point(8, 23);
+      this.edComment.Margin = new System.Windows.Forms.Padding(4);
       this.edComment.Multiline = true;
       this.edComment.Name = "edComment";
       this.edComment.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-      this.edComment.Size = new System.Drawing.Size(556, 148);
+      this.edComment.Size = new System.Drawing.Size(743, 94);
       this.edComment.TabIndex = 0;
       // 
       // groupBox1
       // 
+      this.groupBox1.Controls.Add(this.cbDeposit);
+      this.groupBox1.Controls.Add(this.edPeriod);
+      this.groupBox1.Controls.Add(this.label2);
       this.groupBox1.Controls.Add(this.edName);
       this.groupBox1.Controls.Add(this.label1);
       this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
       this.groupBox1.Location = new System.Drawing.Point(0, 0);
+      this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
       this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(568, 53);
+      this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
+      this.groupBox1.Size = new System.Drawing.Size(760, 155);
       this.groupBox1.TabIndex = 0;
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "Кошелек";
       // 
+      // edPeriod
+      // 
+      this.edPeriod.Location = new System.Drawing.Point(240, 53);
+      this.edPeriod.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+      this.edPeriod.Name = "edPeriod";
+      this.edPeriod.Size = new System.Drawing.Size(467, 45);
+      this.edPeriod.TabIndex = 5;
+      // 
+      // label2
+      // 
+      this.label2.Location = new System.Drawing.Point(8, 53);
+      this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+      this.label2.Name = "label2";
+      this.label2.Size = new System.Drawing.Size(211, 25);
+      this.label2.TabIndex = 4;
+      this.label2.Text = "&Период действия";
+      this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+      // 
       // edName
       // 
-      this.edName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                  | System.Windows.Forms.AnchorStyles.Right)));
-      this.edName.Location = new System.Drawing.Point(180, 19);
+      this.edName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.edName.Location = new System.Drawing.Point(240, 23);
+      this.edName.Margin = new System.Windows.Forms.Padding(4);
       this.edName.Name = "edName";
-      this.edName.Size = new System.Drawing.Size(372, 20);
+      this.edName.Size = new System.Drawing.Size(498, 22);
       this.edName.TabIndex = 1;
       // 
       // label1
       // 
-      this.label1.Location = new System.Drawing.Point(6, 19);
+      this.label1.Location = new System.Drawing.Point(8, 23);
+      this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
       this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(158, 20);
+      this.label1.Size = new System.Drawing.Size(211, 25);
       this.label1.TabIndex = 0;
       this.label1.Text = "&Название";
       this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
+      // cbDeposit
+      // 
+      this.cbDeposit.AutoSize = true;
+      this.cbDeposit.Location = new System.Drawing.Point(17, 111);
+      this.cbDeposit.Name = "cbDeposit";
+      this.cbDeposit.Size = new System.Drawing.Size(453, 21);
+      this.cbDeposit.TabIndex = 6;
+      this.cbDeposit.Text = "Вклад (не участвует в операциях расхода и дачи/взятия в долг)";
+      this.cbDeposit.UseVisualStyleBackColor = true;
+      // 
       // EditWallet
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+      this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(582, 258);
+      this.ClientSize = new System.Drawing.Size(776, 318);
       this.Controls.Add(this.tabControl1);
+      this.Margin = new System.Windows.Forms.Padding(4);
       this.Name = "EditWallet";
       this.tabControl1.ResumeLayout(false);
       this.tabPage1.ResumeLayout(false);
@@ -155,5 +200,8 @@
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.GroupBox groupBox5;
     private System.Windows.Forms.TextBox edComment;
+    private FreeLibSet.Controls.DateRangeBox edPeriod;
+    private System.Windows.Forms.Label label2;
+    private System.Windows.Forms.CheckBox cbDeposit;
   }
 }

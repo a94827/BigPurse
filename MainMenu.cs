@@ -157,6 +157,14 @@ namespace App
       ci.MenuText = "Долги";
       ci.ImageKey = "DebtReport";
       ci.Click += new EventHandler(ciDebtReport_Click);
+      EFPApp.CommandItems.Add(ci);
+      speedPanelStandard.Add(ci);
+
+      ci = new EFPCommandItem("Reports", "FeedbackReport");
+      ci.Parent = menuReports;
+      ci.MenuText = "Отзывы";
+      ci.ImageKey = "FeedbackReport";
+      ci.Click += new EventHandler(ciFeedbackReport_Click);
       ci.GroupEnd = true;
       EFPApp.CommandItems.Add(ci);
       speedPanelStandard.Add(ci);
@@ -276,6 +284,11 @@ namespace App
     private static void ciDebtReport_Click(object sender, EventArgs args)
     {
       new DebtReport().Run();
+    }
+
+    private static void ciFeedbackReport_Click(object sender, EventArgs args)
+    {
+      new FeedbackReport().Run();
     }
 
     #endregion

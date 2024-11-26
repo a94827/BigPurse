@@ -11,6 +11,8 @@ using FreeLibSet.DependedValues;
 using FreeLibSet.Data;
 using FreeLibSet.Data.Docs;
 using FreeLibSet.Core;
+using FreeLibSet.Forms.Data;
+using FreeLibSet.UICore;
 
 namespace App
 {
@@ -130,7 +132,7 @@ namespace App
 
     public static void BeforeEditDoc(object sender, BeforeDocEditEventArgs args)
     {
-      if (args.Editor.State == EFPDataGridViewState.Insert)
+      if (args.Editor.State == UIDataState.Insert)
       {
         ListSelectDialog dlg = new ListSelectDialog();
         dlg.Title = "Создание операции";
@@ -200,9 +202,11 @@ namespace App
     EFPDocComboBox efpWalletDebt, efpWalletCredit, efpContra;
     EFPDecimalEditBox efpSumBefore, efpSumOp, efpSumAfter;
 
+    DateRangeInclusionGridFilter filtWalletDebtDate, filtWalletCreditDate, filtContraDate;
+
     private void AddPage1(InitDocEditFormEventArgs args)
     {
-      DocEditPage page = args.AddPage("Общие", MainPanel1);
+      ExtEditPage page = args.AddPage("Общие", MainPanel1);
       if (opType == MixedOpType)
       {
         page.ImageKey = args.Editor.DocTypeUI.ImageKey;
@@ -217,7 +221,9 @@ namespace App
 
       efpDate = new EFPDateTimeBox(page.BaseProvider, edDate);
       efpDate.CanBeEmpty = false;
+      efpDate.NValueEx.ValueChanged += efpDate_ValueChanged;
       args.AddDate(efpDate, "Date", true);
+      _Editor.Properties["EFPDate"] = efpDate;
 
       efpOpOrder = new EFPIntEditBox(page.BaseProvider, edOpOrder);
       efpOpOrder.CanBeEmpty = false;
@@ -236,6 +242,20 @@ namespace App
         efpWalletDebt.DisplayName = "Кошелек - дебет";
         efpWalletDebt.CanBeEmpty = false;
         args.AddRef(efpWalletDebt, "WalletDebt", true);
+
+        efpWalletDebt.ClearByFilter = false;
+        filtWalletDebtDate = new DateRangeInclusionGridFilter("FirstDate", "LastDate");
+        filtWalletDebtDate.DisplayName = "Период действия";
+        efpWalletDebt.Filters.Add(filtWalletDebtDate);
+
+        if (Tools.DontUseDepositWallet(opType))
+        {
+          BoolValueGridFilter filtWalletDebtDeposit = new BoolValueGridFilter("Deposit");
+          filtWalletDebtDeposit.DisplayName = "Вклад";
+          filtWalletDebtDeposit.Value = false;
+          filtWalletDebtDeposit.FilterTextFalse = "Нет";
+          efpWalletDebt.Filters.Add(filtWalletDebtDeposit);
+        }
       }
       else
       {
@@ -252,6 +272,19 @@ namespace App
         efpWalletCredit.DisplayName = "Кошелек - кредит";
         efpWalletCredit.CanBeEmpty = false;
         args.AddRef(efpWalletCredit, "WalletCredit", true);
+
+        efpWalletCredit.ClearByFilter = false;
+        filtWalletCreditDate = new DateRangeInclusionGridFilter("FirstDate", "LastDate");
+        filtWalletCreditDate.DisplayName = "Период действия";
+        efpWalletCredit.Filters.Add(filtWalletCreditDate);
+        if (Tools.DontUseDepositWallet(opType))
+        {
+          BoolValueGridFilter filtWalletCreditDeposit = new BoolValueGridFilter("Deposit");
+          filtWalletCreditDeposit.DisplayName = "Вклад";
+          filtWalletCreditDeposit.Value = false;
+          filtWalletCreditDeposit.FilterTextFalse = "Нет";
+          efpWalletCredit.Filters.Add(filtWalletCreditDeposit);
+        }
       }
       else
       {
@@ -315,6 +348,13 @@ namespace App
         cbContra.Visible = false;
         lblContra.Visible = false;
       }
+      else
+      {
+        efpContra.ClearByFilter = false;
+        filtContraDate = new DateRangeInclusionGridFilter("FirstDate", "LastDate");
+        filtContraDate.DisplayName = "Период действия";
+        efpContra.Filters.Add(filtContraDate);
+      }
 
       #endregion
 
@@ -341,7 +381,7 @@ namespace App
         if (opType == OperationType.Expense)
         {
           efpSumOp.ReadOnly = true;
-          page.PageShow += new DocEditPageEventHandler(Page1_PageShow_CalcExpenseSum);
+          page.PageShow += new ExtEditPageEventHandler(Page1_PageShow_CalcExpenseSum);
           if (!args.Editor.IsReadOnly)
             efpSumOp.ValueEx.ValueChanged += efpSumOp_ValueChanged_Expense;
         }
@@ -390,7 +430,7 @@ namespace App
       #endregion
     }
 
-    void Page1_PageShow_CalcExpenseSum(object sender, DocEditPageEventArgs args)
+    void Page1_PageShow_CalcExpenseSum(object sender, ExtEditPageEventArgs args)
     {
       efpSumOp.ReadOnly = true; // заранее отключаем чтобы не срабатывал обработчик ValueChanged
       efpSumOp.Value = DataTools.SumDecimal(sdgProducts.SourceAsDataView, "RecordSum");
@@ -454,6 +494,17 @@ namespace App
       if (efpSumOp.Value == 0m)
         args.SetWarning("Сумма должна быть задана");
     }
+
+    private void efpDate_ValueChanged(object sender, EventArgs args)
+    {
+      if (filtWalletDebtDate != null)
+        filtWalletDebtDate.Value = efpDate.NValue;
+      if (filtWalletCreditDate != null)
+        filtWalletCreditDate.Value = efpDate.NValue;
+      if (filtContraDate != null)
+        filtContraDate.Value = efpDate.NValue;
+    }
+
 
     #endregion
 
@@ -530,7 +581,7 @@ namespace App
       try
       {
         EFPApp.ShowAutoCalcSums = false; // временно отключаем панели статусной строки
-        DocEditPage page = args.AddSubDocsPage("OperationProducts", out sdgProducts);
+        ExtEditPage page = args.AddSubDocsPage("OperationProducts", out sdgProducts);
         page.Title = "Товары";
         sdgProducts.ManualOrderColumn = "RecordOrder";
 

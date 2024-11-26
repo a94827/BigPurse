@@ -13,6 +13,7 @@ using FreeLibSet.Data.Docs;
 using FreeLibSet.Core;
 using FreeLibSet.UICore;
 using FreeLibSet.Config;
+using FreeLibSet.Forms.Data;
 
 namespace App
 {
@@ -37,6 +38,13 @@ namespace App
       efpWallets.CanBeEmpty = true;
       efpWallets.EmptyText = "[ Все кошельки ]";
       efpWallets.MaxTextItemCount = 3;
+
+      BoolValueGridFilter filtWalletsDeposit = new BoolValueGridFilter("Deposit");
+      filtWalletsDeposit.DisplayName = "Вклад";
+      filtWalletsDeposit.Value = false;
+      filtWalletsDeposit.FilterTextFalse = "Нет";
+      efpWallets.Filters.Add(filtWalletsDeposit);
+
 
       efpShops = new EFPMultiDocComboBox(FormProvider, cbShops, ProgramDBUI.TheUI.DocTypes["Shops"]);
       efpShops.SelectionMode = DocSelectionMode.MultiCheckBoxes;
@@ -349,6 +357,7 @@ namespace App
         DataTools.SetString(row2, "Comment", comment);
 
         row2["TotalRow"] = false;
+
         table2.Rows.Add(row2);
 
         prodKeys[0] = row1["Product"];
@@ -555,9 +564,10 @@ namespace App
     void OpPage_InitGrid(object sender, EventArgs args)
     {
       _OpPage.ControlProvider.ConfigSectionName = "PurchaseReportOperations";
-      _OpPage.ControlProvider.GetRowAttributes += new EFPDataGridViewRowAttributesEventHandler(OpPage_GetRowAttributes);
       _OpPage.ControlProvider.UseRowImages = true;
-      _OpPage.ControlProvider.ShowRowCountInTopLeftCellToolTipText = true;
+      _OpPage.ControlProvider.GetRowAttributes += new EFPDataGridViewRowAttributesEventHandler(OpPage_GetRowAttributes);
+      _OpPage.ControlProvider.ShowRowCountInTopLeftCell = true;
+      _OpPage.ControlProvider.ShowErrorCountInTopLeftCell = true;
       //OpPage.ControlProvider.DisableOrdering();
 
       _OpPage.ControlProvider.ReadOnly = false;
@@ -575,11 +585,14 @@ namespace App
         return;
 
       if (DataTools.GetBool(args.DataRow, "TotalRow"))
-        args.ColorType = EFPDataGridViewColorType.TotalRow;
+        args.ColorType = UIDataViewColorType.TotalRow;
       else
       {
         Int32 productId = DataTools.GetInt(args.DataRow, "Product");
         ProductBuffer.ProductData pd = ProductBuffer.GetProductData(productId);
+
+        if (!pd.IsLeaf)
+          args.AddRowError("Задана группа товаров", "Product.Name");
 
         #region Описание
 
@@ -759,6 +772,8 @@ namespace App
       _ProdPage.ControlProvider.Columns.LastAdded.TextAlign = HorizontalAlignment.Right;
       _ProdPage.ControlProvider.Columns.LastAdded.GridColumn.DefaultCellStyle.Format = Tools.MoneyFormat;
       _ProdPage.ControlProvider.DisableOrdering();
+      _ProdPage.ControlProvider.UseRowImages = true;
+      _ProdPage.ControlProvider.ShowErrorCountInTopLeftCell = true;
       _ProdPage.ControlProvider.GetRowAttributes += new EFPDataGridViewRowAttributesEventHandler(ProdPage_GetRowAttributes);
 
       _ProdPage.ControlProvider.Control.ReadOnly = true;
@@ -772,7 +787,15 @@ namespace App
     void ProdPage_GetRowAttributes(object sender, EFPDataGridViewRowAttributesEventArgs args)
     {
       if (DataTools.GetInt(args.DataRow, "RecType") == 1)
-        args.ColorType = EFPDataGridViewColorType.TotalRow;
+        args.ColorType = UIDataViewColorType.TotalRow;
+      else
+      {
+        Int32 productId = DataTools.GetInt(args.DataRow, "Product");
+        ProductBuffer.ProductData pd = ProductBuffer.GetProductData(productId);
+
+        if (!pd.IsLeaf)
+          args.AddRowError("Задана группа товаров", "Product.Name");
+      }
     }
 
     void ProdPage_EditData(object sender, EventArgs args)
@@ -834,6 +857,8 @@ namespace App
       _ShopPage.ControlProvider.Columns.LastAdded.TextAlign = HorizontalAlignment.Right;
       _ShopPage.ControlProvider.Columns.LastAdded.GridColumn.DefaultCellStyle.Format = Tools.MoneyFormat;
       _ShopPage.ControlProvider.DisableOrdering();
+      _ShopPage.ControlProvider.UseRowImages = true;
+      _ShopPage.ControlProvider.ShowErrorCountInTopLeftCell = true;
       _ShopPage.ControlProvider.GetRowAttributes += new EFPDataGridViewRowAttributesEventHandler(ShopPage_GetRowAttributes);
 
       _ShopPage.ControlProvider.Control.ReadOnly = true;
@@ -847,7 +872,7 @@ namespace App
     void ShopPage_GetRowAttributes(object sender, EFPDataGridViewRowAttributesEventArgs args)
     {
       if (DataTools.GetInt(args.DataRow, "RecType") == 1)
-        args.ColorType = EFPDataGridViewColorType.TotalRow;
+        args.ColorType = UIDataViewColorType.TotalRow;
     }
 
     void ShopPage_EditData(object sender, EventArgs args)
@@ -909,6 +934,8 @@ namespace App
       _WalletPage.ControlProvider.Columns.LastAdded.TextAlign = HorizontalAlignment.Right;
       _WalletPage.ControlProvider.Columns.LastAdded.GridColumn.DefaultCellStyle.Format = Tools.MoneyFormat;
       _WalletPage.ControlProvider.DisableOrdering();
+      _WalletPage.ControlProvider.UseRowImages = true;
+      _WalletPage.ControlProvider.ShowErrorCountInTopLeftCell = true;
       _WalletPage.ControlProvider.GetRowAttributes += new EFPDataGridViewRowAttributesEventHandler(WalletPage_GetRowAttributes);
 
       _WalletPage.ControlProvider.Control.ReadOnly = true;
@@ -922,7 +949,7 @@ namespace App
     void WalletPage_GetRowAttributes(object sender, EFPDataGridViewRowAttributesEventArgs args)
     {
       if (DataTools.GetInt(args.DataRow, "RecType") == 1)
-        args.ColorType = EFPDataGridViewColorType.TotalRow;
+        args.ColorType = UIDataViewColorType.TotalRow;
     }
 
     void WalletPage_EditData(object sender, EventArgs args)

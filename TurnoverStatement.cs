@@ -12,6 +12,7 @@ using FreeLibSet.Core;
 using FreeLibSet.Data;
 using FreeLibSet.Data.Docs;
 using FreeLibSet.Config;
+using FreeLibSet.UICore;
 
 namespace App
 {
@@ -343,8 +344,8 @@ namespace App
       int recType = DataTools.GetInt(args.DataRow, "RecType");
       switch (recType)
       {
-        case 1: args.ColorType = EFPDataGridViewColorType.Total1; break;
-        case 2: args.ColorType = EFPDataGridViewColorType.TotalRow; break;
+        case 1: args.ColorType = UIDataViewColorType.Total1; break;
+        case 2: args.ColorType = UIDataViewColorType.TotalRow; break;
       }
     }
 
@@ -355,14 +356,14 @@ namespace App
         case "InitialBalance":
         case "FinalBalance":
           if (DataTools.GetDecimal(args.DataRow, args.ColumnName) < 0)
-            args.ColorType = EFPDataGridViewColorType.Error;
+            args.ColorType = UIDataViewColorType.Error;
           break;
         case "DisplayName":
           if (DataTools.GetInt(args.DataRow, "RecType") == 0 &&
             DataTools.GetEnum<OperationType>(args.DataRow, "OpType") == OperationType.Balance)
           {
             if (!DataTools.GetBool(args.DataRow, "BalanceConfirmed"))
-              args.ColorType = EFPDataGridViewColorType.Error;
+              args.ColorType = UIDataViewColorType.Error;
           }
           break;
         case "Id_Image":

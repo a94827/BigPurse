@@ -10,6 +10,7 @@ using FreeLibSet.Forms.Docs;
 using FreeLibSet.DependedValues;
 using FreeLibSet.Data;
 using FreeLibSet.Data.Docs;
+using FreeLibSet.Core;
 
 namespace App
 {
@@ -20,6 +21,18 @@ namespace App
     public EditShop()
     {
       InitializeComponent();
+    }
+
+    #endregion
+
+    #region Табличный просмотр
+
+    public static void ImageValueNeeded(object sender, DBxImageValueNeededEventArgs args)
+    {
+      DateTime? dt1 = args.GetNullableDateTime("FirstDate");
+      DateTime? dt2 = args.GetNullableDateTime("LastDate");
+      if (!DataTools.DateInRange(DateTime.Today, dt1, dt2))
+        args.ImageKey = "No";
     }
 
     #endregion
@@ -45,7 +58,7 @@ namespace App
 
     private void AddPage1(InitDocEditFormEventArgs args)
     {
-      DocEditPage page = args.AddPage("Общие", MainPanel1);
+      ExtEditPage page = args.AddPage("Общие", MainPanel1);
 
       efpName = new EFPTextBox(page.BaseProvider, edName);
       efpName.CanBeEmpty = false;
@@ -54,6 +67,11 @@ namespace App
       EFPDocComboBox efpGroup = new EFPDocComboBox(page.BaseProvider, cbGroup, ProgramDBUI.TheUI.DocTypes["ShopGroups"]);
       efpGroup.CanBeEmpty = true;
       args.AddRef(efpGroup, "GroupId", true);
+
+      EFPDateRangeBox efpPeriod = new EFPDateRangeBox(page.BaseProvider, edPeriod);
+      efpPeriod.First.CanBeEmpty = true;
+      efpPeriod.Last.CanBeEmpty = true;
+      args.AddDate(efpPeriod, "FirstDate", "LastDate", true);
 
       #region Комментарий
 
