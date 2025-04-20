@@ -78,8 +78,8 @@ namespace App
     EFPDocComboBox efpProduct;
     EFPTextComboBox efpDescription;
     ExtValueTextBox dvDescription;
-    EFPDocComboBox efpPurpose;
-    ExtValueDocComboBox dvPurpose;
+    EFPDocComboBox efpPurpose, efpAuxPurpose;
+    ExtValueDocComboBox dvPurpose, dvAuxPurpose;
     EFPDocComboBox efpMU1, efpMU2, efpMU3;
     ExtValueDocComboBox dvMU1, dvMU2, dvMU3;
     EFPSingleEditBox efpQuantity1, efpQuantity2, efpQuantity3;
@@ -111,6 +111,11 @@ namespace App
       efpPurpose.CanBeEmpty = true;
       efpPurpose.Validating += new UIValidatingEventHandler(efpPurpose_Validating);
       dvPurpose = args.AddRef(efpPurpose, "Purpose", false);
+
+      efpAuxPurpose = new EFPDocComboBox(page.BaseProvider, cbAuxPurpose, ProgramDBUI.TheUI.DocTypes["AuxPurposes"]);
+      efpAuxPurpose.CanBeEmpty = true;
+      efpAuxPurpose.Validating += new UIValidatingEventHandler(efpAuxPurpose_Validating);
+      dvAuxPurpose = args.AddRef(efpAuxPurpose, "AuxPurpose", false);
 
       EFPDateTimeBox efpDate = (EFPDateTimeBox)(args.MainEditor.Properties["EFPDate"]);
       DateRangeInclusionGridFilter filtPurposeDate = new DateRangeInclusionGridFilter("FirstDate", "LastDate");
@@ -200,6 +205,22 @@ namespace App
 
       #endregion
 
+      #region История
+
+      _ShopId = ((EFPDocComboBox)(args.MainEditor.Properties["EFPShop"])).DocId;
+
+      btnHistory.Image = EFPApp.MainImages.Images["Time"];
+      btnHistory.ImageAlign = ContentAlignment.MiddleCenter;
+      EFPButton efpHistory = new EFPButton(page.BaseProvider, btnHistory);
+      efpHistory.DisplayName = "История";
+      efpHistory.ToolTipText = "Выбор товара из истории для магазина";
+      if (_Editor.State == UIDataState.Insert && _ShopId != 0)
+        efpHistory.Click += new EventHandler(efpHistory_Click);
+      else
+        efpHistory.Visible = false;
+
+      #endregion
+
       #region Комментарий
 
       EFPTextBox efpComment = new EFPTextBox(page.BaseProvider, edComment);
@@ -244,7 +265,6 @@ namespace App
       }
     }
 
-
     #region Списки для выбора значений полей
 
     /// <summary>
@@ -262,6 +282,10 @@ namespace App
       ProductBuffer.ValidateProductPurpose(efpProduct.DocId, efpPurpose.DocId, args);
     }
 
+    void efpAuxPurpose_Validating(object sender, UIValidatingEventArgs args)
+    {
+    }
+
     void efpProduct_ValueChanged(object sender, EventArgs args)
     {
       if (_Editor.IsReadOnly)
@@ -273,6 +297,9 @@ namespace App
 
       dvPurpose.UserEnabled = ProductBuffer.GetColumnEnabled(efpProduct.DocId, "Purpose");
       efpPurpose.Validate();
+
+      dvAuxPurpose.UserEnabled = dvPurpose.UserEnabled;
+      efpAuxPurpose.Validate();
 
       efpQuantity1.Validate();
       efpQuantity2.Validate();
@@ -532,6 +559,176 @@ namespace App
       pl.Add(ncp);
 
       return pl;
+    }
+
+    #endregion
+
+    #region История
+
+    private Int32 _ShopId;
+
+    private static readonly Dictionary<Int32, DataTable> _ShopHistoryTables = new Dictionary<Int32, DataTable>();
+
+    void efpHistory_Click(object sender, EventArgs args)
+    {
+      EFPButton efpHistory = (EFPButton)sender;
+      string shopName = _Editor.UI.DocTypes["Shops"].GetTextValue(_ShopId);
+
+      DataTable table;
+      if (!_ShopHistoryTables.TryGetValue(_ShopId, out table))
+      {
+        table = LoadShopHistoryTable();
+        _ShopHistoryTables.Add(_ShopId, table);
+      }
+
+      OKCancelGridForm form = new OKCancelGridForm();
+      form.Text = "История покупок в магазине \"" + shopName + "\" за год";
+      form.Icon = EFPApp.MainImages.Icons["Time"];
+      EFPDBxGridView efpGrid = new EFPDBxGridView(form, _Editor.UI);
+      efpGrid.ConfigSectionName = form.FormProvider.ConfigSectionName = "ProductHistory";
+      efpGrid.Control.AutoGenerateColumns = false;
+      efpGrid.GridProducer = CreateHistGridProducer();
+      efpGrid.AutoSort = true;
+      efpGrid.ReadOnly = false;
+      efpGrid.CanInsert = false;
+      efpGrid.CanDelete = false;
+      efpGrid.Control.ReadOnly = true;
+      efpGrid.CanView = true;
+      efpGrid.EditData += new EventHandler(efpHistGrid_EditData);
+      efpGrid.GetDocSel += new EFPDBxGridViewDocSelEventHandler(efpHistGrid_GetDocSel);
+      efpGrid.CommandItems.EnterAsOk = true;
+      efpGrid.RefreshData += new EventHandler(efpHistGrid_RefreshData);
+      efpGrid.SelectedRowsMode = EFPDataGridViewSelectedRowsMode.PrimaryKey; // по Id записи
+
+      efpGrid.Control.DataSource = table.DefaultView;
+
+      if (EFPApp.ShowDialog(form, false, new EFPDialogPosition(efpHistory.Control)) == DialogResult.OK)
+      {
+        if (efpGrid.CurrentDataRow == null)
+        {
+          EFPApp.ShowTempMessage("Нет выбранной строки истории");
+          return;
+        }
+
+        efpProduct.DocId = DataTools.GetInt(efpGrid.CurrentDataRow, "Product");
+        efpDescription.Text = DataTools.GetString(efpGrid.CurrentDataRow, "Description");
+        efpPurpose.DocId = DataTools.GetInt(efpGrid.CurrentDataRow, "Purpose");
+        efpAuxPurpose.DocId = DataTools.GetInt(efpGrid.CurrentDataRow, "AuxPurpose");
+        efpQuantity1.Value = DataTools.GetSingle(efpGrid.CurrentDataRow, "Quantity1");
+        efpMU1.DocId = DataTools.GetInt(efpGrid.CurrentDataRow, "MU1");
+        efpQuantity2.Value = DataTools.GetSingle(efpGrid.CurrentDataRow, "Quantity2");
+        efpMU2.DocId = DataTools.GetInt(efpGrid.CurrentDataRow, "MU2");
+        efpQuantity3.Value = DataTools.GetSingle(efpGrid.CurrentDataRow, "Quantity3");
+        efpMU3.DocId = DataTools.GetInt(efpGrid.CurrentDataRow, "MU3");
+        efpFormula.Text = DataTools.GetString(efpGrid.CurrentDataRow, "Formula");
+        efpSum.Value = DataTools.GetDecimal(efpGrid.CurrentDataRow, "RecordSum");
+      }
+    }
+
+    private DataTable LoadShopHistoryTable()
+    {
+      string shopName = _Editor.UI.DocTypes["Shops"].GetTextValue(_ShopId);
+      using (new Splash("Получение истории для магазина \"" + shopName + "\""))
+      {
+
+        DBxSelectInfo selInfo = new DBxSelectInfo();
+        selInfo.TableName = "OperationProducts";
+        /*
+        selInfo.Expressions.Add("Product,Product.Name,Description,Quantity1,MU1,MU1.Name,Quantity2,MU2,MU2.Name,Quantity3,MU3,MU3.Name,Formula,RecordSum,Purpose,Purpose.Name,AuxPurpose,AuxPurpose.Name");
+        selInfo.OrderBy = DBxOrder.FromDataViewSort("DocId.Date DESC,DocId.OpOrder DESC");
+
+        List<DBxFilter> filters=new List<DBxFilter>();
+        filters.Add(new ValueFilter("DocId.Date", DateTime.Today.AddYears(-1), CompareKind.GreaterOrEqualThan));
+        filters.Add(new ValueFilter("DocId.OpType", (int)OperationType.Expense));
+        filters.Add(new ValueFilter("DocId.Shop", _ShopId));
+        filters.Add(DBSSubDocType.DeletedFalseFilter);
+        filters.Add(DBSSubDocType.DocIdDeletedFalseFilter);
+        selInfo.Where = AndFilter.FromList(filters);
+        selInfo.MaxRecordCount = 50;
+        selInfo.Unique = true;
+         */
+
+        //selInfo.Expressions.Add("Product,Description,Quantity1,MU1,Quantity2,MU2,Quantity3,MU3,Purpose,AuxPurpose");
+        selInfo.Expressions.Add("Product,Description,Purpose");
+        selInfo.InitGroupBy();
+        //selInfo.Expressions.Add("Product.Name,MU1.Name,MU2.Name,MU3.Name,Formula,RecordSum,Purpose.Name,AuxPurpose.Name,DocId,DocId.Date,Id");
+        selInfo.Expressions.Add("Product.Name,Quantity1,MU1,MU1.Name,Quantity2,MU2,MU2.Name,Quantity3,MU3,MU3.Name,Formula,RecordSum,Purpose.Name,AuxPurpose,AuxPurpose.Name,DocId,DocId.Date,Id");
+        selInfo.OrderBy = DBxOrder.FromDataViewSort("DocId.Date DESC,DocId.OpOrder DESC,DocId"); // сортировка нужна, чтобы при наличии повторов показывались последние операции, а не какие попало
+
+        List<DBxFilter> filters = new List<DBxFilter>();
+        filters.Add(new ValueFilter("DocId.Date", DateTime.Today.AddYears(-1), CompareKind.GreaterOrEqualThan));
+        filters.Add(new ValueFilter("DocId.OpType", (int)OperationType.Expense));
+        filters.Add(new ValueFilter("DocId.Shop", _ShopId));
+        filters.Add(DBSSubDocType.DeletedFalseFilter);
+        filters.Add(DBSSubDocType.DocIdDeletedFalseFilter);
+        selInfo.Where = AndFilter.FromList(filters);
+        //  selInfo.MaxRecordCount = 50;
+
+        DataTable table = _Editor.UI.DocProvider.FillSelect(selInfo);
+        DataTools.SetPrimaryKey(table, "Id");
+        return table;
+      }
+    }
+
+    private EFPGridProducer CreateHistGridProducer()
+    {
+      EFPGridProducer producer = new EFPGridProducer();
+      producer.Columns.AddText("Product.Name", "Товар", 30, 20);
+      producer.Columns.AddText("Description", "Описание", 30, 20);
+      producer.Columns.AddText("Purpose.Name", "Назначение", 10, 5);
+      producer.Columns.AddText("AuxPurpose.Name", "Доп. назначение", 10, 5);
+      producer.Columns.AddUserText("QuantityText", "Quantity1,MU1.Name,Quantity2,MU2.Name,Quantity3,MU3.Name",
+        QuantityTextColumnValueNeeded, "Количество", 20, 10);
+      producer.Columns.AddMoney("RecordSum", "Сумма");
+      producer.Columns.AddDate("DocId.Date", "Дата операции");
+
+      producer.FixedColumns.Add("Product.Name");
+      producer.FixedColumns.Add("Description");
+      producer.FixedColumns.Add("Purpose.Name");
+      producer.FixedColumns.Add("DocId.Date");
+
+      producer.Orders.Add("Product.Name,Description,Purpose.Name", "Товар");
+      producer.Orders.Add("DocId.Date DESC,Product.Name,Description,Purpose.Name", "Дата (по убыванию)", new EFPDataGridViewSortInfo("DocId.Date", ListSortDirection.Descending));
+      producer.Orders.Add("DocId.Date ASC,Product.Name,Description,Purpose.Name", "Дата (по возрастанию)", new EFPDataGridViewSortInfo("DocId.Date", ListSortDirection.Ascending));
+      producer.Orders.Add("Purpose.Name,Product.Name,Description", "Назначение");
+
+      producer.NewDefaultConfig(false);
+      producer.DefaultConfig.Columns.AddFill("Product.Name", 40);
+      producer.DefaultConfig.Columns.AddFill("Description", 30);
+      producer.DefaultConfig.Columns.Add("Purpose.Name");
+      producer.DefaultConfig.Columns.Add("AuxPurpose.Name");
+      producer.DefaultConfig.Columns.AddFill("QuantityText", 30);
+      producer.DefaultConfig.Columns.Add("RecordSum");
+      producer.DefaultConfig.Columns.Add("DocId.Date");
+
+      return producer;
+    }
+
+    void efpHistGrid_EditData(object sender, EventArgs args)
+    {
+      EFPDBxGridView efpGrid = (EFPDBxGridView)sender;
+      Int32 docId = DataTools.GetInt(efpGrid.CurrentDataRow, "DocId");
+      _Editor.UI.DocTypes["Operations"].PerformEditing(docId, efpGrid.State == UIDataState.View);
+    }
+
+    void efpHistGrid_GetDocSel(object sender, EFPDBxGridViewDocSelEventArgs args)
+    {
+      args.AddFromColumn("Operations", "DocId");
+      args.AddFromColumn("Products", "Product");
+      args.AddFromColumn("Purposes", "Purpose");
+      args.AddFromColumn("AuxPurposes", "AuxPurpose");
+      args.AddFromColumn("MUs", "MU1");
+      args.AddFromColumn("MUs", "MU2");
+      args.AddFromColumn("MUs", "MU3");
+    }
+
+
+    void efpHistGrid_RefreshData(object sender, EventArgs args)
+    {
+      EFPDBxGridView efpGrid = (EFPDBxGridView)sender;
+      DataTable table = LoadShopHistoryTable();
+      _ShopHistoryTables[_ShopId] = table;
+      efpGrid.Control.DataSource = table.DefaultView;
     }
 
     #endregion

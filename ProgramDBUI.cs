@@ -110,6 +110,7 @@ namespace App
       sdt.GridProducer.Columns.AddText("Product.Name", "Товар, услуга", 20, 5);
       sdt.GridProducer.Columns.AddText("Description", "Описание", 20, 5);
       sdt.GridProducer.Columns.AddText("Purpose.Name", "Назначение", 20, 5);
+      sdt.GridProducer.Columns.AddText("AuxPurpose.Name", "Доп. назначение", 20, 5);
 
       sdt.GridProducer.Columns.AddUserText("QuantityText", "Quantity1,MU1.Name,Quantity2,MU2.Name,Quantity3,MU3.Name",
         new EFPGridProducerValueNeededEventHandler(EditOperationProduct.QuantityTextColumnValueNeeded),
@@ -359,6 +360,7 @@ namespace App
 
       dt.GridProducer.Columns.AddText("Name", "Название", 40, 15);
       dt.GridProducer.Columns.LastAdded.CanIncSearch = true;
+      dt.GridProducer.Columns.AddText("GroupId.Name", "Группа", 15, 5);
       dt.GridProducer.Columns.AddDate("FirstDate", "Начало действия");
       dt.GridProducer.Columns.AddDate("LastDate", "Окончание действия");
       dt.GridProducer.Columns.AddText("Comment", "Комментарий", 30, 10);
@@ -374,6 +376,30 @@ namespace App
 
       dt.InitEditForm += new InitDocEditFormEventHandler(EditPurpose.InitDocEditForm);
       dt.CanInsertCopy = true;
+      dt.CanMultiEdit = true;
+      dt.DataBuffering = true;
+      dt.Columns["Name"].NewMode = ColumnNewMode.AlwaysDefaultValue;
+
+      #endregion
+
+      #region Доп. назначения
+
+      dt = base.DocTypes["AuxPurposes"];
+
+      dt.GridProducer.Columns.AddText("Name", "Название", 40, 15);
+      dt.GridProducer.Columns.LastAdded.CanIncSearch = true;
+      dt.GridProducer.Columns.AddText("Comment", "Комментарий", 30, 10);
+
+      dt.GridProducer.ToolTips.AddText("Comment", String.Empty).DisplayName = "Комментарий (если задан)";
+
+      dt.GridProducer.NewDefaultConfig(false);
+      dt.GridProducer.DefaultConfig.Columns.AddFill("Name", 100);
+      dt.GridProducer.DefaultConfig.ToolTips.Add("Comment");
+
+      dt.ImageKey = "AuxPurpose";
+
+      dt.InitEditForm += new InitDocEditFormEventHandler(EditAuxPurpose.InitDocEditForm);
+      dt.CanInsertCopy = false;
       dt.CanMultiEdit = true;
       dt.DataBuffering = true;
       dt.Columns["Name"].NewMode = ColumnNewMode.AlwaysDefaultValue;

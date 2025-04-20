@@ -325,6 +325,7 @@ namespace App
           efpContra = new EFPDocComboBox(page.BaseProvider, cbContra, ProgramDBUI.TheUI.DocTypes["Shops"]);
           efpContra.CanBeEmpty = true;
           args.AddRef(efpContra, "Shop", true);
+          _Editor.Properties["EFPShop"] = efpContra;
         }
         else if (!_Editor.IsReadOnly)
           _Editor.MainValues["Shop"].SetNull();

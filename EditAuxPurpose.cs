@@ -14,25 +14,13 @@ using FreeLibSet.Core;
 
 namespace App
 {
-  internal partial class EditPurpose : Form
+  internal partial class EditAuxPurpose : Form
   {
     #region Конструктор формы
 
-    public EditPurpose()
+    public EditAuxPurpose()
     {
       InitializeComponent();
-    }
-
-    #endregion
-
-    #region Табличный просмотр
-
-    public static void ImageValueNeeded(object sender, DBxImageValueNeededEventArgs args)
-    {
-      DateTime? dt1 = args.GetNullableDateTime("FirstDate");
-      DateTime? dt2 = args.GetNullableDateTime("LastDate");
-      if (!DataTools.DateInRange(DateTime.Today, dt1, dt2))
-        args.ImageKey = "No";
     }
 
     #endregion
@@ -45,7 +33,7 @@ namespace App
 
     public static void InitDocEditForm(object sender, InitDocEditFormEventArgs args)
     {
-      EditPurpose form = new EditPurpose();
+      EditAuxPurpose form = new EditAuxPurpose();
       form._Editor = args.Editor;
       form.AddPage1(args);
     }
@@ -63,15 +51,6 @@ namespace App
       efpName = new EFPTextBox(page.BaseProvider, edName);
       efpName.CanBeEmpty = false;
       args.AddText(efpName, "Name", false);
-
-      EFPDocComboBox efpGroup = new EFPDocComboBox(page.BaseProvider, cbGroup, ProgramDBUI.TheUI.DocTypes["PurposeGroups"]);
-      efpGroup.CanBeEmpty = true;
-      args.AddRef(efpGroup, "GroupId", true);
-
-      EFPDateRangeBox efpPeriod = new EFPDateRangeBox(page.BaseProvider, edPeriod);
-      efpPeriod.First.CanBeEmpty = true;
-      efpPeriod.Last.CanBeEmpty = true;
-      args.AddDate(efpPeriod, "FirstDate", "LastDate", true);
 
       #region Комментарий
 

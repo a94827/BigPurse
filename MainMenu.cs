@@ -127,6 +127,9 @@ namespace App
       ci = ProgramDBUI.TheUI.DocTypes["Purposes"].CreateMainMenuItem(menuRB);
       speedPanelStandard.Add(ci);
 
+      ci = ProgramDBUI.TheUI.DocTypes["AuxPurposes"].CreateMainMenuItem(menuRB);
+      speedPanelStandard.Add(ci);
+
       #endregion
 
       #region ־עקועû

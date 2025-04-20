@@ -75,6 +75,12 @@
     </Compile>
     <Compile Include="ConfigSection.cs" />
     <Compile Include="DebtReport.cs" />
+    <Compile Include="EditAuxPurpose.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditAuxPurpose.designer.cs">
+      <DependentUpon>EditAuxPurpose.cs</DependentUpon>
+    </Compile>
     <Compile Include="EditMU.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -163,6 +169,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="ChangePasswordForm.resx">
       <DependentUpon>ChangePasswordForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditAuxPurpose.resx">
+      <DependentUpon>EditAuxPurpose.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="EditMU.resx">
@@ -318,6 +328,7 @@
     </Content>
     <None Include="Images\Main\DebtReport.png" />
     <None Include="Images\Main\Feedback.png" />
+    <None Include="Images\Main\AuxPurpose.png" />
     <Content Include="Program.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

@@ -208,6 +208,7 @@ namespace App
       sdt.Struct.Columns.AddString("Formula", 100, true);
       sdt.Struct.Columns.AddDecimal("RecordSum");
       sdt.Struct.Columns.AddReference("Purpose", "Purposes", true);
+      sdt.Struct.Columns.AddReference("AuxPurpose", "AuxPurposes", true);
       sdt.Struct.Columns.AddMemo("Comment"); // отзыв о товаре
       sdt.DefaultOrder = new DBxOrder("RecordOrder");
       dt.SubDocs.Add(sdt);
@@ -349,6 +350,21 @@ namespace App
 
       #region Назначения
 
+      #region Группы
+
+      dt = new DBxDocType("PurposeGroups");
+      dt.SingularTitle = "Группа назначений";
+      dt.PluralTitle = "Группы назначений";
+      dt.Struct.Columns.AddString("Name", 40, false);
+      dt.Struct.Columns.AddReference("ParentId", "ShopGroups", true); // Построение дерева групп
+      dt.TreeParentColumnName = "ParentId";
+      dt.DefaultOrder = new DBxOrder("Name");
+      _DocTypes.Add(dt);
+
+      #endregion
+
+      #region Основной документ
+
       dt = new DBxDocType("Purposes");
       dt.SingularTitle = "Назначение";
       dt.PluralTitle = "Назначения";
@@ -356,8 +372,28 @@ namespace App
       dt.Struct.Columns.AddDate("FirstDate", true); // 20.09.2024
       dt.Struct.Columns.AddDate("LastDate", true);
       dt.Struct.Columns.AddMemo("Comment");
+
+      dt.Struct.Columns.AddReference("GroupId", "PurposeGroups", true);
+      dt.GroupRefColumnName = "GroupId";
+
       dt.DefaultOrder = new DBxOrder("Name");
       _DocTypes.Add(dt);
+
+      #endregion
+
+
+      #region Доп. назначения
+
+      dt = new DBxDocType("AuxPurposes");
+      dt.SingularTitle = "Доп. назначение";
+      dt.PluralTitle = "Доп. назначения";
+      dt.Struct.Columns.AddString("Name", 50, false);
+      dt.Struct.Columns.AddMemo("Comment");
+
+      dt.DefaultOrder = new DBxOrder("Name");
+      _DocTypes.Add(dt);
+
+      #endregion
 
       #endregion
 

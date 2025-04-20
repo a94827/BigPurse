@@ -26,6 +26,7 @@ namespace App
       textHandlers.Add("Debtors", "Name");
       textHandlers.Add("MUs", "Name");
       textHandlers.Add("Purposes", "Name");
+      textHandlers.Add("AuxPurposes", "Name");
     }
 
     #endregion

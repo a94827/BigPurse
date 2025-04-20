@@ -1,6 +1,6 @@
 ﻿namespace App
 {
-  partial class EditPurpose
+  partial class EditAuxPurpose
   {
     /// <summary>
     /// Required designer variable.
@@ -34,12 +34,8 @@
       this.groupBox5 = new System.Windows.Forms.GroupBox();
       this.edComment = new System.Windows.Forms.TextBox();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
-      this.edPeriod = new FreeLibSet.Controls.DateRangeBox();
-      this.label2 = new System.Windows.Forms.Label();
       this.edName = new System.Windows.Forms.TextBox();
       this.label1 = new System.Windows.Forms.Label();
-      this.cbGroup = new FreeLibSet.Controls.UserSelComboBox();
-      this.label3 = new System.Windows.Forms.Label();
       this.tabControl1.SuspendLayout();
       this.tabPage1.SuspendLayout();
       this.MainPanel1.SuspendLayout();
@@ -85,11 +81,11 @@
       // 
       this.groupBox5.Controls.Add(this.edComment);
       this.groupBox5.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.groupBox5.Location = new System.Drawing.Point(0, 148);
+      this.groupBox5.Location = new System.Drawing.Point(0, 58);
       this.groupBox5.Margin = new System.Windows.Forms.Padding(4);
       this.groupBox5.Name = "groupBox5";
       this.groupBox5.Padding = new System.Windows.Forms.Padding(4);
-      this.groupBox5.Size = new System.Drawing.Size(760, 121);
+      this.groupBox5.Size = new System.Drawing.Size(760, 211);
       this.groupBox5.TabIndex = 1;
       this.groupBox5.TabStop = false;
       this.groupBox5.Text = "Комментари&й";
@@ -104,15 +100,11 @@
       this.edComment.Multiline = true;
       this.edComment.Name = "edComment";
       this.edComment.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-      this.edComment.Size = new System.Drawing.Size(743, 89);
+      this.edComment.Size = new System.Drawing.Size(743, 179);
       this.edComment.TabIndex = 0;
       // 
       // groupBox1
       // 
-      this.groupBox1.Controls.Add(this.cbGroup);
-      this.groupBox1.Controls.Add(this.label3);
-      this.groupBox1.Controls.Add(this.edPeriod);
-      this.groupBox1.Controls.Add(this.label2);
       this.groupBox1.Controls.Add(this.edName);
       this.groupBox1.Controls.Add(this.label1);
       this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
@@ -120,28 +112,10 @@
       this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
       this.groupBox1.Name = "groupBox1";
       this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
-      this.groupBox1.Size = new System.Drawing.Size(760, 148);
+      this.groupBox1.Size = new System.Drawing.Size(760, 58);
       this.groupBox1.TabIndex = 0;
       this.groupBox1.TabStop = false;
-      this.groupBox1.Text = "Назначение";
-      // 
-      // edPeriod
-      // 
-      this.edPeriod.Location = new System.Drawing.Point(240, 86);
-      this.edPeriod.Margin = new System.Windows.Forms.Padding(4);
-      this.edPeriod.Name = "edPeriod";
-      this.edPeriod.Size = new System.Drawing.Size(467, 45);
-      this.edPeriod.TabIndex = 5;
-      // 
-      // label2
-      // 
-      this.label2.Location = new System.Drawing.Point(8, 86);
-      this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-      this.label2.Name = "label2";
-      this.label2.Size = new System.Drawing.Size(211, 25);
-      this.label2.TabIndex = 4;
-      this.label2.Text = "&Период действия";
-      this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+      this.groupBox1.Text = "Дополнительное назначение";
       // 
       // edName
       // 
@@ -163,34 +137,14 @@
       this.label1.Text = "&Название";
       this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
-      // cbGroup
-      // 
-      this.cbGroup.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.cbGroup.Location = new System.Drawing.Point(239, 53);
-      this.cbGroup.Margin = new System.Windows.Forms.Padding(4);
-      this.cbGroup.Name = "cbGroup";
-      this.cbGroup.Size = new System.Drawing.Size(499, 22);
-      this.cbGroup.TabIndex = 3;
-      // 
-      // label3
-      // 
-      this.label3.Location = new System.Drawing.Point(7, 53);
-      this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-      this.label3.Name = "label3";
-      this.label3.Size = new System.Drawing.Size(211, 25);
-      this.label3.TabIndex = 2;
-      this.label3.Text = "&Группа";
-      this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-      // 
-      // EditPurpose
+      // EditAuxPurpose
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(776, 306);
       this.Controls.Add(this.tabControl1);
       this.Margin = new System.Windows.Forms.Padding(4);
-      this.Name = "EditPurpose";
+      this.Name = "EditAuxPurpose";
       this.tabControl1.ResumeLayout(false);
       this.tabPage1.ResumeLayout(false);
       this.MainPanel1.ResumeLayout(false);
@@ -212,9 +166,5 @@
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.GroupBox groupBox5;
     private System.Windows.Forms.TextBox edComment;
-    private FreeLibSet.Controls.DateRangeBox edPeriod;
-    private System.Windows.Forms.Label label2;
-    private FreeLibSet.Controls.UserSelComboBox cbGroup;
-    private System.Windows.Forms.Label label3;
   }
 }

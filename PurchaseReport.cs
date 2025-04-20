@@ -17,7 +17,7 @@ using FreeLibSet.Forms.Data;
 
 namespace App
 {
-  public partial class PurchaseReportParamForm : EFPReportExtParamsForm
+  public partial class PurchaseReportParamForm : EFPReportExtParamsTwoPageForm
   {
     #region Конструктор
 
@@ -27,35 +27,6 @@ namespace App
 
       efpPeriod = new EFPDateRangeBox(FormProvider, edPeriod);
 
-      efpProducts = new EFPMultiDocComboBox(FormProvider, cbProducts, ProgramDBUI.TheUI.DocTypes["Products"]);
-      efpProducts.SelectionMode = DocSelectionMode.MultiCheckBoxes;
-      efpProducts.CanBeEmpty = true;
-      efpProducts.EmptyText = "[ Все расходы ]";
-      efpProducts.MaxTextItemCount = 5;
-
-      efpWallets = new EFPMultiDocComboBox(FormProvider, cbWallets, ProgramDBUI.TheUI.DocTypes["Wallets"]);
-      efpWallets.SelectionMode = DocSelectionMode.MultiCheckBoxes;
-      efpWallets.CanBeEmpty = true;
-      efpWallets.EmptyText = "[ Все кошельки ]";
-      efpWallets.MaxTextItemCount = 3;
-
-      BoolValueGridFilter filtWalletsDeposit = new BoolValueGridFilter("Deposit");
-      filtWalletsDeposit.DisplayName = "Вклад";
-      filtWalletsDeposit.Value = false;
-      filtWalletsDeposit.FilterTextFalse = "Нет";
-      efpWallets.Filters.Add(filtWalletsDeposit);
-
-
-      efpShops = new EFPMultiDocComboBox(FormProvider, cbShops, ProgramDBUI.TheUI.DocTypes["Shops"]);
-      efpShops.SelectionMode = DocSelectionMode.MultiCheckBoxes;
-      efpShops.CanBeEmpty = true;
-      efpShops.EmptyText = "[ Все магазины ]";
-
-      efpPurposes = new EFPMultiDocComboBox(FormProvider, cbPurposes, ProgramDBUI.TheUI.DocTypes["Purposes"]);
-      efpPurposes.SelectionMode = DocSelectionMode.MultiCheckBoxes;
-      efpPurposes.CanBeEmpty = true;
-      efpPurposes.EmptyText = "[ Любое назначение ]";
-      efpPurposes.MaxTextItemCount = 5;
 
       efpProductDet = new EFPListComboBox(FormProvider, cbProductDet);
     }
@@ -66,14 +37,6 @@ namespace App
 
     public EFPDateRangeBox efpPeriod;
 
-    public EFPMultiDocComboBox efpProducts;
-
-    public EFPMultiDocComboBox efpWallets;
-
-    public EFPMultiDocComboBox efpShops;
-
-    public EFPMultiDocComboBox efpPurposes;
-
     public EFPListComboBox efpProductDet;
 
     #endregion
@@ -83,21 +46,72 @@ namespace App
   {
     public enum ProducDetLevel { Product, Description, Quantity }
 
+    #region Конструктор
+
+    public PurchaseReportParams()
+    {
+      Filters = new EFPDBxGridFilters();
+
+      FilterProducts = new RefDocGridFilter(ProgramDBUI.TheUI.DocTypes["Products"], "Product");
+      FilterProducts.DisplayName = "Товар";
+      FilterProducts.Nullable = false;
+      Filters.Add(FilterProducts);
+
+      FilterWallets = new RefDocGridFilter(ProgramDBUI.TheUI.DocTypes["Wallets"], "DocId.WalletCredit");
+      FilterWallets.DisplayName = "Кошелек";
+      FilterWallets.Nullable = false;
+      Filters.Add(FilterWallets);
+      BoolValueGridFilter filtWalletsDeposit = new BoolValueGridFilter("Deposit");
+      filtWalletsDeposit.DisplayName = "Вклад";
+      filtWalletsDeposit.Value = false;
+      filtWalletsDeposit.FilterTextFalse = "Нет";
+      FilterWallets.DocFilters.Add(filtWalletsDeposit);
+
+      FilterShops = new RefDocGridFilterSet(ProgramDBUI.TheUI.DocTypes["Shops"], "DocId.Shop");
+      FilterShops.DisplayName = "Магазин";
+      FilterShops.Nullable = false;
+      Filters.Add(FilterShops);
+
+      FilterPurposes = new RefDocGridFilterSet(ProgramDBUI.TheUI.DocTypes["Purposes"], "Purpose");
+      FilterPurposes.DisplayName = "Назначение";
+      FilterPurposes.Nullable = false;
+      Filters.Add(FilterPurposes);
+
+      FilterAuxPurposes = new RefDocGridFilter(ProgramDBUI.TheUI.DocTypes["AuxPurposes"], "AuxPurpose");
+      FilterAuxPurposes.DisplayName = "Доп. назначение";
+      FilterAuxPurposes.Nullable = false;
+      Filters.Add(FilterAuxPurposes);
+    }
+
+    #endregion
+
     #region Поля
+
+    #region Общие
 
     public DateTime? FirstDate;
 
     public DateTime? LastDate;
 
-    public Int32[] ProductIds;
-
-    public Int32[] WalletIds;
-
-    public Int32[] ShopIds;
-
-    public Int32[] PurposeIds;
-
     public ProducDetLevel ProductDet;
+
+    #endregion
+
+    #region Фильтры
+
+    public EFPDBxGridFilters Filters;
+
+    public RefDocGridFilter FilterProducts;
+
+    public RefDocGridFilter FilterWallets;
+
+    public RefDocGridFilterSet FilterShops;
+
+    public RefDocGridFilterSet FilterPurposes;
+
+    public RefDocGridFilter FilterAuxPurposes;
+
+    #endregion
 
     #endregion
 
@@ -106,15 +120,7 @@ namespace App
     protected override void OnInitTitle()
     {
       base.Title = "Покупки за " + DateRangeFormatter.Default.ToString(FirstDate, LastDate, true);
-
-      if (ProductIds != null && ProductIds.Length > 0)
-        base.FilterInfo.Add("Товары", String.Join(", ", ProgramDBUI.TheUI.DocProvider.GetTextValues("Products", ProductIds)));
-      if (WalletIds != null && WalletIds.Length > 0)
-        base.FilterInfo.Add("Кошельки", String.Join(", ", ProgramDBUI.TheUI.DocProvider.GetTextValues("Wallets", WalletIds)));
-      if (ShopIds != null && ShopIds.Length > 0)
-        base.FilterInfo.Add("Магазины", String.Join(", ", ProgramDBUI.TheUI.DocProvider.GetTextValues("Shops", ShopIds)));
-      if (PurposeIds != null && PurposeIds.Length > 0)
-        base.FilterInfo.Add("Назначение", String.Join(", ", ProgramDBUI.TheUI.DocProvider.GetTextValues("Purposes", PurposeIds)));
+      Filters.AddFilterInfo(FilterInfo);
     }
 
     public override EFPReportExtParamsForm CreateForm()
@@ -127,11 +133,8 @@ namespace App
       PurchaseReportParamForm form2 = (PurchaseReportParamForm)form;
       form2.efpPeriod.First.NValue = FirstDate;
       form2.efpPeriod.Last.NValue = LastDate;
-      form2.efpProducts.DocIds = ProductIds;
-      form2.efpWallets.DocIds = WalletIds;
-      form2.efpShops.DocIds = ShopIds;
-      form2.efpPurposes.DocIds = PurposeIds;
       form2.efpProductDet.SelectedIndex = (int)ProductDet;
+      form2.FiltersControlProvider.Filters = Filters;
     }
 
     public override void ReadFormValues(EFPReportExtParamsForm form, SettingsPart part)
@@ -139,10 +142,6 @@ namespace App
       PurchaseReportParamForm form2 = (PurchaseReportParamForm)form;
       FirstDate = form2.efpPeriod.First.NValue;
       LastDate = form2.efpPeriod.Last.NValue;
-      ProductIds = form2.efpProducts.DocIds;
-      WalletIds = form2.efpWallets.DocIds;
-      ShopIds = form2.efpShops.DocIds;
-      PurposeIds = form2.efpPurposes.DocIds;
       ProductDet = (ProducDetLevel)(form2.efpProductDet.SelectedIndex);
     }
 
@@ -150,22 +149,16 @@ namespace App
     {
       cfg.SetNullableDate("FirstDate", FirstDate);
       cfg.SetNullableDate("LastDate", LastDate);
-      cfg.SetIntCommaString("Products", ProductIds);
-      cfg.SetIntCommaString("Wallets", WalletIds);
-      cfg.SetIntCommaString("Shops", ShopIds);
-      cfg.SetIntCommaString("Purposes", PurposeIds);
       cfg.SetEnum<ProducDetLevel>("ProductDet", ProductDet);
+      Filters.WriteConfig(cfg);
     }
 
     public override void ReadConfig(CfgPart cfg, SettingsPart part)
     {
       FirstDate = cfg.GetNullableDate("FirstDate");
       LastDate = cfg.GetNullableDate("LastDate");
-      ProductIds = cfg.GetIntCommaString("Products");
-      WalletIds = cfg.GetIntCommaString("Wallets");
-      ShopIds = cfg.GetIntCommaString("Shops");
-      PurposeIds = cfg.GetIntCommaString("Purposes");
       ProductDet = cfg.GetEnumDef<ProducDetLevel>("ProductDet", ProducDetLevel.Quantity);
+      Filters.ReadConfig(cfg);
     }
 
     #endregion
@@ -227,18 +220,6 @@ namespace App
 
     protected override void BuildReport()
     {
-      #region Развернутый список идентификаторов видов товаров
-
-      IdList productIds2 = null;
-      if (Params.ProductIds != null && Params.ProductIds.Length > 0)
-      {
-        productIds2 = new IdList();
-        for (int i = 0; i < Params.ProductIds.Length; i++)
-          AddProductIds(productIds2, Params.ProductIds[i]); // рекурсивная процедура
-      }
-
-      #endregion
-
       #region Заготовка таблицы продуктов
 
       DataTable prodTable = new DataTable();
@@ -247,6 +228,8 @@ namespace App
       prodTable.Columns.Add("Description", typeof(string));
       prodTable.Columns.Add("Purpose", typeof(Int32));
       prodTable.Columns.Add("Purpose.Name", typeof(string));
+      prodTable.Columns.Add("AuxPurpose", typeof(Int32));
+      prodTable.Columns.Add("AuxPurpose.Name", typeof(string));
       prodTable.Columns.Add("Quantity1", typeof(float));
       prodTable.Columns.Add("MU1", typeof(Int32));
       prodTable.Columns.Add("MU1.Name", typeof(string));
@@ -315,23 +298,20 @@ namespace App
       DBxSelectInfo si = new DBxSelectInfo();
       si.TableName = "OperationProducts";
       si.Expressions.Add("Id"); // нужно только для EFPDBxGridView
-      si.Expressions.Add("DocId,RecordOrder,Product,Product.Name,Description,Purpose,Purpose.Name,Quantity1,MU1,MU1.Name,Quantity2,MU2,MU2.Name,Quantity3,MU3,MU3.Name,Formula,RecordSum,Comment");
+      si.Expressions.Add("DocId,RecordOrder,Product,Product.Name,Description,Purpose,Purpose.Name,AuxPurpose,AuxPurpose.Name,Quantity1,MU1,MU1.Name,Quantity2,MU2,MU2.Name,Quantity3,MU3,MU3.Name,Formula,RecordSum,Comment");
       si.Expressions.Add("DocId.Date,DocId.OpOrder,DocId.WalletCredit,DocId.WalletCredit.Name,DocId.Shop,DocId.Shop.Name,DocId.Comment");
 
-      List<DBxFilter> filters = new List<DBxFilter>();
-      if (productIds2 != null)
-        filters.Add(new IdsFilter("Product", productIds2));
-      filters.Add(new DateRangeFilter("DocId.Date", Params.FirstDate, Params.LastDate));
-      if (Params.WalletIds != null && Params.WalletIds.Length > 0)
-        filters.Add(new IdsFilter("DocId.WalletCredit", Params.WalletIds));
-      if (Params.ShopIds != null && Params.ShopIds.Length > 0)
-        filters.Add(new IdsFilter("DocId.Shop", Params.ShopIds));
-      if (Params.PurposeIds != null && Params.PurposeIds.Length > 0)
-        filters.Add(new IdsFilter("Purpose", Params.PurposeIds));
-      filters.Add(DBSSubDocType.DeletedFalseFilter);
-      filters.Add(DBSSubDocType.DocIdDeletedFalseFilter);
-      filters.Add(new ValueFilter("DocId.OpType", (int)OperationType.Expense)); // чтобы мусор не пролез
-      si.Where = AndFilter.FromList(filters);
+      List<DBxFilter> sqlFilters = new List<DBxFilter>();
+      foreach (DBxCommonFilter filter in Params.Filters)
+      {
+        if (!filter.IsEmpty)
+          sqlFilters.Add(filter.GetSqlFilter());
+      }
+      sqlFilters.Add(new DateRangeFilter("DocId.Date", Params.FirstDate, Params.LastDate));
+      sqlFilters.Add(DBSSubDocType.DeletedFalseFilter);
+      sqlFilters.Add(DBSSubDocType.DocIdDeletedFalseFilter);
+      sqlFilters.Add(new ValueFilter("DocId.OpType", (int)OperationType.Expense)); // чтобы мусор не пролез
+      si.Where = AndFilter.FromList(sqlFilters);
 
       DataTable table1 = ProgramDBUI.TheUI.DocProvider.FillSelect(si);
 
@@ -482,23 +462,6 @@ namespace App
       #endregion
     }
 
-    private void AddProductIds(IdList productIds2, Int32 id)
-    {
-      if (id == 0)
-        throw new ArgumentException("id=0");
-
-      if (productIds2.Contains(id))
-        return; // предотвращение зацикливания в дереве продуктов
-      productIds2.Add(id);
-
-      DBxFilter[] filters = new DBxFilter[2];
-      filters[0] = new ValueFilter("ParentId", id);
-      filters[1] = DBSDocType.DeletedFalseFilter;
-      IdList children = ProgramDBUI.TheUI.DocProvider.GetIds("Products", AndFilter.FromArray(filters));
-      foreach (Int32 child in children)
-        AddProductIds(productIds2, child);
-    }
-
     #endregion
 
     #region Страница "Операции"
@@ -515,6 +478,7 @@ namespace App
       producer.Columns.AddText("Product.Name", "Товар, услуга", 20, 5);
       producer.Columns.AddText("Description", "Описание", 20, 5);
       producer.Columns.AddText("Purpose.Name", "Назначение", 20, 5);
+      producer.Columns.AddText("AuxPurpose.Name", "Доп. назначение", 20, 5);
 
       producer.Columns.AddUserText("QuantityText", "Quantity1,MU1.Name,Quantity2,MU2.Name,Quantity3,MU3.Name",
         new EFPGridProducerValueNeededEventHandler(EditOperationProduct.QuantityTextColumnValueNeeded),
